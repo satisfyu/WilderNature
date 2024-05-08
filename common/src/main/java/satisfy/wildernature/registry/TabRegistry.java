@@ -29,6 +29,9 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.OWL_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.BISON_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.TURKEY_SPAWN_EGG.get());
+                out.accept(ObjectRegistry.PELICAN_MEAT.get());
+                out.accept(ObjectRegistry.COOKED_PELICAN_MEAT.get());
+
 
             })
             .build());

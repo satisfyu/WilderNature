@@ -6,6 +6,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -16,10 +17,13 @@ import satisfy.wildernature.util.WilderNatureIdentifier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+
 @SuppressWarnings("unused")
 public class ObjectRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(WilderNature.MOD_ID, Registries.ITEM);
     public static final Registrar<Item> ITEM_REGISTRAR = ITEMS.getRegistrar();
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK);
+    public static final Registrar<Block> BLOCK_REGISTRAR = BLOCKS.getRegistrar();
     public static final RegistrySupplier<Item> WILDERNATURE_STANDARD = registerItem("wildernature_standard", () -> new WilderNatureStandardItem(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
     public static final RegistrySupplier<Item> DEER_SPAWN_EGG = registerItem("deer_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.DEER, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> RED_WOLF_SPAWN_EGG = registerItem("red_wolf_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.RED_WOLF, -1, -1, getSettings()));
@@ -32,8 +36,45 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BOAR_SPAWN_EGG = registerItem("boar_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.BOAR, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> BISON_SPAWN_EGG = registerItem("bison_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.BISON, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK);
-    public static final Registrar<Block> BLOCK_REGISTRAR = BLOCKS.getRegistrar();
+
+    public static final RegistrySupplier<Item> PELICAN_MEAT = registerItem("pelican_meat", () -> new Item(getSettings().food(Foods.SALMON)));
+    public static final RegistrySupplier<Item> COOKED_PELICAN_MEAT = registerItem("cooked_pelican_meat", () -> new Item(getSettings().food(Foods.COOKED_SALMON)));
+
+    /**
+     TODO:
+     Add:
+     * Venison
+     * Bison Meat
+     * Turkey Meat
+     * Cooked Venison
+     * Cooked Bison Meat
+     * Cooked Turkey Meat
+     Ideas for Items:
+     * Trophies?
+     * A Red Wolf Fur Cloak - adds a 'Fear' Effect to aggressive Animals and Creepers
+     * Pelican / Fish Oil - can be used as fuel
+     * Raccoons LootBag - rare drop when killing a raccoon - contains apples, bones, bonemeal, seeds
+     * Blunderbuss - a mix between a bow and crossbow - VERY LOUD!
+     * Bison Horn - TOOOOOT
+
+     Ideas for Animals:
+     * Ram, rideable - just like a slow Horse with LOTS of health
+     * Penguin
+     * Koala
+     * Lions
+     * Chameleon
+     * Hippos
+     * Elephants
+     * Bears
+     * Moose
+     * Beaver
+     * Kangaroos
+     * Crocodiles
+     * Jaguars
+     * Porcupines
+     * Hedgehog
+     * A mini sheep
+     */
 
     public static void init() {
         WilderNature.LOGGER.debug("Registering Mod Block and Items for " + WilderNature.MOD_ID);

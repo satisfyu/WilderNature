@@ -21,7 +21,6 @@ public class WilderNatureForge {
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(CompostableRegistry::init);
         WilderNature.commonInit();
     }
 }
