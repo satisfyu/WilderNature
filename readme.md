@@ -1,10 +1,16 @@
-<p align="center"><img src="https://imgur.com/aHbesRp.png" width="1200"></p>
+<p align="center"><img src="https://imgur.com/xyz.png" width="1200"></p>
 
 <h1 align="center">Welcome to WilderNature</h1>
+
+<p align="center">
+  Enjoy a new variety of animals!
+
 <br>
-<p>Explore a redesigned overworld: new animals, reshaped biomes, livelier landscapes.</p><p>
-<br>
-Virtually all biomes have been completely revamped: Trees in Forests, Birch Forests, Flower Forests, and Taiga Biomes are larger, redesigned, and host new species of animals. New flowers and plants adorn the surroundings. In Savannas, towering Baobab trees now grow, inhabited by bisons and termites. Beaches feature fan_palms, dry grass, and pelicans. In snowy regions, snow-covered spruces grow, creating a more rugged appearance.</p>
+
+
+  Meet new friends on your adventures and discover new creatures - ranging from friendly to aggressive and neutral.<br>
+  Adding new animals such as Deers, Red Wolves, Raccoons, and even rideable Rams!
+</p>
 
 <h1 align="center">Available for</h1>
 <p align="center"><img src="https://imgur.com/gREqi3m.png" width="240" height="120"></p>
