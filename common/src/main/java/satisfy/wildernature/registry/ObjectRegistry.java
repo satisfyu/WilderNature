@@ -56,7 +56,7 @@ public class ObjectRegistry {
      * Raccoons LootBag - rare drop when killing a raccoon - contains apples, bones, bonemeal, seeds
      * Blunderbuss - a mix between a bow and crossbow - VERY LOUD!
      * Bison Horn - TOOOOOT
-
+     * Truffle - will be dropped on the floor (low chance) when boars eating grass block - combine it with any edible item to give it 20% more hunger / saturation
      Ideas for Animals:
      * Ram, rideable - just like a slow Horse with LOTS of health
      * Penguin

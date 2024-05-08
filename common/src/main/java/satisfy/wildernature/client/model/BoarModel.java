@@ -14,11 +14,12 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Pig;
 import org.jetbrains.annotations.NotNull;
+import satisfy.wildernature.entity.BoarEntity;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
-public class BoarModel<T extends Pig> extends HierarchicalModel<T> {
+public class BoarModel extends HierarchicalModel<BoarEntity> {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new WilderNatureIdentifier("boar"), "main");
     private final ModelPart body;
@@ -87,13 +88,13 @@ public class BoarModel<T extends Pig> extends HierarchicalModel<T> {
     }
 
     @Override
-    public void setupAnim(T mob, float f, float g, float h, float i, float j) {
+    public void setupAnim(BoarEntity entity, float f, float g, float h, float i, float j) {
         this.head.yRot = i * 0.017453292F;
 
         float l = 1.0F;
 
 
-        if (mob.isBaby()) {
+        if (entity.isBaby()) {
             this.head.y = Mth.lerp(l, 2.0F, 5.0F);
         } else {
             this.head.y = 2.0F;
@@ -105,7 +106,6 @@ public class BoarModel<T extends Pig> extends HierarchicalModel<T> {
         this.rightHindLeg.xRot = this.leftFrontLeg.xRot;
         this.leftHindLeg.xRot = this.rightFrontLeg.xRot;
     }
-
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
