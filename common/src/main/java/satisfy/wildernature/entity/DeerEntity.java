@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
@@ -26,7 +27,7 @@ public class DeerEntity extends Animal {
         super(entityType, world);
     }
 
-    public static AttributeSupplier.Builder createMobAttributes() {
+    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.27000001192092896).add(Attributes.MAX_HEALTH, 10.0).add(Attributes.ATTACK_DAMAGE, 1.5);
     }
 
@@ -51,7 +52,7 @@ public class DeerEntity extends Animal {
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
         float f;
-        if (this.getPose() == Pose.STANDING) {
+        if(this.getPose() == Pose.STANDING) {
             f = Math.min(pPartialTick * 6F, 1f);
         } else {
             f = 0f;
@@ -59,7 +60,7 @@ public class DeerEntity extends Animal {
 
         this.walkAnimation.update(f, 0.2f);
     }
-
+    
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));

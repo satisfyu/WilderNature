@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.entity.animation.DeerModelAnimation;
 
 public class DeerModel<T extends Entity> extends HierarchicalModel<T> {
 
@@ -78,10 +79,9 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.yRot = netHeadYaw * 0.0089453292F;
         this.head.xRot = headPitch * 0.0047453292F;
 
-        this.rightHindLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 0.5F * limbSwingAmount;
-        this.leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 0.5F * limbSwingAmount;
-        this.rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 0.5F * limbSwingAmount;
-        this.leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 0.5F * limbSwingAmount;
+        this.animateWalk(DeerModelAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
+        this.animateEat(DeerModelAnimation.eat, limbSwing, limbSwingAmount, 2f, 2.5f);
+
     }
 
     @Override
