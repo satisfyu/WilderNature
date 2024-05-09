@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.client.model.OwlModel;
 import satisfy.wildernature.entity.OwlEntity;
@@ -20,7 +21,7 @@ public class OwlRenderer extends MobRenderer<OwlEntity, OwlModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(OwlEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(OwlEntity entity) {
         return TEXTURE;
     }
 

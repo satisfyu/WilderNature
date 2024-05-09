@@ -1,7 +1,5 @@
 package satisfy.wildernature.entity.ai;
 
-import java.util.EnumSet;
-import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,6 +14,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+
+import java.util.EnumSet;
+import java.util.Random;
 
 public class DigIntoGrassGoal extends Goal {
     private static final int EAT_ANIMATION_TICKS = 40;
@@ -41,7 +42,7 @@ public class DigIntoGrassGoal extends Goal {
 
     public void start() {
         this.eatAnimationTick = this.adjustedTickDelay(EAT_ANIMATION_TICKS);
-        this.level.broadcastEntityEvent(this.mob, (byte)10);
+        this.level.broadcastEntityEvent(this.mob, (byte) 10);
         this.mob.getNavigation().stop();
     }
 

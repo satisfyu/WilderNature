@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.entity.OwlEntity;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
@@ -32,7 +33,7 @@ public class OwlModel extends AgeableListModel<OwlEntity> implements HeadedModel
         this.leg_left = body.getChild("leg_left");
     }
 
-
+    @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -74,29 +75,25 @@ public class OwlModel extends AgeableListModel<OwlEntity> implements HeadedModel
         return LayerDefinition.create(meshdefinition, 48, 48);
     }
 
-    // Animations by Lemonszz: https://github.com/Lemonszz/Biome-Makeover/blob/1.20/LICENCE
     @Override
     public void setupAnim(OwlEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         float pi = (float) Math.PI;
 
-        if (entity.getStandingState() != OwlEntity.StandingState.FLYING) {
-            this.head.xRot = -0.2618F + (headPitch * 0.0175F);
-            this.head.yRot = netHeadYaw * 0.0175F;
+        this.head.xRot = -0.2618F + (headPitch * 0.0175F);
+        this.head.yRot = netHeadYaw * 0.0175F;
 
+        this.leg_right.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.leg_left.xRot = Mth.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
+
+        if (entity.getStandingState() != OwlEntity.StandingState.FLYING) {
             this.wing_left.zRot = 0;
             this.wing_right.zRot = 0;
-
-            this.leg_right.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-            this.leg_left.xRot = Mth.cos(limbSwing * 0.6662F + pi) * 1.4F * limbSwingAmount;
-
-            float wingSwingAmountNonFlying = 0.5F;
-
-            this.wing_right.yRot = Mth.cos(limbSwing * 0.6662F) * wingSwingAmountNonFlying;
-            this.wing_left.yRot = -Mth.cos(limbSwing * 0.6662F + pi) * wingSwingAmountNonFlying;
+            this.wing_left.yRot = 0;
+            this.wing_right.yRot = 0;
 
             if (entity.isInSittingPose()) {
-                leg_right.xRot = -1.5F;
-                leg_left.xRot = 1.5F;
+                this.leg_right.xRot = -1.5F;
+                this.leg_left.xRot = -1.5F;
             }
         } else {
             float wingSwingAmountFlying = 1.0F;
@@ -112,48 +109,23 @@ public class OwlModel extends AgeableListModel<OwlEntity> implements HeadedModel
         }
     }
 
-
     @Override
     public void prepareMobModel(OwlEntity entity, float limbAngle, float limbDistance, float delta) {
         super.prepareMobModel(entity, limbAngle, limbDistance, delta);
-
-        switch (entity.getStandingState()) {
-            case STANDING:
-
-                break;
-            case FLYING:
-
-                break;
-        }
-
-        float rad90 = 1.5708F;
-        float rad40 = 0.698132F;
-
-        float leanProgress = entity.getSwimAmount(delta) / 7F;
-        setRotationAngle(leg_left, rad90 * leanProgress, 0, 0);
-        setRotationAngle(leg_right, rad90 * leanProgress, 0, 0);
-
-        setRotationAngle(head, -rad40 * leanProgress, 0, 0);
     }
 
     @Override
-    protected Iterable<ModelPart> headParts() {
+    protected @NotNull Iterable<ModelPart> headParts() {
         return ImmutableList.of(head);
     }
 
     @Override
-    protected Iterable<ModelPart> bodyParts() {
+    protected @NotNull Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(body);
     }
 
-    public void setRotationAngle(ModelPart part, float x, float y, float z) {
-        part.xRot = x;
-        part.yRot = y;
-        part.zRot = z;
-    }
-
     @Override
-    public ModelPart getHead() {
+    public @NotNull ModelPart getHead() {
         return head;
     }
 }

@@ -21,11 +21,20 @@ import satisfy.wildernature.registry.SoundRegistry;
 
 public class BoarEntity extends Pig {
     private static final Ingredient FOOD_ITEMS;
-    private int digAnimationTick;
-    private DigIntoGrassGoal digintoBlockGoal;
 
     static {
         FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.CHICKEN, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
+    }
+
+    private int digAnimationTick;
+    private DigIntoGrassGoal digintoBlockGoal;
+
+    public BoarEntity(EntityType<? extends Pig> entityType, Level world) {
+        super(entityType, world);
+    }
+
+    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12.0).add(Attributes.MOVEMENT_SPEED, 0.2F);
     }
 
     protected void registerGoals() {
@@ -61,15 +70,6 @@ public class BoarEntity extends Pig {
         } else {
             super.handleEntityEvent(b);
         }
-    }
-
-
-    public BoarEntity(EntityType<? extends Pig> entityType, Level world) {
-        super(entityType, world);
-    }
-
-    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12.0).add(Attributes.MOVEMENT_SPEED, 0.2F);
     }
 
     @Override

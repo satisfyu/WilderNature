@@ -12,7 +12,6 @@ import satisfy.wildernature.client.model.BoarModel;
 import satisfy.wildernature.entity.BoarEntity;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
-
 @Environment(value = EnvType.CLIENT)
 public class BoarRenderer extends MobRenderer<BoarEntity, BoarModel> {
     private static final ResourceLocation TEXTURE = new WilderNatureIdentifier("textures/entity/boar.png");

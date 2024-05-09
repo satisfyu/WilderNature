@@ -8,8 +8,8 @@
 <br>
 
 
-  Meet new friends on your adventures and discover new creatures - ranging from friendly to aggressive and neutral.<br>
-  Adding new animals such as Deers, Red Wolves, Raccoons, and even rideable Rams!
+Meet new friends on your adventures and discover new creatures - ranging from friendly to aggressive and neutral.<br>
+Adding new animals such as Deers, Red Wolves, Raccoons, and even rideable Rams!
 </p>
 
 <h1 align="center">Available for</h1>
