@@ -62,7 +62,6 @@ public class ObjectRegistry {
      * A Red Wolf Fur Cloak - adds a 'Fear' Effect to aggressive Animals and Creepers
      * Raccoons LootBag - rare drop when killing a raccoon - contains apples, bones, bonemeal, seeds
      * Blunderbuss - a mix between a bow and crossbow - VERY LOUD!
-     * Bison Horn - TOOOOOT
      * Truffle - will be dropped on the floor (low chance) when boars eating grass block - combine it with any edible item to give it 20% more hunger / saturation,
      -> Theres a Mod thats already have a functionality like this: The Salt Mod. I've just looked at the code and... its really complicated
 

@@ -8,8 +8,8 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.entity.animation.DeerModelAnimation;
 
@@ -18,18 +18,10 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "deer"), "main");
     private final ModelPart deer;
     private final ModelPart head;
-    private final ModelPart leftHindLeg;
-    private final ModelPart rightHindLeg;
-    private final ModelPart rightFrontLeg;
-    private final ModelPart leftFrontLeg;
 
     public DeerModel(ModelPart root) {
         this.deer = root.getChild("deer");
         this.head = this.deer.getChild("body").getChild("head");
-        this.leftHindLeg = this.deer.getChild("leftHindLeg");
-        this.rightHindLeg = this.deer.getChild("rightHindLeg");
-        this.rightFrontLeg = this.deer.getChild("rightFrontLeg");
-        this.leftFrontLeg = this.deer.getChild("leftFrontLeg");
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -80,7 +72,6 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.xRot = headPitch * 0.0047453292F;
 
         this.animateWalk(DeerModelAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
-        this.animateEat(DeerModelAnimation.eat, limbSwing, limbSwingAmount, 2f, 2.5f);
 
     }
 
@@ -90,7 +81,7 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<T> {
     }
 
     @Override
-    public ModelPart root() {
+    public @NotNull ModelPart root() {
         return deer;
     }
 }

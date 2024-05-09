@@ -6,6 +6,7 @@ import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.ObjectRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 import satisfy.wildernature.registry.TabRegistry;
+import satisfy.wildernature.util.WilderNatureProperties;
 
 public class WilderNature {
     public static final String MOD_ID = "wildernature";
@@ -16,6 +17,7 @@ public class WilderNature {
         EntityRegistry.init();
         TabRegistry.init();
         SoundRegistry.init();
+        WilderNatureProperties.init();
     }
 
     public static void commonInit() {
