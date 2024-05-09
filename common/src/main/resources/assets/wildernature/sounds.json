@@ -213,5 +213,11 @@
     "sounds": [
       "wildernature:red_wolf_aggro"
     ]
+  },
+  "bison_horn": {
+    "subtitle": "subtitles.wildernature.bison_horn",
+    "sounds": [
+      "wildernature:bison_horn"
+    ]
   }
 }

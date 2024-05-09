@@ -1,8 +1,10 @@
 package satisfy.wildernature.registry;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.InstrumentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import satisfy.wildernature.util.WilderNatureIdentifier;
@@ -22,3 +24,4 @@ public class TagsRegistry {
     public static final TagKey<Biome> SPAWNS_SQUIRREL = TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_squirrel"));
     public static final TagKey<Biome> REMOVE_WOLF = TagKey.create(Registries.BIOME, new WilderNatureIdentifier("remove_wolf"));
 }
+

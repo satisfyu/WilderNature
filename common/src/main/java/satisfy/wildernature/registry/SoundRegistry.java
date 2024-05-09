@@ -26,6 +26,7 @@ public class SoundRegistry {
     public static final RegistrySupplier<SoundEvent> OWL_DEATH = create("owl_death");
     public static final RegistrySupplier<SoundEvent> BISON_AMBIENT = create("bison_ambient");
     public static final RegistrySupplier<SoundEvent> BISON_HURT = create("bison_hurt");
+    public static final RegistrySupplier<SoundEvent> BISON_HORN = create("bison_horn");
     public static final RegistrySupplier<SoundEvent> BISON_ANGRY = create("bison_angry");
     public static final RegistrySupplier<SoundEvent> BISON_DEATH = create("bison_death");
     public static final RegistrySupplier<SoundEvent> PELICAN_AMBIENT = create("pelican_ambient");
