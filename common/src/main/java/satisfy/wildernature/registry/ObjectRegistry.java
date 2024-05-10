@@ -1,6 +1,7 @@
 package satisfy.wildernature.registry;
 
 import de.cristelknight.doapi.Util;
+import de.cristelknight.doapi.common.block.FacingBlock;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.fuel.FuelRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -13,7 +14,10 @@ import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.block.DeerTrophyBlock;
 import satisfy.wildernature.item.BisonHornItem;
 import satisfy.wildernature.item.WilderNatureStandardItem;
 import satisfy.wildernature.util.WilderNatureIdentifier;
@@ -43,6 +47,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> COOKED_PELICAN_MEAT = registerItem("cooked_pelican_meat", () -> new Item(getSettings().food(Foods.COOKED_SALMON)));
     public static final RegistrySupplier<Item> FISH_OIL = registerItem("fish_oil", () -> new Item(getSettings().stacksTo(16)));
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
+    public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 
 
     /**

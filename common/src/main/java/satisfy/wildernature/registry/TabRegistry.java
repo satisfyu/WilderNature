@@ -33,6 +33,8 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.COOKED_PELICAN_MEAT.get());
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
+                out.accept(ObjectRegistry.DEER_TROPHY.get());
+
             })
             .build());
 

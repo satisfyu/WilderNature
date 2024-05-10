@@ -2,16 +2,20 @@ package satisfy.wildernature.client;
 
 import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
+import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SheepFurModel;
 import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.client.model.*;
 import satisfy.wildernature.client.render.entity.*;
-import satisfy.wildernature.registry.EntityRegistry;
+
+import static satisfy.wildernature.registry.EntityRegistry.*;
+import static satisfy.wildernature.registry.ObjectRegistry.*;
 
 @Environment(EnvType.CLIENT)
 public class WilderNatureClient {
@@ -20,22 +24,25 @@ public class WilderNatureClient {
     public static final ModelLayerLocation MOSSY_SHEEP_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep"), "main");
 
     public static void preInitClient() {
+        RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get()
+
+        );
         registerEntityRenderers();
         registerEntityModelLayer();
     }
 
     public static void registerEntityRenderers() {
-        EntityRendererRegistry.register(EntityRegistry.RED_WOLF, RedWolfRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.PELICAN, PelicanRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.RACCOON, RaccoonRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.SQUIRREL, SquirrelRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.MUDDY_PIG, MuddyPigRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.MOSSY_SHEEP, MossySheepRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.DEER, DeerRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.OWL, OwlRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.BOAR, BoarRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.BISON, BisonRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.TURKEY, TurkeyRenderer::new);
+        EntityRendererRegistry.register(RED_WOLF, RedWolfRenderer::new);
+        EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
+        EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
+        EntityRendererRegistry.register(SQUIRREL, SquirrelRenderer::new);
+        EntityRendererRegistry.register(MUDDY_PIG, MuddyPigRenderer::new);
+        EntityRendererRegistry.register(MOSSY_SHEEP, MossySheepRenderer::new);
+        EntityRendererRegistry.register(DEER, DeerRenderer::new);
+        EntityRendererRegistry.register(OWL, OwlRenderer::new);
+        EntityRendererRegistry.register(BOAR, BoarRenderer::new);
+        EntityRendererRegistry.register(BISON, BisonRenderer::new);
+        EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
