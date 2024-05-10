@@ -30,5 +30,8 @@
     "minecraft": ">=1.20",
     "architectury": ">=9.0.8",
     "doapi": ">=1.2.10"
-  }
+  },
+  "mixins": [
+    "wildernature.fabric.mixins.json"
+  ]
 }
