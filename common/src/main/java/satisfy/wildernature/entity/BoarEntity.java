@@ -7,7 +7,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,22 +19,51 @@ import satisfy.wildernature.entity.ai.DigIntoGrassGoal;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 
-public class BoarEntity extends Pig {
+public class BoarEntity extends Animal {
     private static final Ingredient FOOD_ITEMS;
-
-    static {
-        FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.CHICKEN, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
-    }
-
+    public final AnimationState idleAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
     private int digAnimationTick;
     private DigIntoGrassGoal digintoBlockGoal;
+    private boolean isDigging = false;
 
-    public BoarEntity(EntityType<? extends Pig> entityType, Level world) {
+    public BoarEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12.0).add(Attributes.MOVEMENT_SPEED, 0.2F);
+    }
+
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide()) {
+            setupAnimationStates();
+        }
+    }
+
+    private void setupAnimationStates() {
+        if (this.idleAnimationTimeout <= 0) {
+            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
+            this.idleAnimationState.start(this.tickCount);
+        } else {
+            --this.idleAnimationTimeout;
+        }
+    }
+
+    @Override
+    protected void updateWalkAnimation(float pPartialTick) {
+        float f;
+        if (this.getPose() == Pose.STANDING) {
+            f = Math.min(pPartialTick * 6F, 1f);
+        } else {
+            f = 0f;
+        }
+
+        this.walkAnimation.update(f, 0.2f);
     }
 
     protected void registerGoals() {
@@ -56,19 +85,30 @@ public class BoarEntity extends Pig {
         super.customServerAiStep();
     }
 
-    public void aiStep() {
-        if (this.level().isClientSide) {
-            this.digAnimationTick = Math.max(0, this.digAnimationTick - 1);
-        }
-
-        super.aiStep();
+    public boolean isDigging() {
+        return isDigging;
     }
 
-    public void handleEntityEvent(byte b) {
-        if (b == 10) {
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            this.isDigging = true;
             this.digAnimationTick = 40;
         } else {
-            super.handleEntityEvent(b);
+            super.handleEntityEvent(id);
+        }
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.level().isClientSide) {
+            if (this.digAnimationTick > 0) {
+                --this.digAnimationTick;
+                if (this.digAnimationTick == 0) {
+                    this.isDigging = false;
+                }
+            }
         }
     }
 
@@ -100,5 +140,9 @@ public class BoarEntity extends Pig {
     @Override
     public boolean isFood(@NotNull ItemStack itemStack) {
         return FOOD_ITEMS.test(itemStack);
+    }
+
+    static {
+        FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.CHICKEN, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
     }
 }

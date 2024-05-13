@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.client.model.DeerModel;
 import satisfy.wildernature.entity.DeerEntity;
 import satisfy.wildernature.util.WilderNatureIdentifier;
@@ -17,11 +18,11 @@ public class DeerRenderer extends MobRenderer<DeerEntity, DeerModel<DeerEntity>>
     private static final ResourceLocation TEXTURE = new WilderNatureIdentifier("textures/entity/deer.png");
 
     public DeerRenderer(EntityRendererProvider.Context context) {
-        super(context, new DeerModel(context.bakeLayer(DeerModel.LAYER_LOCATION)), 0.7f);
+        super(context, new DeerModel<>(context.bakeLayer(DeerModel.LAYER_LOCATION)), 0.7f);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DeerEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(DeerEntity entity) {
         return TEXTURE;
     }
 
