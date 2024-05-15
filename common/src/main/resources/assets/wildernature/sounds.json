@@ -224,8 +224,11 @@
     "subtitle": "subtitles.wildernature.blunderbuss_shoot",
     "sounds": [
       "wildernature:blunderbuss_shoot1",
-      "wildernature:blunderbuss_shoot2"
-
+      "wildernature:blunderbuss_shoot2",
+      "wildernature:blunderbuss_shoot3",
+      "wildernature:blunderbuss_shoot4",
+      "wildernature:blunderbuss_shoot5",
+      "wildernature:blunderbuss_shoot6"
     ]
   },
   "blunderbuss_load": {

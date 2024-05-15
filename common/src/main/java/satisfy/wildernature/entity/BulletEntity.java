@@ -19,10 +19,11 @@ import satisfy.wildernature.network.SatisfyPacketHandler;
 import satisfy.wildernature.registry.EntityRegistry;
 
 public class BulletEntity extends Fireball {
-	protected double damage = 1;
-	protected boolean ignoreInvulnerability = false;
-	protected double knockbackStrength = 0;
-	protected int ticksSinceFired;
+	private static final double STOP_TRESHOLD = 0.01;
+	private double damage = 1;
+	private boolean ignoreInvulnerability = false;
+	private double knockbackStrength = 0;
+	private int ticksSinceFired;
 
 	public BulletEntity(EntityType<? extends Fireball> entityType, Level level) {
 		super(entityType, level);
@@ -36,10 +37,6 @@ public class BulletEntity extends Fireball {
 	public BulletEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
 		super(EntityRegistry.BULLET.get(), shooter, accelX, accelY, accelZ, worldIn);
 	}
-
-	private static final double STOP_TRESHOLD = 0.01;
-
-
 
 	@Override
 	public void tick() {
@@ -65,18 +62,14 @@ public class BulletEntity extends Fireball {
 
 			if (damaged && target instanceof LivingEntity livingTarget) {
 				if (knockbackStrength > 0) {
-					double actualKnockback = knockbackStrength;
-					Vec3 vec = getDeltaMovement().multiply(1, 0, 1).normalize().scale(actualKnockback);
+					Vec3 vec = getDeltaMovement().multiply(1, 0, 1).normalize().scale(knockbackStrength);
 					if (vec.lengthSqr() > 0) livingTarget.push(vec.x, 0.1, vec.z);
 				}
-
 				if (shooter instanceof LivingEntity) doEnchantDamageEffects((LivingEntity) shooter, target);
-
 				BulletItem.onLivingEntityHit(livingTarget, shooter, level());
 			} else if (!damaged && ignoreInvulnerability) target.invulnerableTime = lastHurtResistant;
 		}
 	}
-
 
 	@Override
 	protected void onHit(HitResult result) {
@@ -129,11 +122,6 @@ public class BulletEntity extends Fireball {
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
-		return false;
-	}
-
-	@Override
-	protected boolean shouldBurn() {
 		return false;
 	}
 

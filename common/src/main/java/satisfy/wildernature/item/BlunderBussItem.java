@@ -1,38 +1,50 @@
 package satisfy.wildernature.item;
 
+import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.entity.BulletEntity;
-import satisfy.wildernature.registry.ObjectRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class BlunderBussItem extends ProjectileWeaponItem {
-	protected int bonusDamage;
-	protected double damageMultiplier;
-	protected int fireDelay;
-	protected double inaccuracy;
-	protected double projectileSpeed = 3;
-	protected boolean ignoreInvulnerability = false;
-	protected Supplier<Ingredient> repairMaterial = () -> Ingredient.of(net.minecraft.world.item.Items.IRON_INGOT);
+	private static final int DEFAULT_BONUS_DAMAGE = 0;
+	private static final double DEFAULT_DAMAGE_MULTIPLIER = 1.0;
+	private static final int DEFAULT_FIRE_DELAY = 24;
+	private static final double DEFAULT_INACCURACY = 1.75;
+	private static final double DEFAULT_PROJECTILE_SPEED = 4.0;
+	private static final int DEFAULT_DURABILITY = 128;
+	private static final Ingredient DEFAULT_REPAIR_MATERIAL = Ingredient.of(Items.IRON_INGOT);
 
-	public BlunderBussItem(Properties properties, int bonusDamage, double damageMultiplier, int fireDelay, double inaccuracy) {
-		super(properties);
-		this.bonusDamage = bonusDamage;
-		this.damageMultiplier = damageMultiplier;
-		this.fireDelay = fireDelay;
-		this.inaccuracy = inaccuracy;
+	private final int bonusDamage;
+	private final double damageMultiplier;
+	private final int fireDelay;
+	private final double inaccuracy;
+	private final double projectileSpeed;
+	private final boolean ignoreInvulnerability;
+	private final Ingredient repairMaterial;
+
+	public BlunderBussItem() {
+		super(new Properties().durability(DEFAULT_DURABILITY));
+		this.bonusDamage = DEFAULT_BONUS_DAMAGE;
+		this.damageMultiplier = DEFAULT_DAMAGE_MULTIPLIER;
+		this.fireDelay = DEFAULT_FIRE_DELAY;
+		this.inaccuracy = DEFAULT_INACCURACY;
+		this.projectileSpeed = DEFAULT_PROJECTILE_SPEED;
+		this.ignoreInvulnerability = false;
+		this.repairMaterial = DEFAULT_REPAIR_MATERIAL;
 	}
 
 	@Override
@@ -41,31 +53,42 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 		ItemStack ammo = player.getProjectile(gun);
 
 		if (!ammo.isEmpty() || player.getAbilities().instabuild) {
-			if (ammo.isEmpty()) ammo = new ItemStack(ObjectRegistry.AMMO_BAG.get());
-
-			BulletItem bulletItem = (BulletItem) (ammo.getItem() instanceof BulletItem ? ammo.getItem() : ObjectRegistry.AMMO_BAG.get());
-			if (!world.isClientSide) {
-				boolean bulletFree = player.getAbilities().instabuild || !shouldConsumeAmmo();
-
-				ItemStack shotAmmo = ammo.getItem() instanceof BulletItem ? ammo : new ItemStack(ObjectRegistry.AMMO_BAG.get());
-				shoot(world, player, shotAmmo, bulletItem);
-
-				gun.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
-				if (!bulletFree) bulletItem.consume(ammo, player);
+			if (ammo.isEmpty()) {
+				ammo = new ItemStack(net.minecraft.world.item.Items.IRON_INGOT);
 			}
 
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.BLUNDERBUSS_SHOOT.get(), SoundSource.PLAYERS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
-			player.awardStat(Stats.ITEM_USED.get(this));
+			if (ammo.getItem() instanceof BulletItem bulletItem) {
+				if (!world.isClientSide) {
+					boolean bulletFree = player.getAbilities().instabuild || !shouldConsumeAmmo();
 
-			player.getCooldowns().addCooldown(this, getFireDelay());
-			return InteractionResultHolder.consume(gun);
+					shoot(world, player, ammo, bulletItem);
+
+					gun.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
+					if (!bulletFree) bulletItem.consume(ammo, player);
+				}
+
+				world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.BLUNDERBUSS_SHOOT.get(), SoundSource.PLAYERS, 1.0F, world.getRandom().nextFloat() * 5F + 1.0F);
+				player.awardStat(Stats.ITEM_USED.get(this));
+
+				player.getCooldowns().addCooldown(this, getFireDelay());
+
+				if (world instanceof ServerLevel serverWorld) {
+					serverWorld.getServer().tell(new TickTask(serverWorld.getServer().getTickCount() + 40, () -> world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.BLUNDERBUSS_LOAD.get(), SoundSource.PLAYERS, 0.5F, 1.0F)));
+				}
+
+				return InteractionResultHolder.consume(gun);
+			}
+		} else {
+			return InteractionResultHolder.fail(gun);
 		}
-		else return InteractionResultHolder.fail(gun);
+		return InteractionResultHolder.pass(gun);
 	}
+
+
 
 	protected void shoot(Level world, Player player, ItemStack ammo, BulletItem bulletItem) {
 		BulletEntity shot = bulletItem.createProjectile(world, ammo, player);
-		shot.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, (float)getProjectileSpeed(), (float)getInaccuracy());
+		shot.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, (float) getProjectileSpeed(), (float) getInaccuracy());
 		shot.setDamage((shot.getDamage() + getBonusDamage()) * getDamageMultiplier());
 		shot.setIgnoreInvulnerability(ignoreInvulnerability);
 
@@ -106,7 +129,7 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 		return 0;
 	}
 
-	private static final Predicate<ItemStack> BULLETS = (stack) -> stack.getItem() instanceof BulletItem && ((BulletItem)stack.getItem()).hasAmmo(stack);
+	private static final Predicate<ItemStack> BULLETS = (stack) -> stack.getItem() instanceof BulletItem && ((BulletItem) stack.getItem()).hasAmmo(stack);
 
 	@Override
 	public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
@@ -120,6 +143,6 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 
 	@Override
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-		return (repairMaterial != null && repairMaterial.get().test(repair)) || super.isValidRepairItem(toRepair, repair);
+		return repairMaterial.test(repair) || super.isValidRepairItem(toRepair, repair);
 	}
 }

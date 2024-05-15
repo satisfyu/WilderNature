@@ -48,8 +48,8 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 
-    public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", () -> new BlunderBussItem(getSettings().durability(104), 0, 1, 16, 1.5));
-    public static final RegistrySupplier<Item> AMMO_BAG = registerItem("ammo_bag", () -> new BulletItem(getSettings(), 6));
+    public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", BlunderBussItem::new);
+    public static final RegistrySupplier<Item> AMMO_BAG = registerItem("ammo_bag", () -> new BulletItem(getSettings(), 8));
 
     /**
      * TODO:
@@ -67,13 +67,13 @@ public class ObjectRegistry {
 
      * A Red Wolf Fur Cloak - adds a 'Fear' Effect to aggressive Animals and Creepers
      * Raccoons LootBag - rare drop when killing a raccoon - contains apples, bones, bonemeal, seeds
-     * Blunderbuss - a mix between a bow and crossbow - VERY LOUD!
      * Truffle - will be dropped on the floor (low chance) when boars eating grass block - combine it with any edible item to give it 20% more hunger / saturation,
      -> Theres a Mod thats already have a functionality like this: The Salt Mod. I've just looked at the code and... its really complicated
 
      *  Ideas for Animals:
      * Ram, rideable - just like a slow Horse with LOTS of health
      * Birds & birdnest & treehouses
+     * A REAL Dog?
      * Penguin
      * Koala
      * Lions
