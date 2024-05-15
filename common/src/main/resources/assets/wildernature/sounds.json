@@ -219,5 +219,19 @@
     "sounds": [
       "wildernature:bison_horn"
     ]
+  },
+  "blunderbuss_shoot": {
+    "subtitle": "subtitles.wildernature.blunderbuss_shoot",
+    "sounds": [
+      "wildernature:blunderbuss_shoot1",
+      "wildernature:blunderbuss_shoot2"
+
+    ]
+  },
+  "blunderbuss_load": {
+    "subtitle": "subtitles.wildernature.blunderbuss_load",
+    "sounds": [
+      "wildernature:blunderbuss_load"
+    ]
   }
 }

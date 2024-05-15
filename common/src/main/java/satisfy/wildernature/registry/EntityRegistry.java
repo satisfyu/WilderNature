@@ -78,6 +78,12 @@ public class EntityRegistry {
                     .build(new WilderNatureIdentifier("bison").toString())
     );
 
+    public static final RegistrySupplier<EntityType<BulletEntity>> BULLET = create("bullet",
+            () -> EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC)
+                    .sized(0.3125f, 0.3125f).clientTrackingRange(64).updateInterval(2)
+                    .build(new WilderNatureIdentifier("bullet").toString())
+    );
+
 
     public static <T extends EntityType<?>> RegistrySupplier<T> create(final String path, final Supplier<T> type) {
         return ENTITY_TYPES.register(new WilderNatureIdentifier(path), type);

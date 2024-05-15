@@ -34,6 +34,8 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
+                out.accept(ObjectRegistry.BLUNDERBUSS.get());
+                out.accept(ObjectRegistry.AMMO_BAG.get());
 
             })
             .build());

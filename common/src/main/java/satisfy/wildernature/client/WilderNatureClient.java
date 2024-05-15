@@ -9,6 +9,7 @@ import net.minecraft.client.model.SheepFurModel;
 import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.client.model.*;
@@ -24,14 +25,13 @@ public class WilderNatureClient {
     public static final ModelLayerLocation MOSSY_SHEEP_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep"), "main");
 
     public static void preInitClient() {
-        RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get()
-
-        );
+        RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get());
         registerEntityRenderers();
         registerEntityModelLayer();
     }
 
     public static void registerEntityRenderers() {
+        EntityRendererRegistry.register(BULLET, ThrownItemRenderer::new);
         EntityRendererRegistry.register(RED_WOLF, RedWolfRenderer::new);
         EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
         EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
@@ -60,4 +60,3 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
     }
 }
-

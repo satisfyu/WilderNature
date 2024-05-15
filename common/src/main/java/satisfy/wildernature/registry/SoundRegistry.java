@@ -42,7 +42,8 @@ public class SoundRegistry {
     public static final RegistrySupplier<SoundEvent> RED_WOLF_HURT = create("red_wolf_hurt");
     public static final RegistrySupplier<SoundEvent> RED_WOLF_DEATH = create("red_wolf_death");
     public static final RegistrySupplier<SoundEvent> RED_WOLF_AGGRO = create("red_wolf_aggro");
-
+    public static final RegistrySupplier<SoundEvent> BLUNDERBUSS_SHOOT = create("blunderbuss_shoot");
+    public static final RegistrySupplier<SoundEvent> BLUNDERBUSS_LOAD = create("blunderbuss_load");
 
     private static RegistrySupplier<SoundEvent> create(String name) {
         final ResourceLocation id = new WilderNatureIdentifier(name);

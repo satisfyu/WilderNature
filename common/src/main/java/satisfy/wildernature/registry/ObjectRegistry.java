@@ -1,16 +1,13 @@
 package satisfy.wildernature.registry;
 
 import de.cristelknight.doapi.Util;
-import de.cristelknight.doapi.common.block.FacingBlock;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.fuel.FuelRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.InstrumentTags;
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +16,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.DeerTrophyBlock;
 import satisfy.wildernature.item.BisonHornItem;
+import satisfy.wildernature.item.BlunderBussItem;
+import satisfy.wildernature.item.BulletItem;
 import satisfy.wildernature.item.WilderNatureStandardItem;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
@@ -49,6 +48,8 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 
+    public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", () -> new BlunderBussItem(getSettings().durability(104), 0, 1, 16, 1.5));
+    public static final RegistrySupplier<Item> AMMO_BAG = registerItem("ammo_bag", () -> new BulletItem(getSettings(), 6));
 
     /**
      * TODO:
