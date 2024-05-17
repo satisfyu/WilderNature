@@ -24,6 +24,8 @@ public class WilderNatureClient {
     public static final ModelLayerLocation MOSSY_SHEEP_FUR = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep_"), "fur");
     public static final ModelLayerLocation MOSSY_SHEEP_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep"), "main");
 
+    public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
+
     public static void preInitClient() {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get());
         registerEntityRenderers();

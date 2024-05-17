@@ -37,6 +37,8 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.BLUNDERBUSS.get());
                 out.accept(ObjectRegistry.AMMO_BAG.get());
 
+                out.accept(ObjectRegistry.WOLF_FUR_CHESTPLATE.get());
+
             })
             .build());
 

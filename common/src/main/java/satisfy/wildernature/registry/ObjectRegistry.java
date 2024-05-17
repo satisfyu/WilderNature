@@ -8,6 +8,8 @@ import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -15,10 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.DeerTrophyBlock;
-import satisfy.wildernature.item.BisonHornItem;
-import satisfy.wildernature.item.BlunderBussItem;
-import satisfy.wildernature.item.BulletItem;
-import satisfy.wildernature.item.WilderNatureStandardItem;
+import satisfy.wildernature.item.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 import java.util.function.Consumer;
@@ -50,6 +49,8 @@ public class ObjectRegistry {
 
     public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", BlunderBussItem::new);
     public static final RegistrySupplier<Item> AMMO_BAG = registerItem("ammo_bag", () -> new BulletItem(getSettings(), 8));
+
+    public static final RegistrySupplier<Item> WOLF_FUR_CHESTPLATE = registerItem("wolf_fur_chestplate", () -> new WolfFurChestplateItem(ArmorMaterials.LEATHER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 
     /**
      * TODO:
