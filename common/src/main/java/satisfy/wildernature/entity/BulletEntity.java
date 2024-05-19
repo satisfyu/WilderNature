@@ -15,7 +15,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.item.BulletItem;
-import satisfy.wildernature.network.SatisfyPacketHandler;
+import satisfy.wildernature.network.EntityPacketHandler;
 import satisfy.wildernature.registry.EntityRegistry;
 
 public class BulletEntity extends Fireball {
@@ -132,6 +132,6 @@ public class BulletEntity extends Fireball {
 
 	@Override
 	public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return SatisfyPacketHandler.createAddEntityPacket(this);
+		return EntityPacketHandler.createAddEntityPacket(this);
 	}
 }

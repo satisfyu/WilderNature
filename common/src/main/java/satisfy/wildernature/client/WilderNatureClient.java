@@ -20,10 +20,6 @@ import static satisfy.wildernature.registry.ObjectRegistry.*;
 
 @Environment(EnvType.CLIENT)
 public class WilderNatureClient {
-
-    public static final ModelLayerLocation MOSSY_SHEEP_FUR = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep_"), "fur");
-    public static final ModelLayerLocation MOSSY_SHEEP_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep"), "main");
-
     public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
 
     public static void preInitClient() {
@@ -38,8 +34,6 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
         EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
         EntityRendererRegistry.register(SQUIRREL, SquirrelRenderer::new);
-        EntityRendererRegistry.register(MUDDY_PIG, MuddyPigRenderer::new);
-        EntityRendererRegistry.register(MOSSY_SHEEP, MossySheepRenderer::new);
         EntityRendererRegistry.register(DEER, DeerRenderer::new);
         EntityRendererRegistry.register(OWL, OwlRenderer::new);
         EntityRendererRegistry.register(BOAR, BoarRenderer::new);
@@ -52,10 +46,7 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(PelicanModel.LAYER_LOCATION, PelicanModel::getTexturedModelData);
         EntityModelLayerRegistry.register(RaccoonModel.LAYER_LOCATION, RaccoonModel::getTexturedModelData);
         EntityModelLayerRegistry.register(SquirrelModel.LAYER_LOCATION, SquirrelModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(MuddyPigModel.LAYER_LOCATION, MuddyPigModel::getTexturedModelData);
         EntityModelLayerRegistry.register(DeerModel.LAYER_LOCATION, DeerModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(MOSSY_SHEEP_MODEL_LAYER, SheepModel::createBodyLayer);
-        EntityModelLayerRegistry.register(MOSSY_SHEEP_FUR, SheepFurModel::createFurLayer);
         EntityModelLayerRegistry.register(OwlModel.LAYER_LOCATION, OwlModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);

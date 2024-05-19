@@ -34,22 +34,10 @@ public class EntityRegistry {
                     .build(new WilderNatureIdentifier("raccoon").toString())
     );
 
-    public static final RegistrySupplier<EntityType<MossySheepEntity>> MOSSY_SHEEP = create("mossy_sheep",
-            () -> EntityType.Builder.of(MossySheepEntity::new, MobCategory.CREATURE)
-                    .sized(0.9f, 1.3f)
-                    .build(new ResourceLocation(WilderNature.MOD_ID, "mossy_sheep").toString())
-    );
-
     public static final RegistrySupplier<EntityType<SquirrelEntity>> SQUIRREL = create("squirrel",
             () -> EntityType.Builder.of(SquirrelEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
                     .build(new WilderNatureIdentifier("raccoon").toString())
-    );
-
-    public static final RegistrySupplier<EntityType<MuddyPigEntity>> MUDDY_PIG = create("muddy_pig",
-            () -> EntityType.Builder.of(MuddyPigEntity::new, MobCategory.CREATURE)
-                    .sized(0.9f, 1.3f)
-                    .build(new WilderNatureIdentifier("muddy_pig").toString())
     );
 
     public static final RegistrySupplier<EntityType<TurkeyEntity>> TURKEY = create("turkey",
@@ -92,13 +80,11 @@ public class EntityRegistry {
     public static void init() {
         WilderNature.LOGGER.debug("Registering Entities for " + WilderNature.MOD_ID);
         ENTITY_TYPES.register();
-        EntityAttributeRegistry.register(MOSSY_SHEEP, SheepEntity::createMobAttributes);
         EntityAttributeRegistry.register(DEER, DeerEntity::createMobAttributes);
         EntityAttributeRegistry.register(PELICAN, PelicanEntity::createMobAttributes);
         EntityAttributeRegistry.register(RED_WOLF, RedWolfEntity::createMobAttributes);
         EntityAttributeRegistry.register(RACCOON, RaccoonEntity::createMobAttributes);
         EntityAttributeRegistry.register(SQUIRREL, SquirrelEntity::createMobAttributes);
-        EntityAttributeRegistry.register(MUDDY_PIG, MuddyPigEntity::createMobAttributes);
         EntityAttributeRegistry.register(OWL, OwlEntity::createMobAttributes);
         EntityAttributeRegistry.register(BOAR, BoarEntity::createMobAttributes);
         EntityAttributeRegistry.register(BISON, BisonEntity::createMobAttributes);

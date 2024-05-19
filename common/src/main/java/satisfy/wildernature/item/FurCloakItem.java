@@ -6,11 +6,11 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 
-public class WolfFurChestplateItem extends Item implements Equipable {
+public class FurCloakItem extends Item implements Equipable {
 
     protected final ArmorItem.Type type;
 
-    public WolfFurChestplateItem(ArmorMaterial pMaterial, ArmorItem.Type pType, Properties pProperties) {
+    public FurCloakItem(ArmorMaterial pMaterial, ArmorItem.Type pType, Properties pProperties) {
         super(pProperties.defaultDurability(pMaterial.getDurabilityForType(pType)));
         this.type = pType;
     }

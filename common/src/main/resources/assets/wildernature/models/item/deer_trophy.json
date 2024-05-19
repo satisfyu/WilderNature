@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "wildernature:item/muddy_pig_spawn_egg"
+    "layer0": "wildernature:item/deer_trophy"
   }
 }

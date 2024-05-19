@@ -45,9 +45,7 @@ public class WilderNatureFabric implements ModInitializer {
         addMobSpawn(BiomeTags.HAS_WOODLAND_MANSION, EntityType.EVOKER, 4, 1, 2);
         addMobSpawn(BiomeTags.HAS_WOODLAND_MANSION, EntityType.VINDICATOR, 4, 1, 2);
         addMobSpawn(BiomeTags.HAS_WOODLAND_MANSION, EntityType.PILLAGER, 4, 1, 3);
-        addMobSpawn(TagsRegistry.SPAWNS_MUDDY_PIG, EntityRegistry.MUDDY_PIG.get(), 8, 4, 5);
-        addMobSpawn(TagsRegistry.SPAWNS_MOSSY_SHEEP, EntityRegistry.MOSSY_SHEEP.get(), 8, 3, 5);
-        addMobSpawn(TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), 8, 2, 3);
+         addMobSpawn(TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), 8, 2, 3);
         addMobSpawn(TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(), 8, 2, 2);
         addMobSpawn(TagsRegistry.SPAWNS_RED_WOLF, EntityRegistry.RED_WOLF.get(), 10, 3, 4);
         addMobSpawn(TagsRegistry.SPAWNS_OWL, EntityRegistry.OWL.get(), 12, 3, 3);
@@ -71,11 +69,7 @@ public class WilderNatureFabric implements ModInitializer {
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         SpawnPlacements.register(EntityRegistry.PELICAN.get(), SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
-        SpawnPlacements.register(EntityRegistry.MUDDY_PIG.get(), SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         SpawnPlacements.register(EntityRegistry.DEER.get(), SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
-        SpawnPlacements.register(EntityRegistry.MOSSY_SHEEP.get(), SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         SpawnPlacements.register(EntityRegistry.RED_WOLF.get(), SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
