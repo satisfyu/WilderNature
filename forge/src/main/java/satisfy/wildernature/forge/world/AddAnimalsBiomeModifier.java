@@ -38,9 +38,7 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
         registerEntity(EntityRegistry.TURKEY.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.RACCOON.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.PELICAN.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
-        registerEntity(EntityRegistry.MUDDY_PIG.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.DEER.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
-        registerEntity(EntityRegistry.MOSSY_SHEEP.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.RED_WOLF.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.BOAR.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.BISON.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
@@ -57,8 +55,6 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
             addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.EVOKER, 4, 1, 2);
             addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.VINDICATOR, 4, 1, 2);
             addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.PILLAGER, 4, 1, 3);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_MUDDY_PIG, MobCategory.CREATURE, EntityRegistry.MUDDY_PIG.get(), 8, 4, 5);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_MOSSY_SHEEP, MobCategory.CREATURE, EntityRegistry.MOSSY_SHEEP.get(), 8, 3, 5);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RACCOON, MobCategory.CREATURE, EntityRegistry.RACCOON.get(), 8, 2, 3);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_SQUIRREL, MobCategory.CREATURE, EntityRegistry.SQUIRREL.get(), 8, 2, 2);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RED_WOLF, MobCategory.CREATURE, EntityRegistry.RED_WOLF.get(), 10, 3, 4);

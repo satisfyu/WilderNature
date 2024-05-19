@@ -3,9 +3,9 @@ package satisfy.wildernature.player.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -13,52 +13,49 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import satisfy.wildernature.WilderNature;
 
 public class WolfFurChestplateModel<T extends Entity> extends EntityModel<T> {
 
-    // vanilla textures are kept in 'minecraft\textures\models\armor'
-    // we're locating files with an additional folder to ease grouping of related textures
-    public static final ResourceLocation WOLF_FUR_CHESTPLATE_TEXTURE = new ResourceLocation(WilderNature.MOD_ID, "textures/models/armor/wolf_fur/wolf_fur_chestplate.png");
+    public static final ResourceLocation WOLF_FUR_CHESTPLATE_TEXTURE = new ResourceLocation(WilderNature.MOD_ID, "textures/models/armor/fur_cloak.png");
 
-    private final ModelPart chestplate; // this should feel similar to entity models (Bison, Boar, Deer, etc.)
+    private final ModelPart chestplate;
+    private final ModelPart cape;
 
     public WolfFurChestplateModel(ModelPart root) {
-         super(RenderType::entityCutoutNoCull); // method reference
-         // super(resourceLocation -> RenderType.entityCutoutNoCull(resourceLocation)); // lambda
-        // super(resourceLocation -> {
-        //     return RenderType.armorCutoutNoCull(resourceLocation);
-        // }); // also a lambda, these all do the same thing
-
-        // ^^^
-        // super is calling to the SUPER-class of WolfFurChestplateModel, which is the EntityModel class that it's extending.
-        // we're essentially setting how we want to render our model through the class we're extending.
-
+        super(RenderType::entityCutoutNoCull);
         this.chestplate = root.getChild("chestplate");
+        this.cape = this.chestplate.getChild("cape");
     }
 
     @Override
-    public void setupAnim(T entity, float f, float g, float h, float i, float j) {
-        // nothing is animated, currently
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+            float forwardVelocity = (float) livingEntity.getDeltaMovement().horizontalDistance();
+            if (forwardVelocity > 0) {
+                this.cape.xRot = 0.2F + (0.1F * forwardVelocity);
+            } else {
+                this.cape.xRot = 0.0F;
+            }
+        }
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, float redChannel, float greenChannel, float blueChannel, float alphaChannel) {
-        chestplate.render(poseStack, vertexConsumer, packedLightIn, packedOverlayIn, 1.0f, 1.0f, 1.0f, 1.0f); // renders, handles applying overlaid textures as well
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        chestplate.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    // check out LayerDefinitions
-
-    // public for use in the client initializer of each loader
     public static LayerDefinition createBodyLayer() {
-
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
 
-        part.addOrReplaceChild("chestplate", CubeListBuilder.create()
-                .texOffs(0, 0).addBox(0.0f, 0.0f, 0.0f, 16.0f, 16.0f, 16.0f), // create a 16x16 cube, begin drawing the texture from pixel (0, 0)
+        PartDefinition chestplate = part.addOrReplaceChild("chestplate", CubeListBuilder.create().texOffs(0, 0).addBox(-17.0F, -3.0F, -1.0F, 18.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 23).addBox(-12.0F, -4.0F, 4.0F, 8.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(20, 23).addBox(-10.0F, 0.0F, 4.0F, 4.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 3.0F, -2.0F));
 
-                PartPose.offsetAndRotation(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)); // offsetX, offsetY, offsetZ, rotX, rotY, rotZ
+        PartDefinition cape = chestplate.addOrReplaceChild("cape", CubeListBuilder.create().texOffs(0, 8).addBox(-6.0F, 0.0F, -0.5F, 12.0F, 14.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-8.0F, 0.0F, 3.5F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }

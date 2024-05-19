@@ -19,34 +19,27 @@ public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidMo
 
     public WolfFurChestplateLayer(RenderLayerParent<T, M> renderLayerParent) {
         super(renderLayerParent);
-
-        model = new WolfFurChestplateModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WilderNatureClient.WOLF_FUR_CHESTPLATE_LAYER));
+        this.model = new WolfFurChestplateModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WilderNatureClient.WOLF_FUR_CHESTPLATE_LAYER));
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T entity, float f, float g, float h, float j, float k, float l) {
-
-        // we need to check if our player is actually wearing the chestplate
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         boolean shouldRender = false;
 
         for (ItemStack stack : ((Player) entity).getInventory().armor) {
-            // change this to check for the actual item, not against the item's name
             if (stack.getItem().getDescriptionId().toLowerCase().contains("fur")) {
                 shouldRender = true;
             }
         }
 
         if (shouldRender) {
+            this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
             poseStack.pushPose();
-
-            poseStack.translate(0.0d, 0.0d, 0.0d); // helpful for fixing offset issues
-
-            renderColoredCutoutModel(model, getTextureLocation(entity), poseStack, multiBufferSource, i, entity, 1.0f, 1.0f, 1.0f);
-
+            poseStack.translate(0.0d, 0.0d, 0.0d);
+            renderColoredCutoutModel(this.model, getTextureLocation(entity), poseStack, multiBufferSource, i, entity, 1.0f, 1.0f, 1.0f);
             poseStack.popPose();
         }
-
     }
 
     @Override
