@@ -34,11 +34,10 @@ public class WolfFurChestplateModel<T extends Entity> extends EntityModel<T> {
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             float forwardVelocity = (float) livingEntity.getDeltaMovement().horizontalDistance();
-            if (forwardVelocity > 0) {
-                this.cape.xRot = 0.2F + (0.1F * forwardVelocity);
-            } else {
-                this.cape.xRot = 0.0F;
-            }
+            float waveFrequency = 0.1F;
+            float waveAmplitude = 0.05F;
+
+            this.cape.xRot = 0.2F + (0.1F * forwardVelocity) + (waveAmplitude * (float) Math.sin(ageInTicks * waveFrequency));
         }
     }
 
