@@ -28,6 +28,7 @@ public class TabRegistry {
 
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
+                out.accept(ObjectRegistry.LOOT_BAG.get());
 
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
