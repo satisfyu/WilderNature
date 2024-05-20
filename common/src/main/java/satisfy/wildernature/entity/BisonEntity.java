@@ -25,6 +25,7 @@ import satisfy.wildernature.entity.ai.BisonAttackGoal;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 
+import java.io.IOException;
 import java.util.UUID;
 
 //TODO: Add rolling animation / bison doesnt fight back when hit 
@@ -50,7 +51,7 @@ public class BisonEntity extends Animal implements NeutralMob {
     public void tick() {
         super.tick();
         if (this.level().isClientSide()) {
-            setupAnimationStates();
+            this.setupAnimationStates();
         }
         if (this.isAngry() && this.level().getGameTime() - this.getLastHurtTime() > 300) {
             this.setAngry(false);
@@ -65,16 +66,29 @@ public class BisonEntity extends Animal implements NeutralMob {
             --this.idleAnimationTimeout;
         }
 
-        if(this.isAttacking() && attackAnimationTimeout <= 0) {
+
+        if (this.isAttacking() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 80;
             attackAnimationState.start(this.tickCount);
-        } else {
-            --this.attackAnimationTimeout;
+        }
+        else {
+            this.attackAnimationTimeout--;
         }
 
-        if(!this.isAttacking()) {
+        if (!this.isAttacking()) {
             attackAnimationState.stop();
         }
+
+//        if(this.isAttacking() && attackAnimationTimeout <= 0) {
+//            attackAnimationTimeout = 80;
+//            attackAnimationState.start(this.tickCount);
+//        } else {
+//            --this.attackAnimationTimeout;
+//        }
+//
+//        if(!this.isAttacking()) {
+//            attackAnimationState.stop();
+//        }
     }
 
     @Override
@@ -122,7 +136,7 @@ public class BisonEntity extends Animal implements NeutralMob {
         this.entityData.define(LAST_HURT_TIME, 0L);
     }
 
-    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
+    public static @NotNull AttributeSupplier.Builder createMobAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 16.0)
                 .add(Attributes.ATTACK_DAMAGE, 1.5F)
@@ -198,32 +212,41 @@ public class BisonEntity extends Animal implements NeutralMob {
     @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(ANGER_RANGE.sample(this.random));
+        System.out.println(this.getRemainingPersistentAngerTime()); // TODO fix this not hitting
     }
 
-    @Override
-    public boolean isAngryAt(LivingEntity entity) {
-        return entity instanceof Player && this.isAngry() && this.shouldBeAngry();
-    }
+//    @Override
+//    public boolean isAngryAt(LivingEntity entity) {
+//
+//        try (Level level = entity.level()) {
+//            System.out.println(level.isClientSide);
+//        }
+//        catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        } // TODO remove this try-catch
+//
+//        return entity instanceof Player && this.isAngry() && this.shouldBeAngry();
+//    }
+//
+//    private boolean shouldBeAngry() {
+//        if (this.getHealth() < this.getMaxHealth() * 0.25) {
+//            return false;
+//        }
+//        return this.getCommandSenderWorld().getGameTime() - this.getLastHurtTime() < 300;
+//    }
 
-    private boolean shouldBeAngry() {
-        if (this.getHealth() < this.getMaxHealth() * 0.25) {
-            return false;
-        }
-        return this.getCommandSenderWorld().getGameTime() - this.getLastHurtTime() < 300;
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (super.hurt(source, amount)) {
-            if (source.getEntity() instanceof Player) {
-                this.setLastHurtTime(this.level().getGameTime());
-                this.setAngry(true);
-                this.setPersistentAngerTarget(source.getEntity().getUUID());
-            }
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean hurt(DamageSource source, float amount) {
+//        if (super.hurt(source, amount)) {
+//            if (source.getEntity() instanceof Player) {
+//                this.setLastHurtTime(this.level().getGameTime());
+//                this.setAngry(true);
+//                this.setPersistentAngerTarget(source.getEntity().getUUID());
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 
     static class BisonPanicGoal extends PanicGoal {
         public BisonPanicGoal(BisonEntity bison) {
@@ -235,4 +258,5 @@ public class BisonEntity extends Animal implements NeutralMob {
             return this.mob.isBaby() && super.canUse();
         }
     }
+
 }
