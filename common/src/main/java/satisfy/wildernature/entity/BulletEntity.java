@@ -20,10 +20,12 @@ import satisfy.wildernature.registry.EntityRegistry;
 
 public class BulletEntity extends Fireball {
 	private static final double STOP_TRESHOLD = 0.01;
+	private static final double GRAVITY = 0.05;
 	private double damage = 1;
 	private boolean ignoreInvulnerability = false;
 	private double knockbackStrength = 0;
 	private int ticksSinceFired;
+	private Vec3 initialPosition;
 
 	public BulletEntity(EntityType<? extends Fireball> entityType, Level level) {
 		super(entityType, level);
@@ -32,18 +34,31 @@ public class BulletEntity extends Fireball {
 	public BulletEntity(Level worldIn, LivingEntity shooter) {
 		this(worldIn, shooter, 0, 0, 0);
 		setPos(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
+		initialPosition = new Vec3(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
 	}
 
 	public BulletEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
 		super(EntityRegistry.BULLET.get(), shooter, accelX, accelY, accelZ, worldIn);
+		initialPosition = new Vec3(shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
 	}
 
 	@Override
 	public void tick() {
+		if (initialPosition == null) {
+			initialPosition = this.position();
+		}
+
 		ticksSinceFired++;
 		if (ticksSinceFired > 100 || getDeltaMovement().lengthSqr() < STOP_TRESHOLD) {
 			remove(RemovalReason.KILLED);
 		}
+
+		double distanceTraveled = this.position().distanceTo(initialPosition);
+		if (distanceTraveled > 20) {
+			Vec3 movement = getDeltaMovement();
+			setDeltaMovement(movement.add(0, -GRAVITY, 0));
+		}
+
 		super.tick();
 	}
 

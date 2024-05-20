@@ -13,6 +13,7 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.particles.ParticleTypes;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.entity.BulletEntity;
 import satisfy.wildernature.registry.SoundRegistry;
@@ -22,8 +23,8 @@ import java.util.function.Predicate;
 public class BlunderBussItem extends ProjectileWeaponItem {
 	private static final int DEFAULT_BONUS_DAMAGE = 0;
 	private static final double DEFAULT_DAMAGE_MULTIPLIER = 1.0;
-	private static final int DEFAULT_FIRE_DELAY = 24;
-	private static final double DEFAULT_INACCURACY = 1.75;
+	private static final int DEFAULT_FIRE_DELAY = 30;
+	private static final double DEFAULT_INACCURACY = 2.25;
 	private static final double DEFAULT_PROJECTILE_SPEED = 4.0;
 	private static final int DEFAULT_DURABILITY = 128;
 	private static final Ingredient DEFAULT_REPAIR_MATERIAL = Ingredient.of(Items.IRON_INGOT);
@@ -73,6 +74,12 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 				player.getCooldowns().addCooldown(this, getFireDelay());
 
 				if (world instanceof ServerLevel serverWorld) {
+					double particleX = player.getX() + player.getLookAngle().x * 2.5;
+					double particleY = player.getY() + player.getEyeHeight() - 0.3;
+					double particleZ = player.getZ() + player.getLookAngle().z * 1.5;
+
+					serverWorld.sendParticles(ParticleTypes.SMALL_FLAME, particleX, particleY, particleZ, 5, 0.1, 0.1, 0.1, 0.01);
+					serverWorld.sendParticles(ParticleTypes.SMOKE, particleX, particleY, particleZ, 10, 0.1, 0.1, 0.1, 0.01);
 					serverWorld.getServer().tell(new TickTask(serverWorld.getServer().getTickCount() + 40, () -> world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.BLUNDERBUSS_LOAD.get(), SoundSource.PLAYERS, 0.5F, 1.0F)));
 				}
 
@@ -83,7 +90,6 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 		}
 		return InteractionResultHolder.pass(gun);
 	}
-
 
 
 	protected void shoot(Level world, Player player, ItemStack ammo, BulletItem bulletItem) {
