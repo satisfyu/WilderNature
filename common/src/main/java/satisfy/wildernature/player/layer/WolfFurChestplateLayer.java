@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.client.WilderNatureClient;
 import satisfy.wildernature.player.model.WolfFurChestplateModel;
 
@@ -43,7 +44,7 @@ public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidMo
     }
 
     @Override
-    protected ResourceLocation getTextureLocation(T entity) {
+    protected @NotNull ResourceLocation getTextureLocation(T entity) {
         return WolfFurChestplateModel.WOLF_FUR_CHESTPLATE_TEXTURE;
     }
 }

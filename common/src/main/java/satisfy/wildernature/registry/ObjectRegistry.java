@@ -38,7 +38,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> COOKED_TURKEY_MEAT = registerItem("cooked_turkey_meat", () -> new Item(getSettings().food(Foods.COOKED_CHICKEN)));
     public static final RegistrySupplier<Item> PELICAN_MEAT = registerItem("pelican_meat", () -> new Item(getSettings().food(Foods.SALMON)));
     public static final RegistrySupplier<Item> COOKED_PELICAN_MEAT = registerItem("cooked_pelican_meat", () -> new Item(getSettings().food(Foods.COOKED_SALMON)));
-    public static final RegistrySupplier<Item> CHESTNUT = registerItem("chestnut", () -> new Item(getSettings().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).fast().build())));
+    public static final RegistrySupplier<Item> HAZELNUT = registerItem("hazelnut", () -> new Item(getSettings().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).fast().build())));
 
     public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", BlunderBussItem::new);
     public static final RegistrySupplier<Item> AMMO_BAG = registerItem("ammo_bag", () -> new BulletItem(getSettings(), 8));

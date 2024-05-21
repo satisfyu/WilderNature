@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "wildernature:item/chestnut"
+    "layer0": "wildernature:item/hazelnut"
   }
 }

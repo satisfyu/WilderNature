@@ -39,7 +39,7 @@ public class LootBagItem extends Item {
         } else if (randomNumber < 97) {
             spawnedItem = new ItemStack(Items.APPLE);
         } else {
-            spawnedItem = new ItemStack(ObjectRegistry.CHESTNUT.get());
+            spawnedItem = new ItemStack(ObjectRegistry.HAZELNUT.get());
         }
 
         world.addFreshEntity(new ItemEntity(world, user.getX(), user.getY(), user.getZ(), spawnedItem));

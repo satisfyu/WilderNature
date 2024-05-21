@@ -31,8 +31,7 @@ public class WolfFurChestplateModel<T extends Entity> extends EntityModel<T> {
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        if (entity instanceof LivingEntity livingEntity) {
             float forwardVelocity = (float) livingEntity.getDeltaMovement().horizontalDistance();
             float waveFrequency = 0.1F;
             float waveAmplitude = 0.05F;
@@ -46,15 +45,16 @@ public class WolfFurChestplateModel<T extends Entity> extends EntityModel<T> {
         chestplate.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
+    @SuppressWarnings("unused")
     public static LayerDefinition createBodyLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
 
-        PartDefinition chestplate = part.addOrReplaceChild("chestplate", CubeListBuilder.create().texOffs(0, 0).addBox(-17.0F, -3.0F, -1.0F, 18.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 23).addBox(-12.0F, -4.0F, 4.0F, 8.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(20, 23).addBox(-10.0F, 0.0F, 4.0F, 4.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 3.0F, -2.0F));
+        PartDefinition chestplate = part.addOrReplaceChild("chestplate", CubeListBuilder.create().texOffs(0, 0).addBox(-17.0F, -3.5F, -1.0F, 18.0F, 4.0F, 6.0F, new CubeDeformation(0F))
+                .texOffs(23, 22).addBox(-12.0F, -4.5F, 5.0F, 8.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 25).addBox(-11.0F, -0.5F, 5.0F, 6.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 2.5F, -2.0F));
 
-        PartDefinition cape = chestplate.addOrReplaceChild("cape", CubeListBuilder.create().texOffs(0, 8).addBox(-6.0F, 0.0F, -0.5F, 12.0F, 14.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-8.0F, 0.0F, 3.5F));
+        PartDefinition cape = chestplate.addOrReplaceChild("cape", CubeListBuilder.create().texOffs(0, 10).addBox(-6.0F, 0.5F, 0.5F, 12.0F, 14.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-8.0F, -0.5F, 3.5F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }

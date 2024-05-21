@@ -24,7 +24,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.COOKED_TURKEY_MEAT.get());
                 out.accept(ObjectRegistry.PELICAN_MEAT.get());
                 out.accept(ObjectRegistry.COOKED_PELICAN_MEAT.get());
-                out.accept(ObjectRegistry.CHESTNUT.get());
+                out.accept(ObjectRegistry.HAZELNUT.get());
 
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
