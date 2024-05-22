@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import satisfy.wildernature.registry.SoundRegistry;
 import satisfy.wildernature.util.WilderNatureUtil;
 
 import java.util.HashMap;
@@ -35,15 +38,15 @@ public class BisonTrophyBlock extends WallDecorationBlock {
         shape = Shapes.join(shape, Shapes.box(0.28125, 0.125, -0.1875, 0.71875, 0.625, 0.125), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.84375, 0.5625, 0.375, 1.15625, 0.75, 0.4375), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0, 0.625, 0.5, 0.1875, 1.25, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.8125, 0.625, 0.5, 1, 1.25, 0.6875), BooleanOp.OR);        return shape;
+        shape = Shapes.join(shape, Shapes.box(0.8125, 0.625, 0.5, 1, 1.25, 0.6875), BooleanOp.OR);
+        return shape;
     };
     public static final Map<Direction, VoxelShape> SHAPE = Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
             map.put(direction, WilderNatureUtil.rotateShape(Direction.NORTH, direction, voxelShapeSupplier.get()));
         }
     });
-
-
+    private final Map<Player, Long> lastUseTime = new HashMap<>();
 
     public BisonTrophyBlock(Properties properties) {
         super(properties);
@@ -58,6 +61,15 @@ public class BisonTrophyBlock extends WallDecorationBlock {
     @SuppressWarnings("deprecation")
     public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide) {
+            long currentTime = System.currentTimeMillis();
+            Long lastUsed = lastUseTime.getOrDefault(player, 0L);
+            if (currentTime - lastUsed < 180000) {
+                world.playSound(null, pos, SoundEvents.BEACON_POWER_SELECT, SoundSource.BLOCKS, 0.25f, 0.5f);
+                return InteractionResult.FAIL;
+            }
+            lastUseTime.put(player, currentTime);
+            world.playSound(null, pos, SoundRegistry.BISON_ANGRY.get(), SoundSource.BLOCKS, 0.25f, 1.0f);
+
             ServerLevel serverLevel = (ServerLevel) world;
 
             for (int radius = 0; radius <= 20; radius++) {
@@ -66,10 +78,6 @@ public class BisonTrophyBlock extends WallDecorationBlock {
                     double offsetX = radius * Math.cos(radians);
                     double offsetZ = radius * Math.sin(radians);
                     serverLevel.sendParticles(ParticleTypes.CLOUD, pos.getX() + 0.5 + offsetX, pos.getY() + 0.5, pos.getZ() + 0.5 + offsetZ, 1, 0.0, 0.0, 0.0, 0.0);
-                }
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException ignored) {
                 }
             }
 

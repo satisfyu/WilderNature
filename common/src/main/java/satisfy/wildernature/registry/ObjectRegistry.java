@@ -66,9 +66,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> COMPLETIONIST_BANNER = registerWithItem("completionist_banner", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> COMPLETIONIST_WALL_BANNER = registerWithoutItem("completionist_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
 
-    //TODO:
-    // * Add a Cooldown for TrophyBlocks
-
+    
     /**
      * Ideas for Items:
      * Animal Compendium
