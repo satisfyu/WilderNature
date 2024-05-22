@@ -32,6 +32,7 @@
     "doapi": ">=1.2.10"
   },
   "mixins": [
+    "wildernature-common.mixins.json",
     "wildernature.fabric.mixins.json"
   ]
 }

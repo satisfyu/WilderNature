@@ -5,6 +5,9 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class FurCloakItem extends Item implements Equipable {
 
@@ -16,7 +19,16 @@ public class FurCloakItem extends Item implements Equipable {
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
+    public @NotNull EquipmentSlot getEquipmentSlot() {
         return this.type.getSlot();
+    }
+
+    public static boolean isEquippedBy(Player player) {
+        for (ItemStack itemStack : player.getArmorSlots()) {
+            if (itemStack.getItem() instanceof FurCloakItem) {
+                return true;
+            }
+        }
+        return false;
     }
 }
