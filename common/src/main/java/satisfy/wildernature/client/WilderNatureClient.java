@@ -39,7 +39,7 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(BOAR, BoarRenderer::new);
         EntityRendererRegistry.register(BISON, BisonRenderer::new);
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
-        BlockEntityRendererRegistry.register(TAPESTRY.get(), CompletionistBannerRenderer::new);
+        BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
     }
 
     public static void registerEntityModelLayer() {

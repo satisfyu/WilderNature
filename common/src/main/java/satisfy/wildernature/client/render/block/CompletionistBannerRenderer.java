@@ -6,7 +6,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -22,7 +25,7 @@ import satisfy.wildernature.block.CompletionistWallBannerBlock;
 import satisfy.wildernature.block.entity.CompletionistBannerEntity;
 
 public class CompletionistBannerRenderer implements BlockEntityRenderer<CompletionistBannerEntity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "tapestry"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "banner"), "main");
 
     public static final String FLAG = "flag";
     private static final String POLE = "pole";
@@ -42,18 +45,21 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
         partDefinition.addOrReplaceChild(FLAG, CubeListBuilder.create()
-                .texOffs(0, 0).addBox(-10.0F, 0.0F, -1.0F, 20.0F, 40.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -44.0F, 0.0F, -0.0349F, 0.0F, 0.0F));
-
+                        .texOffs(0, 0).addBox(-10.0f, 0.0f, -2.0f, 20.0f, 35.0f, 1.0f)
+                        .texOffs(0, 36).addBox(-10.0F, 35.0F, -2.0F, 4.0F, 5.0F, 1.0F)
+                        .texOffs(10, 36).addBox(-2.0F, 35.0F, -2.0F, 4.0F, 5.0F, 1.0F)
+                        .texOffs(20, 36).addBox(6.0F, 35.0F, -2.0F, 4.0F, 5.0F, 1.0F)
+                , PartPose.ZERO);
         partDefinition.addOrReplaceChild(POLE, CubeListBuilder.create().texOffs(44, 0).addBox(-1.0f, -30.0f, -1.0f, 2.0f, 42.0f, 2.0f), PartPose.ZERO);
-        partDefinition.addOrReplaceChild(BAR, CubeListBuilder.create().texOffs(0, 42).addBox(-10.0f, -32.0f, -0.0f, 20.0f, 2.0f, 2.0f), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(BAR, CubeListBuilder.create().texOffs(0, 42).addBox(-10.0f, -32.0f, -1.0f, 20.0f, 2.0f, 2.0f), PartPose.ZERO);
         return LayerDefinition.create(meshDefinition, 64, 64);
     }
 
     @Override
-    public void render(CompletionistBannerEntity entity, float f, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j) {
+    public void render(CompletionistBannerEntity tapestry, float f, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j) {
         long time;
         float scale = 0.66f;
-        boolean inInventory = entity.getLevel() == null;
+        boolean inInventory = tapestry.getLevel() == null;
 
         poseStack.pushPose();
         if (inInventory) {
@@ -61,22 +67,20 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
             poseStack.translate(0.5, 0.5, 0.5);
             this.pole.visible = true;
         } else {
-            time = entity.getLevel().getGameTime();
-            BlockState blockState = entity.getBlockState();
+            time = tapestry.getLevel().getGameTime();
+            BlockState blockState = tapestry.getBlockState();
             float rotation;
-            if (blockState.getBlock() instanceof CompletionistWallBannerBlock) {
+            if (!(blockState.getBlock() instanceof CompletionistWallBannerBlock)) {
+                poseStack.translate(0.5, 0.5, 0.5);
+                rotation = (float) (-blockState.getValue(CompletionistBannerBlock.ROTATION) * 360) / 16.0f;
+                poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
+                this.pole.visible = true;
+            } else {
                 poseStack.translate(0.5, -0.1666666716337204, 0.5);
                 rotation = -blockState.getValue(CompletionistWallBannerBlock.FACING).toYRot();
                 poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
                 poseStack.translate(0.0, -0.3125, -0.4375);
                 this.pole.visible = false;
-            } else {
-                poseStack.translate(0.5, 0.5, 0.5);
-                if (blockState.hasProperty(CompletionistBannerBlock.ROTATION)) {
-                    rotation = (float) (-blockState.getValue(CompletionistBannerBlock.ROTATION) * 360) / 16.0f;
-                    poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
-                }
-                this.pole.visible = true;
             }
         }
         poseStack.pushPose();
@@ -84,18 +88,19 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
         VertexConsumer vertexConsumer = ModelBakery.BANNER_BASE.buffer(multiBufferSource, RenderType::entitySolid);
         this.pole.render(poseStack, vertexConsumer, i, j);
         this.bar.render(poseStack, vertexConsumer, i, j);
-        BlockPos blockPos = entity.getBlockPos();
+        BlockPos blockPos = tapestry.getBlockPos();
         float k = ((float) Math.floorMod(blockPos.getX() * 7L + blockPos.getY() * 9L + blockPos.getZ() * 13L + time, 100L) + f) / 100.0f;
         this.flag.xRot = (-0.0125f + 0.01f * Mth.cos((float) Math.PI * 2 * k)) * (float) Math.PI;
         this.flag.y = -32.0f;
-        renderStandard(poseStack, multiBufferSource, i, j, this.flag, entity);
+        renderTapestry(poseStack, multiBufferSource, i, j, this.flag, tapestry);
         poseStack.popPose();
         poseStack.popPose();
     }
 
-    public static void renderStandard(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, ModelPart modelPart, CompletionistBannerEntity entity) {
-        ResourceLocation location = ((CompletionistBannerBlock) entity.getBlockState().getBlock()).getRenderTexture();
+    public static void renderTapestry(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, ModelPart modelPart, CompletionistBannerEntity tapestry) {
+        ResourceLocation location = ((CompletionistBannerBlock) tapestry.getBlockState().getBlock()).getRenderTexture();
         VertexConsumer vc = multiBufferSource.getBuffer(RenderType.entitySolid(location));
+
         modelPart.render(poseStack, vc, i, j);
     }
 }

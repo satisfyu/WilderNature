@@ -18,7 +18,7 @@ public class EntityRegistry {
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(WilderNature.MOD_ID, Registries.ENTITY_TYPE);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
 
-    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> TAPESTRY = createBlockEntity("tapestry",
+    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
             () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.COMPLETIONIST_BANNER.get(), ObjectRegistry.COMPLETIONIST_WALL_BANNER.get()).build(null));
 
     public static final RegistrySupplier<EntityType<RedWolfEntity>> RED_WOLF = createEntity("red_wolf",
