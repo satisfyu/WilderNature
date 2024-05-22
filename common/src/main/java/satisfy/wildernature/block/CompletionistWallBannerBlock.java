@@ -21,66 +21,60 @@ import java.util.Map;
 
 public class CompletionistWallBannerBlock extends CompletionistBannerBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(0.0, 0.0, 14.0, 16.0, 12.5, 16.0), Direction.SOUTH, Block.box(0.0, 0.0, 0.0, 16.0, 12.5, 2.0), Direction.WEST, Block.box(14.0, 0.0, 0.0, 16.0, 12.5, 16.0), Direction.EAST, Block.box(0.0, 0.0, 0.0, 2.0, 12.5, 16.0)));
+    private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(Direction.SOUTH, Block.box(0.0, 0.0, 14.0, 16.0, 12.5, 16.0), Direction.NORTH, Block.box(0.0, 0.0, 0.0, 16.0, 12.5, 2.0), Direction.EAST, Block.box(14.0, 0.0, 0.0, 16.0, 12.5, 16.0), Direction.WEST, Block.box(0.0, 0.0, 0.0, 2.0, 12.5, 16.0)));
 
     public CompletionistWallBannerBlock(Properties properties) {
         super(properties);
     }
 
-    @Override
     protected void makeDefaultState() {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    @Override
     public @NotNull String getDescriptionId() {
         return this.asItem().getDescriptionId();
     }
 
-    @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return levelReader.getBlockState(blockPos.relative(blockState.getValue(FACING).getOpposite())).isSolid();
+        return levelReader.getBlockState(blockPos.relative(blockState.getValue(FACING))).isSolid();
     }
 
-    @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        if (direction == blockState.getValue(FACING).getOpposite() && !blockState.canSurvive(levelAccessor, blockPos)) {
+        if (direction == blockState.getValue(FACING) && !blockState.canSurvive(levelAccessor, blockPos)) {
             return Blocks.AIR.defaultBlockState();
         }
         return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
     }
 
-    @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return SHAPES.get(blockState.getValue(FACING));
     }
 
-    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockState = this.defaultBlockState();
         Level level = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
 
         for (Direction direction : context.getNearestLookingDirections()) {
-            if (!direction.getAxis().isHorizontal() || !(blockState = blockState.setValue(FACING, direction.getOpposite())).canSurvive(level, blockPos)) {
-                continue;
+            if (direction.getAxis().isHorizontal()) {
+                Direction oppositeDirection = direction.getOpposite();
+                BlockState oppositeState = blockState.setValue(FACING, oppositeDirection);
+                if (oppositeState.canSurvive(level, blockPos)) {
+                    return oppositeState;
+                }
             }
-            return blockState;
         }
         return null;
     }
 
-    @Override
     public @NotNull BlockState rotate(BlockState blockState, Rotation rotation) {
         return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
     }
 
-    @Override
     public @NotNull BlockState mirror(BlockState blockState, Mirror mirror) {
         return blockState.rotate(mirror.getRotation(blockState.getValue(FACING)));
     }
 
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
