@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.block.BisonTrophyBlock;
 import satisfy.wildernature.block.DeerTrophyBlock;
 import satisfy.wildernature.block.RedWolfTrophyBlock;
 import satisfy.wildernature.item.*;
@@ -52,8 +53,7 @@ public class ObjectRegistry {
 
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistrySupplier<Block> RED_WOLF_TROPHY = registerWithItem("red_wolf_trophy", () -> new RedWolfTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
-    //TODO
-    public static final RegistrySupplier<Block> BISON_TROPHY = registerWithItem("bison_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistrySupplier<Block> BISON_TROPHY = registerWithItem("bison_trophy", () -> new BisonTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     //public static final RegistrySupplier<Item> WILDERNATURE_STANDARD = registerItem("wildernature_standard", () -> new WilderNatureStandardItem(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
 
     //Spawn Eggs

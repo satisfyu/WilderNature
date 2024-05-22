@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "wildernature:block/bison_trophy",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "wildernature:block/bison_trophy"
+    },
+    "facing=south": {
+      "model": "wildernature:block/bison_trophy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "wildernature:block/bison_trophy",
+      "y": 270
+    }
+  }
+}
