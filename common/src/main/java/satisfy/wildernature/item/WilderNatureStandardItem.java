@@ -1,5 +1,5 @@
 package satisfy.wildernature.item;
-
+/*
 import de.cristelknight.doapi.common.item.StandardItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -27,4 +27,4 @@ public class WilderNatureStandardItem extends StandardItem {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("tooltip.wildernature.thankyou_3").withStyle(ChatFormatting.GOLD));
     }
-}
+}*/

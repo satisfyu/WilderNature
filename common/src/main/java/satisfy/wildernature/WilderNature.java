@@ -1,14 +1,12 @@
 package satisfy.wildernature;
 
-import dev.architectury.event.events.common.InteractionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.ObjectRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 import satisfy.wildernature.registry.TabRegistry;
-import satisfy.wildernature.util.Truffling;
-import satisfy.wildernature.util.WilderNatureProperties;
+import satisfy.wildernature.util.WilderNatureUtil;
 
 public class WilderNature {
     public static final String MOD_ID = "wildernature";
@@ -19,7 +17,7 @@ public class WilderNature {
         EntityRegistry.init();
         TabRegistry.init();
         SoundRegistry.init();
-        WilderNatureProperties.init();
+        WilderNatureUtil.init();
     }
 
     public static void commonInit() {

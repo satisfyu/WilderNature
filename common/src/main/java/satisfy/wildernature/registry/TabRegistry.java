@@ -39,7 +39,7 @@ public class TabRegistry {
 
                 out.accept(ObjectRegistry.FUR_CLOAK.get());
 
-                out.accept(ObjectRegistry.WILDERNATURE_STANDARD.get());
+                //out.accept(ObjectRegistry.WILDERNATURE_STANDARD.get());
                 out.accept(ObjectRegistry.DEER_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RED_WOLF_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RACCOON_SPAWN_EGG.get());

@@ -3,11 +3,10 @@ package satisfy.wildernature.block;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,6 +19,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
+import satisfy.wildernature.registry.TagsRegistry;
 import satisfy.wildernature.util.WilderNatureUtil;
 
 import java.util.HashMap;
@@ -27,14 +27,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class DeerTrophyBlock extends WallDecorationBlock {
+public class RedWolfTrophyBlock extends WallDecorationBlock {
     private static final Supplier<VoxelShape> voxelShapeSupplier = () -> {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0.1875, 0.9375, 1, 0.8125, 1), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.3125, 0.3125, 0.5, 0.6875, 0.625, 0.9375), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.375, 0.375, 0.3125, 0.625, 0.5625, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0.4375, 0.8125, 0.3125, 0.625, 0.875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.6875, 0.4375, 0.8125, 0.875, 0.625, 0.875), BooleanOp.OR);        return shape;
+        shape = Shapes.join(shape, Shapes.box(0.25, 0.28125, 0.5625, 0.75, 0.65625, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.5625, 0.65625, 0.8125, 0.75, 0.90625, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.25, 0.65625, 0.8125, 0.4375, 0.90625, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.375, 0.28125, 0.375, 0.625, 0.46875, 0.5625), BooleanOp.OR);
+        return shape;
     };
     public static final Map<Direction, VoxelShape> SHAPE = Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
@@ -42,7 +43,7 @@ public class DeerTrophyBlock extends WallDecorationBlock {
         }
     });
 
-    public DeerTrophyBlock(Properties properties) {
+    public RedWolfTrophyBlock(Properties properties) {
         super(properties);
     }
 
@@ -57,11 +58,22 @@ public class DeerTrophyBlock extends WallDecorationBlock {
         if (!world.isClientSide) {
             Vector3d center = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
             double range = 32.0;
-            List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, new AABB(center.x - range, center.y - range, center.z - range, center.x + range, center.y + range, center.z + range));
-            for (LivingEntity entity : entities) {
-                entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 600, 0));
+            AABB boundingBox = new AABB(center.x - range, center.y - range, center.z - range, center.x + range, center.y + range, center.z + range);
+
+            List<BlockPos> blockPositions = BlockPos.betweenClosedStream(boundingBox).map(BlockPos::immutable).toList();
+            for (BlockPos blockPos : blockPositions) {
+                BlockState blockState = world.getBlockState(blockPos);
+                if (blockState.is(TagsRegistry.MAKES_BLOCK_GLOW)) {
+                    AreaEffectCloud effectCloud = new AreaEffectCloud(world, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+                    effectCloud.setRadius(0.5F);
+                    effectCloud.setDuration(600);
+                    effectCloud.setWaitTime(0);
+                    effectCloud.setParticle(ParticleTypes.GLOW);
+                    world.addFreshEntity(effectCloud);
+                }
             }
         }
         return InteractionResult.sidedSuccess(world.isClientSide);
     }
 }
+

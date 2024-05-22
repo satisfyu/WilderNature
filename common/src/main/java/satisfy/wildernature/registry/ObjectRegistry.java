@@ -1,6 +1,5 @@
 package satisfy.wildernature.registry;
 
-import de.cristelknight.doapi.Util;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.fuel.FuelRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -18,8 +17,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.DeerTrophyBlock;
+import satisfy.wildernature.block.RedWolfTrophyBlock;
 import satisfy.wildernature.item.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
+import satisfy.wildernature.util.WilderNatureUtil;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -50,13 +51,12 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
 
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
-    //TODO
-    public static final RegistrySupplier<Block> RED_WOLF_TROPHY = registerWithItem("red_wolf_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistrySupplier<Block> RED_WOLF_TROPHY = registerWithItem("red_wolf_trophy", () -> new RedWolfTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     //TODO
     public static final RegistrySupplier<Block> BISON_TROPHY = registerWithItem("bison_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    //public static final RegistrySupplier<Item> WILDERNATURE_STANDARD = registerItem("wildernature_standard", () -> new WilderNatureStandardItem(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
 
     //Spawn Eggs
-    public static final RegistrySupplier<Item> WILDERNATURE_STANDARD = registerItem("wildernature_standard", () -> new WilderNatureStandardItem(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
     public static final RegistrySupplier<Item> DEER_SPAWN_EGG = registerItem("deer_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.DEER, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> RED_WOLF_SPAWN_EGG = registerItem("red_wolf_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.RED_WOLF, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> RACCOON_SPAWN_EGG = registerItem("raccoon_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.RACCOON, -1, -1, getSettings()));
@@ -74,9 +74,6 @@ public class ObjectRegistry {
      * Truffle
      * Animal Compendium
      * Trophies? - Can be placed on Walls. Only for Deers, Red Wolfs, Bisons and maybe Boars?
-
-     * A Red Wolf Fur Cloak - adds a 'Fear' Effect to aggressive Animals and Creepers
-     * Raccoons LootBag - rare drop when killing a raccoon - contains apples, bones, bonemeal, seeds
      * Truffle - will be dropped on the floor (low chance) when boars eating grass block - combine it with any edible item to give it 20% more hunger / saturation,
      -> Theres a Mod thats already have a functionality like this: The Salt Mod. I've just looked at the code and... its really complicated
 
@@ -124,14 +121,14 @@ public class ObjectRegistry {
     }
 
     public static <T extends Block> RegistrySupplier<T> registerWithItem(String name, Supplier<T> block) {
-        return Util.registerWithItem(BLOCKS, BLOCK_REGISTRAR, ITEMS, ITEM_REGISTRAR, new WilderNatureIdentifier(name), block);
+        return WilderNatureUtil.registerWithItem(BLOCKS, BLOCK_REGISTRAR, ITEMS, ITEM_REGISTRAR, new WilderNatureIdentifier(name), block);
     }
 
     public static <T extends Block> RegistrySupplier<T> registerWithoutItem(String path, Supplier<T> block) {
-        return Util.registerWithoutItem(BLOCKS, BLOCK_REGISTRAR, new WilderNatureIdentifier(path), block);
+        return WilderNatureUtil.registerWithoutItem(BLOCKS, BLOCK_REGISTRAR, new WilderNatureIdentifier(path), block);
     }
 
     public static <T extends Item> RegistrySupplier<T> registerItem(String path, Supplier<T> itemSupplier) {
-        return Util.registerItem(ITEMS, ITEM_REGISTRAR, new WilderNatureIdentifier(path), itemSupplier);
+        return WilderNatureUtil.registerItem(ITEMS, ITEM_REGISTRAR, new WilderNatureIdentifier(path), itemSupplier);
     }
 }
