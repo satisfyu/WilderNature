@@ -8,17 +8,14 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import satisfy.wildernature.WilderNature;
-import satisfy.wildernature.block.BisonTrophyBlock;
-import satisfy.wildernature.block.DeerTrophyBlock;
-import satisfy.wildernature.block.RedWolfTrophyBlock;
+import satisfy.wildernature.block.*;
 import satisfy.wildernature.item.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 import satisfy.wildernature.util.WilderNatureUtil;
@@ -54,7 +51,6 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistrySupplier<Block> RED_WOLF_TROPHY = registerWithItem("red_wolf_trophy", () -> new RedWolfTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistrySupplier<Block> BISON_TROPHY = registerWithItem("bison_trophy", () -> new BisonTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
-    //public static final RegistrySupplier<Item> WILDERNATURE_STANDARD = registerItem("wildernature_standard", () -> new WilderNatureStandardItem(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
 
     //Spawn Eggs
     public static final RegistrySupplier<Item> DEER_SPAWN_EGG = registerItem("deer_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.DEER, -1, -1, getSettings()));
@@ -67,15 +63,16 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BISON_SPAWN_EGG = registerItem("bison_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.BISON, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
 
+    public static final RegistrySupplier<Block> COMPLETIONIST_BANNER = registerWithItem("completionist_banner", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
+    public static final RegistrySupplier<Block> COMPLETIONIST_WALL_BANNER = registerWithoutItem("completionist_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
+
+    //TODO:
+    // * CompletionistWallBanner doesn't place properly
+    // * Add a Cooldown for TrophyBlocks
 
     /**
-     * TODO:
      * Ideas for Items:
-     * Truffle
      * Animal Compendium
-     * Trophies? - Can be placed on Walls. Only for Deers, Red Wolfs, Bisons and maybe Boars?
-     * Truffle - will be dropped on the floor (low chance) when boars eating grass block - combine it with any edible item to give it 20% more hunger / saturation,
-     -> Theres a Mod thats already have a functionality like this: The Salt Mod. I've just looked at the code and... its really complicated
 
      *  Ideas for Animals:
      * Ram, rideable - just like a slow Horse with LOTS of health
@@ -107,6 +104,14 @@ public class ObjectRegistry {
 
     public static void commonInit() {
         FuelRegistry.register(1400, FISH_OIL.get());
+    }
+
+    public static BlockBehaviour.Properties properties(float strength) {
+        return properties(strength, strength);
+    }
+
+    public static BlockBehaviour.Properties properties(float breakSpeed, float explosionResist) {
+        return BlockBehaviour.Properties.of().strength(breakSpeed, explosionResist);
     }
 
     private static Item.Properties getSettings(Consumer<Item.Properties> consumer) {

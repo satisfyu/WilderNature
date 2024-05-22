@@ -24,7 +24,6 @@ import satisfy.wildernature.util.WilderNatureUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class BisonTrophyBlock extends WallDecorationBlock {
@@ -44,7 +43,6 @@ public class BisonTrophyBlock extends WallDecorationBlock {
         }
     });
 
-    private final Map<Player, Long> lastUseTime = new ConcurrentHashMap<>();
 
 
     public BisonTrophyBlock(Properties properties) {
@@ -57,7 +55,7 @@ public class BisonTrophyBlock extends WallDecorationBlock {
     }
 
     @Override
-    @SuppressWarnings("all")
+    @SuppressWarnings("deprecation")
     public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide) {
             ServerLevel serverLevel = (ServerLevel) world;
@@ -71,8 +69,7 @@ public class BisonTrophyBlock extends WallDecorationBlock {
                 }
                 try {
                     Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ignored) {
                 }
             }
 

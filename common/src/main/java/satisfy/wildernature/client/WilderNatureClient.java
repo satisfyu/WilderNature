@@ -2,17 +2,16 @@ package satisfy.wildernature.client;
 
 import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
+import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.SheepFurModel;
-import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
-import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.client.model.*;
+import satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
 import satisfy.wildernature.client.render.entity.*;
 
 import static satisfy.wildernature.registry.EntityRegistry.*;
@@ -21,6 +20,7 @@ import static satisfy.wildernature.registry.ObjectRegistry.*;
 @Environment(EnvType.CLIENT)
 public class WilderNatureClient {
     public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
+
 
     public static void preInitClient() {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get());
@@ -39,6 +39,7 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(BOAR, BoarRenderer::new);
         EntityRendererRegistry.register(BISON, BisonRenderer::new);
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
+        BlockEntityRendererRegistry.register(TAPESTRY.get(), CompletionistBannerRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
@@ -51,5 +52,6 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
     }
 }

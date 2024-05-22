@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WilderNatureStandardItem extends StandardItem {
     public WilderNatureStandardItem(Properties properties) {
-        super(properties, new WilderNatureIdentifier("textures/standard/wildernature_standard.png"), () -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 1, true, false, true));
+        super(properties, new WilderNatureIdentifier("textures/standard/completionist_banner.png"), () -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 1, true, false, true));
     }
 
     @Override

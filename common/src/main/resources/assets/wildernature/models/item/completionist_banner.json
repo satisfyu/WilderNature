@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "wildernature:item/wildernature_standard"
+    "layer0": "wildernature:item/completionist_banner"
   }
 }
