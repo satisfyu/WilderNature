@@ -33,9 +33,3 @@ versionRange = "[9.1.12,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.wildernature]]
-modId = "doapi"
-mandatory = true
-versionRange = "[1.2.10,)"
-ordering = "AFTER"
-side = "BOTH"
