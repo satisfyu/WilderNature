@@ -63,6 +63,8 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> BISON_SPAWN_EGG = registerItem("bison_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.BISON, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
 
+    public static final RegistrySupplier<Item> TRUFFLE = registerItem("truffle", () -> new Item(new Item.Properties()));
+
     public static final RegistrySupplier<Block> COMPLETIONIST_BANNER = registerWithItem("completionist_banner", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> COMPLETIONIST_WALL_BANNER = registerWithoutItem("completionist_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
 
