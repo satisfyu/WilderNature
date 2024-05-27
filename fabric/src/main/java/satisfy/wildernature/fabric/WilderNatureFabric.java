@@ -2,10 +2,7 @@ package satisfy.wildernature.fabric;
 
 import com.google.common.base.Preconditions;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.fabricmc.fabric.api.biome.v1.*;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -17,8 +14,10 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.fabric.world.PlacedFeatures;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.TagsRegistry;
 import satisfy.wildernature.util.WilderNatureIdentifier;
@@ -37,6 +36,14 @@ public class WilderNatureFabric implements ModInitializer {
         WilderNature.init();
         WilderNature.commonInit();
         addSpawns();
+        addBiomeModification();
+    }
+
+    void addBiomeModification() {
+        BiomeModification world = BiomeModifications.create(new WilderNatureIdentifier("world_features"));
+        Predicate<BiomeSelectionContext> spawns_patch_hazelnut_bush = getBloomingNatureSelector("spawns_patch_hazelnut_bush");
+        world.add(ModificationPhase.ADDITIONS, spawns_patch_hazelnut_bush, ctx -> ctx.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeatures.PATCH_HAZELNUT_BUSH));
+
     }
 
     void addSpawns() {
@@ -89,5 +96,9 @@ public class WilderNatureFabric implements ModInitializer {
             Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.containsKey(id), "Unregistered entity type: %s", entityType);
             BiomeModifications.create(id).add(ModificationPhase.REMOVALS, biomeSelector -> biomeSelector.hasTag(tag), context -> context.getSpawnSettings().removeSpawnsOfEntityType(entityType));
         });
+    }
+
+    private static Predicate<BiomeSelectionContext> getBloomingNatureSelector(String path) {
+        return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier(path)));
     }
 }

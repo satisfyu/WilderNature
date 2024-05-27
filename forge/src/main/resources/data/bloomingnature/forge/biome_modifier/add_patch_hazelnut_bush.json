@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:plains",
+  "features": [
+    "wildernature:patch_hazelnut_bush"
+  ],
+  "step": "vegetal_decoration"
+}
+

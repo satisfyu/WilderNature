@@ -23,7 +23,7 @@ public class WilderNatureClient {
 
 
     public static void preInitClient() {
-        RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get());
+        RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get());
         registerEntityRenderers();
         registerEntityModelLayer();
     }
