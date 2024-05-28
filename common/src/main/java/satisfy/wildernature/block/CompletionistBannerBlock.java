@@ -58,12 +58,20 @@ public class CompletionistBannerBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockPos blockPos = context.getClickedPos();
+        context.getClickedPos();
         Direction clickedFace = context.getClickedFace();
         if (clickedFace == Direction.UP || clickedFace == Direction.DOWN) {
             return this.defaultBlockState().setValue(ROTATION, Mth.floor((double)((180.0f + context.getRotation()) * 16.0f / 360.0f) + 0.5) & 0xF);
         } else {
-            return ObjectRegistry.COMPLETIONIST_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
+            if (this == ObjectRegistry.WOLF_TRAPPER_BANNER.get()) {
+                return ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
+            } else if (this == ObjectRegistry.BUNNY_STALKER_BANNER.get()) {
+                return ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
+            } else if (this == ObjectRegistry.COD_CATCHER_BANNER.get()) {
+                return ObjectRegistry.COD_CATCHER_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
+            } else {
+                return ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
+            }
         }
     }
 
@@ -91,6 +99,19 @@ public class CompletionistBannerBlock extends BaseEntityBlock {
     }
 
     public ResourceLocation getRenderTexture() {
-        return new ResourceLocation("wildernature", "textures/banner/completionist.png");
+        if (this == ObjectRegistry.WOLF_TRAPPER_BANNER.get()) {
+            return new ResourceLocation("wildernature", "textures/banner/wolf_trapper.png");
+        } else if (this == ObjectRegistry.BUNNY_STALKER_BANNER.get()) {
+            return new ResourceLocation("wildernature", "textures/banner/rabbit_hunter.png");
+        } else if (this == ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get()) {
+            return new ResourceLocation("wildernature", "textures/banner/rabbit_hunter.png");
+        } else if (this == ObjectRegistry.COD_CATCHER_BANNER.get()) {
+            return new ResourceLocation("wildernature", "textures/banner/cod_catcher.png");
+        }
+        else if (this == ObjectRegistry.COD_CATCHER_WALL_BANNER.get()) {
+            return new ResourceLocation("wildernature", "textures/banner/cod_catcher.png");
+        }
+
+        return new ResourceLocation("wildernature", "textures/banner/wolf_trapper.png");
     }
 }

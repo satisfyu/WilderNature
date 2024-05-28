@@ -41,7 +41,10 @@ public class TabRegistry {
 
                 out.accept(ObjectRegistry.FUR_CLOAK.get());
 
-                out.accept(ObjectRegistry.COMPLETIONIST_BANNER.get());
+                out.accept(ObjectRegistry.WOLF_TRAPPER_BANNER.get());
+                out.accept(ObjectRegistry.BUNNY_STALKER_BANNER.get());
+                out.accept(ObjectRegistry.COD_CATCHER_BANNER.get());
+
                 out.accept(ObjectRegistry.DEER_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RED_WOLF_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RACCOON_SPAWN_EGG.get());
