@@ -72,5 +72,21 @@
   "subtitles.wildernature.squirrel_hurt": "Squirrel Hurt",
   "subtitles.wildernature.turkey_ambient": "Turkey Ambient",
   "subtitles.wildernature.turkey_death": "Turkey Death",
-  "subtitles.wildernature.turkey_hurt": "Turkey Hurt"
+  "subtitles.wildernature.turkey_hurt": "Turkey Hurt",
+  "text.autoconfig.wildernature.title": "WilderNature Config",
+  "text.autoconfig.wildernature.option.spawnHazelnutBush": "Should Hazelnut Bushes spawn:",
+  "text.autoconfig.wildernature.option.removeSavannaAnimals": "Remove Farm Animals from Savannas:",
+  "text.autoconfig.wildernature.option.removeSwampAnimals": "Remove Farm Animals from Swamps:",
+  "text.autoconfig.wildernature.option.removeForestAnimals": "Remove Chicken and Boars from Forest:",
+  "text.autoconfig.wildernature.option.removeJungleAnimals": "Remove Chicken, Pigs and Cows from Jungles:",
+  "text.autoconfig.wildernature.option.addJungleAnimals": "Add Frogs to Jungles:",
+  "text.autoconfig.wildernature.option.PelicanSpawnWeight": "Pelican Spawn Weight:",
+  "text.autoconfig.wildernature.option.DeerSpawnWeight": "Deer Spawn Weight:",
+  "text.autoconfig.wildernature.option.RaccoonSpawnWeight": "Raccoon Spawn Weight:",
+  "text.autoconfig.wildernature.option.SquirrelSpawnWeight": "Squirrel Spawn Weight:",
+  "text.autoconfig.wildernature.option.RedWolfSpawnWeight": "Red Wolf Spawn Weight:",
+  "text.autoconfig.wildernature.option.OwlSpawnWeight": "Owl Spawn Weight:",
+  "text.autoconfig.wildernature.option.BoarSpawnWeight": "Boar Spawn Weight:",
+  "text.autoconfig.wildernature.option.BisonSpawnWeight": "Bison Spawn Weight:",
+  "text.autoconfig.wildernature.option.TurkeySpawnWeight": "Turkey Spawn Weight:"
 }
