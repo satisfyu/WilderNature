@@ -31,6 +31,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.TRUFFLE.get());
                 out.accept(ObjectRegistry.LOOT_BAG.get());
 
+                out.accept(ObjectRegistry.BOUNTY_BOARD.get());
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
                 out.accept(ObjectRegistry.BISON_TROPHY.get());

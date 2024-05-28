@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "part=bottom_left": {
+      "model": "wildernature:block/bounty_board_bottom_right"
+    },
+    "part=bottom_right": {
+      "model": "wildernature:block/bounty_board_bottom_left"
+    },
+    "part=top_left": {
+      "model": "wildernature:block/bounty_board_top_left"
+    },
+    "part=top_right": {
+      "model": "wildernature:block/bounty_board_top_right"
+    }
+  }
+}

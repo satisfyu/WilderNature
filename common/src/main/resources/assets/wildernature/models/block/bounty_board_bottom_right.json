@@ -1,0 +1,66 @@
+{
+	"credit": "Made by Satisfy",
+	"textures": {
+		"0": "wildernature:block/bounty_board_back1",
+		"1": "wildernature:block/bounty_board_front2",
+		"2": "wildernature:block/bounty_board_front1",
+		"3": "wildernature:block/bounty_board_front3",
+		"particle": "wildernature:block/bounty_board_back1"
+	},
+	"elements": [
+		{
+			"name": "post",
+			"from": [0, 0, 7],
+			"to": [2, 16, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 9]},
+			"faces": {
+				"north": {"uv": [15.968, 14, 0, 15.968], "rotation": 90, "texture": "#1", "cullface": "west"},
+				"east": {"uv": [0, 0.032, 1.968, 16], "texture": "#3", "cullface": "west"},
+				"south": {"uv": [15.968, 15.968, 0, 14], "rotation": 90, "texture": "#1", "cullface": "west"},
+				"west": {"uv": [15.968, 12, 0, 13.968], "rotation": 90, "texture": "#1", "cullface": "west"},
+				"down": {"uv": [1.968, 11.968, 0, 10], "rotation": 90, "texture": "#1", "cullface": "west"}
+			}
+		},
+		{
+			"name": "board",
+			"from": [2, 10, 8],
+			"to": [16, 16, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 10, 8]},
+			"faces": {
+				"north": {"uv": [2.032, 6, 16, 11.968], "texture": "#3"},
+				"south": {"uv": [2.032, 7.968, 16, 2], "texture": "#0"}
+			}
+		},
+		{
+			"name": "corner_support",
+			"from": [2, 4, 8],
+			"to": [6, 8, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 4, 8]},
+			"faces": {
+				"north": {"uv": [5.968, 12.032, 2, 16], "texture": "#2", "cullface": "west"},
+				"south": {"uv": [2, 12.032, 5.968, 16], "texture": "#2", "cullface": "west"}
+			}
+		},
+		{
+			"name": "support",
+			"from": [2, 8, 7],
+			"to": [16, 10, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 8, 9]},
+			"faces": {
+				"north": {"uv": [16, 12, 2.032, 13.968], "texture": "#3"},
+				"south": {"uv": [2.032, 12, 16, 13.968], "texture": "#3"},
+				"up": {"uv": [2.032, 12.968, 16, 12], "texture": "#3"},
+				"down": {"uv": [2.032, 16, 16, 14.032], "texture": "#3"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "bottom_right",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"nbt": "{}",
+			"children": [0, 1, 2, 3]
+		}
+	]
+}
