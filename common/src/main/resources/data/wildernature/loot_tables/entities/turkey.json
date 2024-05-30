@@ -11,7 +11,7 @@
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "max": 2.0,
+                "max": 3.0,
                 "min": 0.0
               },
               "function": "minecraft:set_count"
@@ -19,7 +19,7 @@
             {
               "count": {
                 "type": "minecraft:uniform",
-                "max": 1.0,
+                "max": 2.0,
                 "min": 0.0
               },
               "function": "minecraft:looting_enchant"
@@ -37,6 +37,15 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
               "conditions": [
                 {
                   "condition": "minecraft:entity_properties",
@@ -53,13 +62,13 @@
             {
               "count": {
                 "type": "minecraft:uniform",
-                "max": 1.0,
+                "max": 3.0,
                 "min": 0.0
               },
               "function": "minecraft:looting_enchant"
             }
           ],
-          "name": "minecraft:chicken"
+          "name": "wildernature:turkey_meat"
         }
       ],
       "rolls": 1.0

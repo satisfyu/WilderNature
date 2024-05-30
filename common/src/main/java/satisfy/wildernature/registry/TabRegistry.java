@@ -32,13 +32,16 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.LOOT_BAG.get());
 
                 out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.COMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.RARE_CONTRACT.get());
                 out.accept(ObjectRegistry.BOUNTY_BOARD.get());
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
                 out.accept(ObjectRegistry.BISON_TROPHY.get());
 
                 out.accept(ObjectRegistry.BLUNDERBUSS.get());
-                out.accept(ObjectRegistry.AMMO_BAG.get());
+                out.accept(ObjectRegistry.FLINT_AMMUNITION.get());
+                out.accept(ObjectRegistry.DIAMOND_AMMUNITION.get());
 
                 out.accept(ObjectRegistry.FUR_CLOAK.get());
 

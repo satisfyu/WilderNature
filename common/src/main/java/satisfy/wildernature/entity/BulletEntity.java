@@ -14,7 +14,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import satisfy.wildernature.item.BulletItem;
+import satisfy.wildernature.item.AmmunitionItem;
 import satisfy.wildernature.network.EntityPacketHandler;
 import satisfy.wildernature.registry.EntityRegistry;
 
@@ -68,7 +68,7 @@ public class BulletEntity extends Fireball {
 		if (!level().isClientSide) {
 			Entity target = raytrace.getEntity();
 			Entity shooter = getOwner();
-			BulletItem bullet = (BulletItem) getItemRaw().getItem();
+			AmmunitionItem bullet = (AmmunitionItem) getItemRaw().getItem();
 
 			if (isOnFire()) target.setSecondsOnFire(5);
 			int lastHurtResistant = target.invulnerableTime;
@@ -81,7 +81,7 @@ public class BulletEntity extends Fireball {
 					if (vec.lengthSqr() > 0) livingTarget.push(vec.x, 0.1, vec.z);
 				}
 				if (shooter instanceof LivingEntity) doEnchantDamageEffects((LivingEntity) shooter, target);
-				BulletItem.onLivingEntityHit(livingTarget, shooter, level());
+				AmmunitionItem.onLivingEntityHit(livingTarget, shooter, level());
 			} else if (!damaged && ignoreInvulnerability) target.invulnerableTime = lastHurtResistant;
 		}
 	}

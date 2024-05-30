@@ -58,7 +58,7 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 				ammo = new ItemStack(net.minecraft.world.item.Items.IRON_INGOT);
 			}
 
-			if (ammo.getItem() instanceof BulletItem bulletItem) {
+			if (ammo.getItem() instanceof AmmunitionItem bulletItem) {
 				if (!world.isClientSide) {
 					boolean bulletFree = player.getAbilities().instabuild || !shouldConsumeAmmo();
 
@@ -91,14 +91,22 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 		return InteractionResultHolder.pass(gun);
 	}
 
-
-	protected void shoot(Level world, Player player, ItemStack ammo, BulletItem bulletItem) {
+	protected void shoot(Level world, Player player, ItemStack ammo, AmmunitionItem bulletItem) {
 		BulletEntity shot = bulletItem.createProjectile(world, ammo, player);
 		shot.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, (float) getProjectileSpeed(), (float) getInaccuracy());
 		shot.setDamage((shot.getDamage() + getBonusDamage()) * getDamageMultiplier());
 		shot.setIgnoreInvulnerability(ignoreInvulnerability);
 
 		world.addFreshEntity(shot);
+
+		if (world instanceof ServerLevel serverWorld) {
+			double particleX = player.getX() + player.getLookAngle().x * 0.5;
+			double particleY = player.getY() + player.getEyeHeight() - 0.1;
+			double particleZ = player.getZ() + player.getLookAngle().z * 0.5;
+
+			serverWorld.sendParticles(ParticleTypes.SMALL_FLAME, particleX, particleY, particleZ, 5, 0.1, 0.1, 0.1, 0.01);
+			serverWorld.sendParticles(ParticleTypes.SMOKE, particleX, particleY, particleZ, 10, 0.1, 0.1, 0.1, 0.01);
+		}
 	}
 
 	public boolean shouldConsumeAmmo() {
@@ -135,7 +143,7 @@ public class BlunderBussItem extends ProjectileWeaponItem {
 		return 0;
 	}
 
-	private static final Predicate<ItemStack> BULLETS = (stack) -> stack.getItem() instanceof BulletItem && ((BulletItem) stack.getItem()).hasAmmo(stack);
+	private static final Predicate<ItemStack> BULLETS = (stack) -> stack.getItem() instanceof AmmunitionItem && ((AmmunitionItem) stack.getItem()).hasAmmo(stack);
 
 	@Override
 	public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {

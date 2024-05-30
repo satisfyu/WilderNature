@@ -1,19 +1,24 @@
 package satisfy.wildernature.item;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import satisfy.wildernature.entity.BulletEntity;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
-public class BulletItem extends Item {
+public class AmmunitionItem extends Item {
 	private final int damage;
 
-	public BulletItem(Properties properties, int damage) {
+	public AmmunitionItem(Properties properties, int damage) {
 		super(properties);
 		this.damage = damage;
 	}
@@ -30,6 +35,11 @@ public class BulletItem extends Item {
 		if (stack.isEmpty()) {
 			player.getInventory().removeItem(stack);
 		}
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+		tooltip.add(Component.translatable("tooltip.wildernature.ammunition", damage).withStyle(ChatFormatting.DARK_GREEN));
 	}
 
 	public boolean hasAmmo(ItemStack stack) {
