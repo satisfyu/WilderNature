@@ -13,7 +13,7 @@ public class TabRegistry {
     public static final DeferredRegister<CreativeModeTab> WILDERNATURE_TABS = DeferredRegister.create(WilderNature.MOD_ID, Registries.CREATIVE_MODE_TAB);
 
     public static final RegistrySupplier<CreativeModeTab> WILDERNATURE_TAB = WILDERNATURE_TABS.register("wildernature", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 1)
-            .icon(() -> new ItemStack(ObjectRegistry.DEER_SPAWN_EGG.get()))
+            .icon(() -> new ItemStack(ObjectRegistry.BOUNTY_BOARD.get()))
             .title(Component.translatable("creative_tab.wildernature"))
             .displayItems((parameters, out) -> {
                 out.accept(ObjectRegistry.BISON_MEAT.get());
@@ -31,6 +31,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.TRUFFLE.get());
                 out.accept(ObjectRegistry.LOOT_BAG.get());
 
+                out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
                 out.accept(ObjectRegistry.BOUNTY_BOARD.get());
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
@@ -54,6 +55,8 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.OWL_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.BISON_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.TURKEY_SPAWN_EGG.get());
+
+                out.accept(ObjectRegistry.ANIMAL_COMPENDIUM.get());
 
 
             })

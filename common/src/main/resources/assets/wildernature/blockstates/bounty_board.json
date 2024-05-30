@@ -7,10 +7,10 @@
       "model": "wildernature:block/bounty_board_bottom_left"
     },
     "part=top_left": {
-      "model": "wildernature:block/bounty_board_top_left"
+      "model": "wildernature:block/bounty_board_top_right"
     },
     "part=top_right": {
-      "model": "wildernature:block/bounty_board_top_right"
+      "model": "wildernature:block/bounty_board_top_left"
     }
   }
 }

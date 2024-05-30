@@ -1,7 +1,10 @@
 package satisfy.wildernature.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -14,7 +17,9 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class BountyBoardBlock extends Block {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
@@ -37,6 +42,7 @@ public class BountyBoardBlock extends Block {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
+        Player player = context.getPlayer();
 
         if (!canPlaceAt(world, pos)) {
             return null;
@@ -46,6 +52,13 @@ public class BountyBoardBlock extends Block {
         world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.TOP_LEFT), 3);
         world.setBlock(pos.east(), this.defaultBlockState().setValue(PART, Part.BOTTOM_RIGHT), 3);
         world.setBlock(pos.east().above(), this.defaultBlockState().setValue(PART, Part.TOP_RIGHT), 3);
+
+        world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, pos, SoundEvents.CHERRY_WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+        if (player != null && !player.isCreative()) {
+            context.getItemInHand().shrink(1);
+        }
 
         return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT);
     }
@@ -68,16 +81,12 @@ public class BountyBoardBlock extends Block {
     }
 
     private BlockPos getBasePos(BlockPos pos, Part part) {
-        switch (part) {
-            case TOP_LEFT:
-                return pos.below();
-            case BOTTOM_RIGHT:
-                return pos.west();
-            case TOP_RIGHT:
-                return pos.below().west();
-            default:
-                return pos;
-        }
+        return switch (part) {
+            case TOP_LEFT -> pos.below();
+            case BOTTOM_RIGHT -> pos.west();
+            case TOP_RIGHT -> pos.below().west();
+            default -> pos;
+        };
     }
 
     private void destroyAdjacentBlocks(Level world, BlockPos basePos) {
@@ -88,53 +97,39 @@ public class BountyBoardBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Part part = state.getValue(PART);
-        switch (part) {
-            case BOTTOM_LEFT:
-                return SHAPE_BOTTOM_LEFT;
-            case BOTTOM_RIGHT:
-                return SHAPE_BOTTOM_RIGHT;
-            case TOP_LEFT:
-                return SHAPE_TOP_LEFT;
-            case TOP_RIGHT:
-                return SHAPE_TOP_RIGHT;
-            default:
-                return Shapes.empty();
-        }
+        return switch (part) {
+            case BOTTOM_LEFT -> SHAPE_BOTTOM_LEFT;
+            case BOTTOM_RIGHT -> SHAPE_BOTTOM_RIGHT;
+            case TOP_LEFT -> SHAPE_TOP_LEFT;
+            case TOP_RIGHT -> SHAPE_TOP_RIGHT;
+        };
     }
 
     private static VoxelShape makeBottomLeftShape() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0, 0.4375, 0.125, 1, 0.5625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0.625, 0.5, 1, 1, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0.25, 0.5, 0.375, 0.5, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0.5, 0.4375, 1, 0.625, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0.5, 0.4375, 1, 1, 0.5625), BooleanOp.OR);
         return shape;
     }
 
     private static VoxelShape makeBottomRightShape() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0.875, 0, 0.4375, 1, 1, 0.5625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0, 0.625, 0.5, 0.875, 1, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.625, 0.25, 0.5, 0.875, 0.5, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0, 0.5, 0.4375, 0.875, 0.625, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0.5, 0.4375, 0.875, 1, 0.5625), BooleanOp.OR);
         return shape;
     }
 
     private static VoxelShape makeTopLeftShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0.875, 0, 0.4375, 1, 0.875, 0.5625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0, 0, 0.5, 0.875, 0.75, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0, 0.75, 0.4375, 0.875, 0.875, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0.4375, 1, 0.875, 0.5625), BooleanOp.OR);
         return shape;
     }
 
     private static VoxelShape makeTopRightShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0, 0, 0.4375, 0.125, 0.875, 0.5625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.5, 1, 0.75, 0.5), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0.75, 0.4375, 1, 0.875, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0.4375, 1, 0.875, 0.5625), BooleanOp.OR);
         return shape;
     }
 
@@ -151,7 +146,7 @@ public class BountyBoardBlock extends Block {
         }
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return this.name;
         }
 

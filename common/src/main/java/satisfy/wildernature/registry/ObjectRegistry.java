@@ -6,8 +6,10 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.*;
+import satisfy.wildernature.client.gui.CompendiumGui;
 import satisfy.wildernature.item.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 import satisfy.wildernature.util.WilderNatureUtil;
@@ -52,6 +55,10 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> LOOT_BAG = registerItem("loot_bag", () -> new LootBagItem(getSettings()));
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
 
+    public static final RegistrySupplier<Item> UNCOMMON_CONTRACT = registerItem("uncommon_contract", () -> new Item(getSettings()));
+    public static final RegistrySupplier<Item> COMMON_CONTRACT = registerItem("common_contract", () -> new Item(getSettings()));
+    public static final RegistrySupplier<Item> RARE_CONTRACT = registerItem("rare_contract", () -> new Item(getSettings()));
+
     public static final RegistrySupplier<Block> BOUNTY_BOARD = registerWithItem("bounty_board", () -> new BountyBoardBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistrySupplier<Block> DEER_TROPHY = registerWithItem("deer_trophy", () -> new DeerTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistrySupplier<Block> RED_WOLF_TROPHY = registerWithItem("red_wolf_trophy", () -> new RedWolfTrophyBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
@@ -77,6 +84,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> COD_CATCHER_BANNER = registerWithItem("cod_catcher_banner", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> COD_CATCHER_WALL_BANNER = registerWithoutItem("cod_catcher_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
 
+    public static final RegistrySupplier<Item> ANIMAL_COMPENDIUM = registerItem("animal_compendium", () -> new CompendiumItem(getSettings()));
 
 
     /**
@@ -103,6 +111,8 @@ public class ObjectRegistry {
      * Hedgehog
      * A mini sheep
      */
+
+
 
     public static void init() {
         WilderNature.LOGGER.debug("Registering Mod Block and Items for " + WilderNature.MOD_ID);
