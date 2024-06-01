@@ -47,6 +47,13 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
         return LayerDefinition.create(meshDefinition, 64, 64);
     }
 
+    public static void renderBanner(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, ModelPart modelPart, CompletionistBannerEntity banner) {
+        ResourceLocation location = ((CompletionistBannerBlock) banner.getBlockState().getBlock()).getRenderTexture();
+        VertexConsumer vc = multiBufferSource.getBuffer(RenderType.entitySolid(location));
+
+        modelPart.render(poseStack, vc, i, j);
+    }
+
     @Override
     public void render(CompletionistBannerEntity banner, float f, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j) {
         long time;
@@ -87,13 +94,5 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
         renderBanner(poseStack, multiBufferSource, i, j, this.flag, banner);
         poseStack.popPose();
         poseStack.popPose();
-    }
-
-
-    public static void renderBanner(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, ModelPart modelPart, CompletionistBannerEntity banner) {
-        ResourceLocation location = ((CompletionistBannerBlock) banner.getBlockState().getBlock()).getRenderTexture();
-        VertexConsumer vc = multiBufferSource.getBuffer(RenderType.entitySolid(location));
-
-        modelPart.render(poseStack, vc, i, j);
     }
 }

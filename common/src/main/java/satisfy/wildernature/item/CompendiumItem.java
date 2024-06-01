@@ -17,6 +17,15 @@ public class CompendiumItem extends Item {
         super(settings);
     }
 
+    public static void setCompendiumScreen() {
+        Minecraft.getInstance().setScreen(new CompendiumGui() {
+            @Override
+            public @NotNull Component getTitle() {
+                return super.getTitle();
+            }
+        });
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
@@ -27,14 +36,5 @@ public class CompendiumItem extends Item {
         }
         user.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
-    }
-
-    public static void setCompendiumScreen() {
-        Minecraft.getInstance().setScreen(new CompendiumGui() {
-            @Override
-            public @NotNull Component getTitle() {
-                return super.getTitle();
-            }
-        });
     }
 }

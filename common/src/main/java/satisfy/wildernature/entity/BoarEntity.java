@@ -21,6 +21,11 @@ import satisfy.wildernature.registry.SoundRegistry;
 
 public class BoarEntity extends Animal {
     private static final Ingredient FOOD_ITEMS;
+
+    static {
+        FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.CHICKEN, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
+    }
+
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
     private int digAnimationTick;
@@ -34,7 +39,6 @@ public class BoarEntity extends Animal {
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12.0).add(Attributes.MOVEMENT_SPEED, 0.2F);
     }
-
 
     @Override
     public void tick() {
@@ -140,9 +144,5 @@ public class BoarEntity extends Animal {
     @Override
     public boolean isFood(@NotNull ItemStack itemStack) {
         return FOOD_ITEMS.test(itemStack);
-    }
-
-    static {
-        FOOD_ITEMS = Ingredient.of(Items.BEEF, Items.CHICKEN, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
     }
 }

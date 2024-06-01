@@ -28,8 +28,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.registry.ObjectRegistry;
 
@@ -41,6 +41,15 @@ public class HazelnutBushBlock extends BushBlock implements BonemealableBlock {
     private static final VoxelShape AGE_1_TOP_SHAPE;
     private static final VoxelShape AGE_2_TOP_SHAPE;
     private static final VoxelShape AGE_3_TOP_SHAPE;
+
+    static {
+        AGE = BlockStateProperties.AGE_3;
+        HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+        SAPLING_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+        AGE_1_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+        AGE_2_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
+        AGE_3_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    }
 
     public HazelnutBushBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -151,14 +160,5 @@ public class HazelnutBushBlock extends BushBlock implements BonemealableBlock {
             }
         }
         super.playerWillDestroy(level, blockPos, blockState, player);
-    }
-
-    static {
-        AGE = BlockStateProperties.AGE_3;
-        HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-        SAPLING_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-        AGE_1_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-        AGE_2_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
-        AGE_3_TOP_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     }
 }

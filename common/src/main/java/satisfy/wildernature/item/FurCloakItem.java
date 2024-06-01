@@ -1,12 +1,8 @@
 package satisfy.wildernature.item;
 
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Equipable;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.NotNull;
 
 public class FurCloakItem extends Item implements Equipable {
@@ -18,11 +14,6 @@ public class FurCloakItem extends Item implements Equipable {
         this.type = pType;
     }
 
-    @Override
-    public @NotNull EquipmentSlot getEquipmentSlot() {
-        return this.type.getSlot();
-    }
-
     public static boolean isEquippedBy(Player player) {
         for (ItemStack itemStack : player.getArmorSlots()) {
             if (itemStack.getItem() instanceof FurCloakItem) {
@@ -30,5 +21,10 @@ public class FurCloakItem extends Item implements Equipable {
             }
         }
         return false;
+    }
+
+    @Override
+    public @NotNull EquipmentSlot getEquipmentSlot() {
+        return this.type.getSlot();
     }
 }

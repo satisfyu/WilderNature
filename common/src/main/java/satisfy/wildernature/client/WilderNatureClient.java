@@ -19,6 +19,8 @@ import static satisfy.wildernature.registry.ObjectRegistry.*;
 
 @Environment(EnvType.CLIENT)
 public class WilderNatureClient {
+    public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
+
     public static void preInitClient() {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get(), BOUNTY_BOARD.get());
         registerEntityRenderers();
@@ -36,6 +38,7 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(BOAR, BoarRenderer::new);
         EntityRendererRegistry.register(BISON, BisonRenderer::new);
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
+        EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
         BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
     }
 
@@ -49,8 +52,7 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(MiniSheepModel.LAYER_LOCATION, MiniSheepModel::getTexturedModelData);
         EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
     }
-
-    public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
 }

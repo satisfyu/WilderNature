@@ -76,7 +76,6 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<DeerEntity> {
         this.animate(entity.lookAroundAnimationState, DeerAnimation.Look_around, ageInTicks, 1.0f);
 
 
-
     }
 
     @Override

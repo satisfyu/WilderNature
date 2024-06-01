@@ -15,62 +15,55 @@ import satisfy.wildernature.util.WilderNatureIdentifier;
 import java.util.function.Supplier;
 
 public class EntityRegistry {
-    private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(WilderNature.MOD_ID, Registries.ENTITY_TYPE);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
-
-    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
-            () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
-
+    private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(WilderNature.MOD_ID, Registries.ENTITY_TYPE);
     public static final RegistrySupplier<EntityType<RedWolfEntity>> RED_WOLF = createEntity("red_wolf",
             () -> EntityType.Builder.of(RedWolfEntity::new, MobCategory.CREATURE)
                     .sized(0.4f, 1.5f)
                     .clientTrackingRange(10)
-                    .build(new WilderNatureIdentifier("red_wolf").toString()));
-
+                    .build(new WilderNatureIdentifier("red_wolf").toString()));    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
+            () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
     public static final RegistrySupplier<EntityType<PelicanEntity>> PELICAN = createEntity("pelican",
             () -> EntityType.Builder.of(PelicanEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
                     .build(new WilderNatureIdentifier("pelican").toString())
     );
-
     public static final RegistrySupplier<EntityType<RaccoonEntity>> RACCOON = createEntity("raccoon",
             () -> EntityType.Builder.of(RaccoonEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
                     .build(new WilderNatureIdentifier("raccoon").toString())
     );
-
     public static final RegistrySupplier<EntityType<SquirrelEntity>> SQUIRREL = createEntity("squirrel",
             () -> EntityType.Builder.of(SquirrelEntity::new, MobCategory.CREATURE)
                     .sized(0.4f, 0.9f)
                     .build(new WilderNatureIdentifier("squirrel").toString())
     );
-
     public static final RegistrySupplier<EntityType<TurkeyEntity>> TURKEY = createEntity("turkey",
             () -> EntityType.Builder.of(TurkeyEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
                     .build(new WilderNatureIdentifier("turkey").toString())
     );
-
     public static final RegistrySupplier<EntityType<DeerEntity>> DEER = createEntity("deer",
             () -> EntityType.Builder.of(DeerEntity::new, MobCategory.CREATURE)
                     .build(new WilderNatureIdentifier("deer").toString())
     );
-
     public static final RegistrySupplier<EntityType<OwlEntity>> OWL = createEntity("owl",
             () -> EntityType.Builder.of(OwlEntity::new, MobCategory.CREATURE)
                     .build(new WilderNatureIdentifier("owl").toString())
     );
-
     public static final RegistrySupplier<EntityType<BoarEntity>> BOAR = createEntity("boar",
             () -> EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE)
                     .build(new WilderNatureIdentifier("boar").toString())
     );
-
     public static final RegistrySupplier<EntityType<BisonEntity>> BISON = createEntity("bison",
             () -> EntityType.Builder.of(BisonEntity::new, MobCategory.CREATURE)
                     .build(new WilderNatureIdentifier("bison").toString())
     );
-
+    public static final RegistrySupplier<EntityType<MiniSheepEntity>> MINISHEEP = createEntity("minisheep",
+            () -> EntityType.Builder.of(MiniSheepEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.3f)
+                    .build(new WilderNatureIdentifier("minisheep").toString())
+    );
     public static final RegistrySupplier<EntityType<BulletEntity>> BULLET = createEntity("bullet",
             () -> EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC)
                     .sized(0.3125f, 0.3125f).clientTrackingRange(64).updateInterval(2)
@@ -98,5 +91,9 @@ public class EntityRegistry {
         EntityAttributeRegistry.register(BOAR, BoarEntity::createMobAttributes);
         EntityAttributeRegistry.register(BISON, BisonEntity::createMobAttributes);
         EntityAttributeRegistry.register(TURKEY, TurkeyEntity::createMobAttributes);
+        EntityAttributeRegistry.register(MINISHEEP, MiniSheepEntity::createMobAttributes);
+
     }
+
+
 }

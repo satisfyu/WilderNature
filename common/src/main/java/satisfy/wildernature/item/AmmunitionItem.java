@@ -16,39 +16,40 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class AmmunitionItem extends Item {
-	private final int damage;
+    private final int damage;
 
-	public AmmunitionItem(Properties properties, int damage) {
-		super(properties);
-		this.damage = damage;
-	}
+    public AmmunitionItem(Properties properties, int damage) {
+        super(properties);
+        this.damage = damage;
+    }
 
-	public BulletEntity createProjectile(Level world, ItemStack stack, LivingEntity shooter) {
-		BulletEntity entity = new BulletEntity(world, shooter);
-		entity.setItem(stack);
-		entity.setDamage(damage);
-		return entity;
-	}
+    public static void onLivingEntityHit(LivingEntity target, @Nullable Entity shooter, Level world) {
+    }
 
-	public void consume(ItemStack stack, Player player) {
-		stack.shrink(1);
-		if (stack.isEmpty()) {
-			player.getInventory().removeItem(stack);
-		}
-	}
+    public BulletEntity createProjectile(Level world, ItemStack stack, LivingEntity shooter) {
+        BulletEntity entity = new BulletEntity(world, shooter);
+        entity.setItem(stack);
+        entity.setDamage(damage);
+        return entity;
+    }
 
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable("tooltip.wildernature.ammunition", damage).withStyle(ChatFormatting.DARK_GREEN));
-	}
+    public void consume(ItemStack stack, Player player) {
+        stack.shrink(1);
+        if (stack.isEmpty()) {
+            player.getInventory().removeItem(stack);
+        }
+    }
 
-	public boolean hasAmmo(ItemStack stack) {
-		return !stack.isEmpty();
-	}
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("tooltip.wildernature.ammunition", damage).withStyle(ChatFormatting.DARK_GREEN));
+    }
 
-	public static void onLivingEntityHit(LivingEntity target, @Nullable Entity shooter, Level world) {}
+    public boolean hasAmmo(ItemStack stack) {
+        return !stack.isEmpty();
+    }
 
-	public double modifyDamage(double damage, BulletEntity projectile, Entity target, @Nullable Entity shooter, Level world) {
-		return damage;
-	}
+    public double modifyDamage(double damage, BulletEntity projectile, Entity target, @Nullable Entity shooter, Level world) {
+        return damage;
+    }
 }

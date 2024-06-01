@@ -37,8 +37,7 @@ public class WilderNatureClientForge {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static <E extends Player, M extends HumanoidModel<E>>
-    void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName, Function<LivingEntityRenderer<E, M>, ? extends RenderLayer<E, M>> factory)
-    {
+    void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName, Function<LivingEntityRenderer<E, M>, ? extends RenderLayer<E, M>> factory) {
         LivingEntityRenderer renderer = event.getSkin(skinName);
         if (renderer != null) renderer.addLayer(factory.apply(renderer));
     }

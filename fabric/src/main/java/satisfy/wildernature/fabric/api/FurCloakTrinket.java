@@ -1,8 +1,8 @@
 package satisfy.wildernature.fabric.api;
 
+import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
-import dev.emi.trinkets.api.TrinketComponent;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;

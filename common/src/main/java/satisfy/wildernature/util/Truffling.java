@@ -6,18 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class Truffling {
-
-    public record FoodValue(int nutrition, float saturationModifier) {
-        @Override
-        public String toString() {
-            return "{Nutrition:" + nutrition + ",Saturation:" + saturationModifier + "}";
-        }
-    }
 
     private static final String TRUFFLED_KEY = "Truffled";
 
@@ -40,12 +32,21 @@ public class Truffling {
 
         return new FoodValue(2, 2.0F);
     }
-    
-    /**  */
+
+    /**
+     *
+     */
     public static CompoundEventResult<ItemStack> onPlayerUseEat(Player player, InteractionHand hand) {
 
         player.sendSystemMessage(Component.literal("Used item in " + hand.toString()));
 
         return CompoundEventResult.interruptFalse(player.getItemInHand(hand));
+    }
+
+    public record FoodValue(int nutrition, float saturationModifier) {
+        @Override
+        public String toString() {
+            return "{Nutrition:" + nutrition + ",Saturation:" + saturationModifier + "}";
+        }
     }
 }

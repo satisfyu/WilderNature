@@ -3,7 +3,6 @@ package satisfy.wildernature.forge.mixin;
 //import io.github.mortuusars.salt.Salt;
 //import io.github.mortuusars.salt.Salting;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
@@ -19,7 +18,8 @@ import satisfy.wildernature.util.Truffling;
 @Mixin(FoodData.class)
 public class FoodDataMixin {
     @Shadow
-    public void eat(int foodLevel, float saturationModifier) { }
+    public void eat(int foodLevel, float saturationModifier) {
+    }
 
     @Inject(method = "eat(Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), cancellable = true)

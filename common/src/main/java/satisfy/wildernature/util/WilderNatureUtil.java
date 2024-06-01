@@ -27,7 +27,7 @@ public class WilderNatureUtil {
             if (p_174637_ == null) {
                 return 0.0F;
             } else {
-                return p_174637_.getUseItem() != p_174635_ ? 0.0F : (float)(p_174635_.getUseDuration() -
+                return p_174637_.getUseItem() != p_174635_ ? 0.0F : (float) (p_174635_.getUseDuration() -
                         p_174637_.getUseItemRemainingTicks()) / 20.0F;
             }
         });
@@ -39,7 +39,7 @@ public class WilderNatureUtil {
         VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
         int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
 
-        for(int i = 0; i < times; ++i) {
+        for (int i = 0; i < times; ++i) {
             buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
                 buffer[1] = Shapes.joinUnoptimized(buffer[1], Shapes.box(1.0 - maxZ, minY, minX, 1.0 - minZ, maxY, maxX), BooleanOp.OR);
             });

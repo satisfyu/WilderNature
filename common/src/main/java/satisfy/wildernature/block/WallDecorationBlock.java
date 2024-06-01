@@ -2,7 +2,6 @@ package satisfy.wildernature.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,14 +21,29 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @SuppressWarnings("deprecation")
 public class WallDecorationBlock extends HorizontalDirectionalBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final Map<Direction, VoxelShape> BOUNDING_SHAPES;
 
+    static {
+        BOUNDING_SHAPES = Maps.newEnumMap(ImmutableMap.of(
+                Direction.NORTH, Block.box(0.0, 0.0, 15.0, 16.0, 16.0, 16.0),
+                Direction.SOUTH, Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 1.0),
+                Direction.WEST, Block.box(15.0, 0.0, 0.0, 16.0, 16.0, 16.0),
+                Direction.EAST, Block.box(0.0, 0.0, 0.0, 1.0, 16.0, 16.0)
+        ));
+    }
+
     public WallDecorationBlock(BlockBehaviour.Properties settings) {
         super(settings);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    public static VoxelShape getBoundingShape(BlockState state) {
+        return BOUNDING_SHAPES.get(state.getValue(FACING));
     }
 
     @Override
@@ -39,10 +53,6 @@ public class WallDecorationBlock extends HorizontalDirectionalBlock {
 
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return getBoundingShape(state);
-    }
-
-    public static VoxelShape getBoundingShape(BlockState state) {
-        return BOUNDING_SHAPES.get(state.getValue(FACING));
     }
 
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
@@ -71,14 +81,5 @@ public class WallDecorationBlock extends HorizontalDirectionalBlock {
 
     public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         return direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : state;
-    }
-
-    static {
-        BOUNDING_SHAPES = Maps.newEnumMap(ImmutableMap.of(
-                Direction.NORTH, Block.box(0.0, 0.0, 15.0, 16.0, 16.0, 16.0),
-                Direction.SOUTH, Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 1.0),
-                Direction.WEST, Block.box(15.0, 0.0, 0.0, 16.0, 16.0, 16.0),
-                Direction.EAST, Block.box(0.0, 0.0, 0.0, 1.0, 16.0, 16.0)
-        ));
     }
 }
