@@ -4,12 +4,15 @@ import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import satisfy.wildernature.bountyboard.BountyBlockScreen;
+import satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
 import satisfy.wildernature.client.model.*;
 import satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
 import satisfy.wildernature.client.render.entity.*;
@@ -23,6 +26,7 @@ public class WilderNatureClient {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get(), BOUNTY_BOARD.get());
         registerEntityRenderers();
         registerEntityModelLayer();
+        registerScreens();
     }
 
     public static void registerEntityRenderers() {
@@ -52,5 +56,8 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
     }
 
+    public static void registerScreens(){
+        MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(),BountyBlockScreen::new);
+    }
     public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
 }

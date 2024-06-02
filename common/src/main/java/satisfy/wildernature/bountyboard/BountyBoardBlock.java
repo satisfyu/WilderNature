@@ -1,26 +1,35 @@
-package satisfy.wildernature.block;
+package satisfy.wildernature.bountyboard;
 
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation")
-public class BountyBoardBlock extends Block {
+public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
     private static final VoxelShape SHAPE_BOTTOM_LEFT = makeBottomLeftShape();
@@ -31,6 +40,21 @@ public class BountyBoardBlock extends Block {
     public BountyBoardBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.BOTTOM_LEFT));
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.MODEL;
+    }
+
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
+        var entity = level.getBlockEntity(blockPos);
+        if(entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity){
+            return bountyBoardBlockEntity;
+        }
+        return null;
     }
 
     @Override
@@ -69,6 +93,7 @@ public class BountyBoardBlock extends Block {
                 world.getBlockState(pos.east()).canBeReplaced() &&
                 world.getBlockState(pos.east().above()).canBeReplaced();
     }
+
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -131,6 +156,20 @@ public class BountyBoardBlock extends Block {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0, 0.4375, 1, 0.875, 0.5625), BooleanOp.OR);
         return shape;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new BountyBoardBlockEntity(blockPos,blockState);
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if(level.isClientSide())
+            return InteractionResult.SUCCESS;
+        MenuRegistry.openExtendedMenu((ServerPlayer) player,getMenuProvider(blockState, level, blockPos),(friendlyByteBuf -> {}));
+        return InteractionResult.SUCCESS;
     }
 
     public enum Part implements StringRepresentable {

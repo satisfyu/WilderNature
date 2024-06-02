@@ -9,6 +9,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.entity.CompletionistBannerEntity;
+import satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
+import satisfy.wildernature.bountyboard.BountyBoardBlockEntity;
 import satisfy.wildernature.entity.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
@@ -77,6 +79,11 @@ public class EntityRegistry {
                     .build(new WilderNatureIdentifier("bullet").toString())
     );
 
+    public static final RegistrySupplier<BlockEntityType<BountyBoardBlockEntity>> BOUNTY_BLOCK = createBlockEntity("bounty_block",
+            () -> BlockEntityType.Builder.of((a, b)->new BountyBoardBlockEntity(a,b), ObjectRegistry.BOUNTY_BOARD.get())
+                    .build(null)
+    );
+
     public static <T extends EntityType<?>> RegistrySupplier<T> createEntity(final String path, final Supplier<T> type) {
         return ENTITY_TYPES.register(new WilderNatureIdentifier(path), type);
     }
@@ -98,5 +105,7 @@ public class EntityRegistry {
         EntityAttributeRegistry.register(BOAR, BoarEntity::createMobAttributes);
         EntityAttributeRegistry.register(BISON, BisonEntity::createMobAttributes);
         EntityAttributeRegistry.register(TURKEY, TurkeyEntity::createMobAttributes);
+
+        BountyBlockScreenHandler.registerMenuTypes();
     }
 }
