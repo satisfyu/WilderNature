@@ -1,5 +1,7 @@
 package satisfy.wildernature.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
@@ -17,24 +19,25 @@ public class CompendiumItem extends Item {
         super(settings);
     }
 
-    public static void setCompendiumScreen() {
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        if (world.isClientSide()) {
+            openCompendiumGui();
+        } else {
+            user.containerMenu.broadcastChanges();
+        }
+        user.awardStat(Stats.ITEM_USED.get(this));
+        return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openCompendiumGui() {
         Minecraft.getInstance().setScreen(new CompendiumGui() {
             @Override
             public @NotNull Component getTitle() {
                 return super.getTitle();
             }
         });
-    }
-
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        ItemStack itemStack = user.getItemInHand(hand);
-        if (world.isClientSide()) {
-            setCompendiumScreen();
-        } else {
-            user.containerMenu.broadcastChanges();
-        }
-        user.awardStat(Stats.ITEM_USED.get(this));
-        return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
     }
 }

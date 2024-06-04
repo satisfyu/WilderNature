@@ -17,7 +17,6 @@ public class WilderNature {
         EntityRegistry.init();
         TabRegistry.init();
         SoundRegistry.init();
-        WilderNatureUtil.init();
     }
 
     public static void commonInit() {

@@ -6,13 +6,18 @@ import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import satisfy.wildernature.client.model.*;
 import satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
 import satisfy.wildernature.client.render.entity.*;
+import satisfy.wildernature.registry.ObjectRegistry;
+import satisfy.wildernature.util.WilderNatureUtil;
 
 import static satisfy.wildernature.registry.EntityRegistry.*;
 import static satisfy.wildernature.registry.ObjectRegistry.*;
@@ -25,6 +30,7 @@ public class WilderNatureClient {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get(), BOUNTY_BOARD.get());
         registerEntityRenderers();
         registerEntityModelLayer();
+        WilderNatureUtil.init();
     }
 
     public static void registerEntityRenderers() {

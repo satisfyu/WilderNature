@@ -29,6 +29,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.FISH_OIL.get());
                 out.accept(ObjectRegistry.TRUFFLE.get());
                 out.accept(ObjectRegistry.LOOT_BAG.get());
+                out.accept(ObjectRegistry.FUR_CLOAK.get());
                 out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
                 out.accept(ObjectRegistry.COMMON_CONTRACT.get());
                 out.accept(ObjectRegistry.RARE_CONTRACT.get());
@@ -39,7 +40,6 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.BLUNDERBUSS.get());
                 out.accept(ObjectRegistry.FLINT_AMMUNITION.get());
                 out.accept(ObjectRegistry.DIAMOND_AMMUNITION.get());
-                out.accept(ObjectRegistry.FUR_CLOAK.get());
                 out.accept(ObjectRegistry.WOLF_TRAPPER_BANNER.get());
                 out.accept(ObjectRegistry.BUNNY_STALKER_BANNER.get());
                 out.accept(ObjectRegistry.COD_CATCHER_BANNER.get());
@@ -53,7 +53,6 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.BISON_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.TURKEY_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.MINISHEEP_SPAWN_EGG.get());
-
                 out.accept(ObjectRegistry.ANIMAL_COMPENDIUM.get());
 
 
