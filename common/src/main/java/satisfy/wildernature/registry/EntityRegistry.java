@@ -21,7 +21,8 @@ public class EntityRegistry {
             () -> EntityType.Builder.of(RedWolfEntity::new, MobCategory.CREATURE)
                     .sized(0.4f, 1.5f)
                     .clientTrackingRange(10)
-                    .build(new WilderNatureIdentifier("red_wolf").toString()));    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
+                    .build(new WilderNatureIdentifier("red_wolf").toString()));
+    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
             () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
     public static final RegistrySupplier<EntityType<PelicanEntity>> PELICAN = createEntity("pelican",
             () -> EntityType.Builder.of(PelicanEntity::new, MobCategory.CREATURE)

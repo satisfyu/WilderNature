@@ -14,7 +14,8 @@ import satisfy.wildernature.util.WilderNatureIdentifier;
 
 @Environment(value = EnvType.CLIENT)
 public class MiniSheepRenderer extends MobRenderer<MiniSheepEntity, MiniSheepModel<MiniSheepEntity>> {
-    private static final ResourceLocation TEXTURE = new WilderNatureIdentifier("textures/entity/minisheep.png");
+    private static final ResourceLocation SHEARED_TEXTURE = new WilderNatureIdentifier("textures/entity/minisheep_sheared.png");
+    private static final ResourceLocation DEFAULT_TEXTURE = new WilderNatureIdentifier("textures/entity/minisheep.png");
 
     public MiniSheepRenderer(EntityRendererProvider.Context context) {
         super(context, new MiniSheepModel<>(context.bakeLayer(MiniSheepModel.LAYER_LOCATION)), 0.7f);
@@ -22,16 +23,15 @@ public class MiniSheepRenderer extends MobRenderer<MiniSheepEntity, MiniSheepMod
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(MiniSheepEntity entity) {
-        return TEXTURE;
+        return entity.isSheared() ? SHEARED_TEXTURE : DEFAULT_TEXTURE;
     }
 
     @Override
-    public void render(MiniSheepEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
-                       MultiBufferSource pBuffer, int pPackedLight) {
-        if (pEntity.isBaby()) {
-            pMatrixStack.scale(0.4f, 0.4f, 0.4f);
+    public void render(MiniSheepEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack,
+                       MultiBufferSource buffer, int packedLight) {
+        if (entity.isBaby()) {
+            matrixStack.scale(0.4f, 0.4f, 0.4f);
         }
-
-        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -24,18 +25,18 @@ public class MiniSheepModel<T extends MiniSheepEntity> extends HierarchicalModel
 
     public MiniSheepModel(ModelPart root) {
         this.mini_sheep = root.getChild("mini_sheep");
-        this.head = this.mini_sheep.getChild("body").getChild("head");
+        this.head = this.mini_sheep.getChild("head");
     }
 
+    @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition mini_sheep = partdefinition.addOrReplaceChild("mini_sheep", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, -8.0F));
+        PartDefinition mini_sheep = partdefinition.addOrReplaceChild("mini_sheep", CubeListBuilder.create(), PartPose.offset(0.0F, 14.0F, 0.0F));
 
-        PartDefinition body = mini_sheep.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-5.28F, -10.8F, -7.62F, 12.0F, 12.0F, 15.0F, new CubeDeformation(0.8F)), PartPose.offset(-0.72F, -6.0F, 9.12F));
 
-        PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.72F, -6.24F, -8.16F));
+        PartDefinition head = mini_sheep.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.0F, -2.24F, -7.04F));
 
         PartDefinition h_horn = head.addOrReplaceChild("h_horn", CubeListBuilder.create(), PartPose.offset(-0.24F, -2.16F, -0.48F));
 
@@ -56,18 +57,22 @@ public class MiniSheepModel<T extends MiniSheepEntity> extends HierarchicalModel
 
         PartDefinition cube_r4 = h_head2.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(17, 27).mirror().addBox(-2.0F, -4.76F, 0.84F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 7.2F, -4.8F, 0.3927F, 0.0F, 0.0F));
 
-        PartDefinition tail = body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(4, 2).addBox(-0.96F, -0.6F, -0.52F, 3.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.6F, -2.16F, 8.64F));
+        PartDefinition body = mini_sheep.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-5.28F, -5.8F, -7.62F, 12.0F, 12.0F, 15.0F, new CubeDeformation(0.8F))
+                .texOffs(1, 33).addBox(-5.28F, -5.8F, -7.62F, 12.0F, 12.0F, 15.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.72F, -1.0F, 1.12F));
 
-        PartDefinition right_front_leg = mini_sheep.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.08F, -0.2F, -1.16F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(3.6F, -4.8F, 3.12F));
+        PartDefinition right_front_leg = mini_sheep.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.08F, -0.2F, -1.16F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(3.6F, 5.2F, -4.88F));
 
-        PartDefinition left_front_leg = mini_sheep.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.56F, -0.2F, -1.16F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-3.6F, -4.8F, 3.12F));
+        PartDefinition left_front_leg = mini_sheep.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.56F, -0.2F, -1.16F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-3.6F, 5.2F, -4.88F));
 
-        PartDefinition right_hind_leg = mini_sheep.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.08F, -0.2F, -1.2F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(3.6F, -4.8F, 14.12F));
+        PartDefinition right_hind_leg = mini_sheep.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 7).mirror().addBox(-1.08F, -0.2F, -1.2F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(3.6F, 5.2F, 6.12F));
 
-        PartDefinition left_hind_leg = mini_sheep.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(0, 7).addBox(-1.56F, -0.2F, -2.2F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.6F, -4.8F, 15.12F));
+        PartDefinition left_hind_leg = mini_sheep.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(0, 7).addBox(-1.56F, -0.2F, -2.2F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.6F, 5.2F, 7.12F));
+
+        PartDefinition tail = mini_sheep.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(4, 2).addBox(-0.96F, -0.6F, -1.52F, 3.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.12F, 1.84F, 9.76F));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
+
     @Override
     public void setupAnim(MiniSheepEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
@@ -76,6 +81,7 @@ public class MiniSheepModel<T extends MiniSheepEntity> extends HierarchicalModel
         this.animateWalk(MiniSheepAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         this.animate(entity.idleAnimationState, MiniSheepAnimation.idle, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, MiniSheepAnimation.attack, ageInTicks, 1f);
+        this.animate(entity.eatAnimationState, MiniSheepAnimation.eat, ageInTicks, 2.0f);
     }
 
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {

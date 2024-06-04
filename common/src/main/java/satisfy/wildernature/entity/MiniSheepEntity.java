@@ -8,15 +8,21 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -25,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import satisfy.wildernature.registry.EntityRegistry;
 
-public class MiniSheepEntity extends Animal {
-    private static final EntityDataAccessor<Boolean> ATTACKING =
-            SynchedEntityData.defineId(MiniSheepEntity.class, EntityDataSerializers.BOOLEAN);
+public class MiniSheepEntity extends Animal implements Shearable {
+    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(MiniSheepEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SHEARED = SynchedEntityData.defineId(MiniSheepEntity.class, EntityDataSerializers.BOOLEAN);
     private int eatAnimationTick;
     private EatBlockGoal eatBlockGoal;
 
@@ -36,6 +42,8 @@ public class MiniSheepEntity extends Animal {
 
     public final AnimationState attackAnimationState = new AnimationState();
     public int attackAnimationTimeout = 0;
+
+    public final AnimationState eatAnimationState = new AnimationState();
 
     public MiniSheepEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
@@ -54,7 +62,6 @@ public class MiniSheepEntity extends Animal {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
-
     private void setupAnimationStates() {
         if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
@@ -63,15 +70,21 @@ public class MiniSheepEntity extends Animal {
             --this.idleAnimationTimeout;
         }
 
-        if(this.isAttacking() && attackAnimationTimeout <= 0) {
+        if (this.isAttacking() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 80;
             attackAnimationState.start(this.tickCount);
         } else {
             --this.attackAnimationTimeout;
         }
 
-        if(!this.isAttacking()) {
+        if (!this.isAttacking()) {
             attackAnimationState.stop();
+        }
+
+        if (this.eatAnimationTick > 0) {
+            eatAnimationState.start(this.tickCount);
+        } else {
+            eatAnimationState.stop();
         }
     }
 
@@ -103,6 +116,14 @@ public class MiniSheepEntity extends Animal {
         return this.entityData.get(ATTACKING);
     }
 
+    public void setSheared(boolean sheared) {
+        this.entityData.set(SHEARED, sheared);
+    }
+
+    public boolean isSheared() {
+        return this.entityData.get(SHEARED);
+    }
+
     protected void customServerAiStep() {
         this.eatAnimationTick = this.eatBlockGoal.getEatAnimationTick();
         super.customServerAiStep();
@@ -120,6 +141,7 @@ public class MiniSheepEntity extends Animal {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ATTACKING, false);
+        this.entityData.define(SHEARED, false);
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
@@ -158,9 +180,11 @@ public class MiniSheepEntity extends Animal {
 
     public void ate() {
         super.ate();
+        this.setSheared(false);
         if (this.isBaby()) {
             this.ageUp(60);
         }
+        this.level().broadcastEntityEvent(this, (byte) 10);
     }
 
     @Nullable
@@ -170,5 +194,49 @@ public class MiniSheepEntity extends Animal {
 
     protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
         return 0.95F * dimensions.height;
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (itemstack.getItem() instanceof ShearsItem && this.readyForShearing()) {
+            this.shear(SoundSource.PLAYERS);
+            itemstack.hurtAndBreak(1, player, (p_213613_1_) -> p_213613_1_.broadcastBreakEvent(hand));
+            return InteractionResult.SUCCESS;
+        } else {
+            return super.mobInteract(player, hand);
+        }
+    }
+
+    @Override
+    public void shear(@NotNull SoundSource shearedSoundCategory) {
+        this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F);
+        this.setSheared(true);
+        int i = 1 + this.random.nextInt(3);
+        for (int j = 0; j < i; ++j) {
+            ItemEntity itemEntity = this.spawnAtLocation(Items.WHITE_WOOL, 1);
+            if (itemEntity != null) {
+                itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().add(
+                        (this.random.nextFloat() - this.random.nextFloat()) * 0.1F,
+                        this.random.nextFloat() * 0.05F,
+                        (this.random.nextFloat() - this.random.nextFloat()) * 0.1F
+                ));
+            }
+        }
+    }
+
+    @Override
+    public boolean readyForShearing() {
+        return this.isAlive() && !this.isSheared() && !this.isBaby();
+    }
+
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putBoolean("Sheared", this.isSheared());
+    }
+
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.setSheared(compoundTag.getBoolean("Sheared"));
     }
 }

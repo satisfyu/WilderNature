@@ -36,9 +36,9 @@ public class BisonEntity extends Animal implements NeutralMob {
     private static final EntityDataAccessor<Long> LAST_HURT_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.LONG);
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
     public int attackAnimationTimeout = 0;
     private UUID lastHurtBy;
-    private int idleAnimationTimeout = 0;
     public BisonEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }

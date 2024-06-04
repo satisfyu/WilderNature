@@ -8,13 +8,12 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.entity.DeerEntity;
 import satisfy.wildernature.entity.animation.DeerAnimation;
 
-public class DeerModel<T extends Entity> extends HierarchicalModel<DeerEntity> {
+public class DeerModel extends HierarchicalModel<DeerEntity> {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(WilderNature.MOD_ID, "deer"), "main");
     private final ModelPart deer;
@@ -72,8 +71,9 @@ public class DeerModel<T extends Entity> extends HierarchicalModel<DeerEntity> {
         this.head.yRot = netHeadYaw * 0.0089453292F;
         this.head.xRot = headPitch * 0.0047453292F;
 
+        this.animate(entity.idleAnimationState, DeerAnimation.idle, ageInTicks, 1f);
         this.animateWalk(DeerAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
-        this.animate(entity.lookAroundAnimationState, DeerAnimation.Look_around, ageInTicks, 1.0f);
+        this.animate(entity.lookAroundAnimationState, DeerAnimation.look_around, ageInTicks, 1.0f);
 
 
     }
