@@ -15,6 +15,9 @@ archivesBaseName = jarFileName
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }
+fabricApi {
+    configureDataGeneration()
+}
 
 configurations {
     common

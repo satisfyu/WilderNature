@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier5",
+  "count": 1,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 1 entities of type trader_llama",
+  "name": "trader_llama killer",
+  "reward": {
+    "blockExpReward": 25,
+    "loot": "minecraft:entities/trader_llama",
+    "playerExpReward": 200
+  },
+  "targetPredicate": "minecraft:trader_llama",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

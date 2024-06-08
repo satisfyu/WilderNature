@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type area_effect_cloud",
+  "name": "area_effect_cloud killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/area_effect_cloud",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:area_effect_cloud",
+  "texture": "wildernature:textures/item/_contract.png"
+}

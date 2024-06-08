@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type frog",
+  "name": "frog killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/frog",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:frog",
+  "texture": "wildernature:textures/item/_contract.png"
+}

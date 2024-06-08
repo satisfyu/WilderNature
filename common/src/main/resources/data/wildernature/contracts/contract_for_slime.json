@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier2",
+  "count": 4,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 4 entities of type slime",
+  "name": "slime killer",
+  "reward": {
+    "blockExpReward": 10,
+    "loot": "minecraft:entities/slime",
+    "playerExpReward": 80
+  },
+  "targetPredicate": "minecraft:slime",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

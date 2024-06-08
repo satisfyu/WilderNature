@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier2",
+  "count": 4,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 4 entities of type zombie_villager",
+  "name": "zombie_villager killer",
+  "reward": {
+    "blockExpReward": 10,
+    "loot": "minecraft:entities/zombie_villager",
+    "playerExpReward": 80
+  },
+  "targetPredicate": "minecraft:zombie_villager",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

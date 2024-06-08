@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier2",
+  "count": 4,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 4 entities of type chest_minecart",
+  "name": "chest_minecart killer",
+  "reward": {
+    "blockExpReward": 10,
+    "loot": "minecraft:entities/chest_minecart",
+    "playerExpReward": 80
+  },
+  "targetPredicate": "minecraft:chest_minecart",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

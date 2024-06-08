@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier5",
+  "count": 1,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 1 entities of type ender_pearl",
+  "name": "ender_pearl killer",
+  "reward": {
+    "blockExpReward": 25,
+    "loot": "minecraft:entities/ender_pearl",
+    "playerExpReward": 200
+  },
+  "targetPredicate": "minecraft:ender_pearl",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

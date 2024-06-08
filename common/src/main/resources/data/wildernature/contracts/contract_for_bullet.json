@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type bullet",
+  "name": "bullet killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "wildernature:entities/bullet",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "wildernature:bullet",
+  "texture": "wildernature:textures/item/_contract.png"
+}

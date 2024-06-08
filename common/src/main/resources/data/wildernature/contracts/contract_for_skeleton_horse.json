@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier5",
+  "count": 1,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 1 entities of type skeleton_horse",
+  "name": "skeleton_horse killer",
+  "reward": {
+    "blockExpReward": 25,
+    "loot": "minecraft:entities/skeleton_horse",
+    "playerExpReward": 200
+  },
+  "targetPredicate": "minecraft:skeleton_horse",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier2",
+  "count": 4,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 4 entities of type parrot",
+  "name": "parrot killer",
+  "reward": {
+    "blockExpReward": 10,
+    "loot": "minecraft:entities/parrot",
+    "playerExpReward": 80
+  },
+  "targetPredicate": "minecraft:parrot",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

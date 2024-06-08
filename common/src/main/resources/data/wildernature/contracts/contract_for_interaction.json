@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier0",
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 6 entities of type interaction",
+  "name": "interaction killer",
+  "reward": {
+    "blockExpReward": 0,
+    "loot": "minecraft:entities/interaction",
+    "playerExpReward": 0
+  },
+  "targetPredicate": "minecraft:interaction",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

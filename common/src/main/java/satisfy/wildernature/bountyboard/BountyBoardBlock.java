@@ -2,7 +2,6 @@ package satisfy.wildernature.bountyboard;
 
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,6 +15,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import satisfy.wildernature.registry.EntityRegistry;
 
 public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -91,6 +92,16 @@ public class BountyBoardBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PART);
+    }
+
+    private static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<BountyBoardBlockEntity> blockEntityType2){
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, BountyBoardBlockEntity::serverTick);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createTicker(level, blockEntityType, EntityRegistry.BOUNTY_BLOCK.get());
     }
 
     @Override
@@ -166,14 +177,26 @@ public class BountyBoardBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        if(blockPos!=getBasePos(blockPos,blockState.getValue(PART))){
+            return null;
+        }
         return new BountyBoardBlockEntity(blockPos,blockState);
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public InteractionResult use(BlockState blockState, Level level, BlockPos originalBlockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(level.isClientSide())
             return InteractionResult.SUCCESS;
-        MenuRegistry.openExtendedMenu((ServerPlayer) player,getMenuProvider(blockState, level, blockPos),(friendlyByteBuf -> {}));
+        final var blockPos = getBasePos(originalBlockPos,blockState.getValue(PART));
+        var pr = getMenuProvider(blockState, level, blockPos);
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, pr, friendlyByteBuf -> {
+            var entity = (BountyBoardBlockEntity)level.getBlockEntity(blockPos);
+            friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
+            friendlyByteBuf.writeShort(3);
+            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity.getContractsNbt());
+            BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf,entity.rerollsLeft,entity.rerollCooldownLeft,entity.boardId,entity.tier,entity.xp);
+            BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf,(ServerPlayer) player);
+        });
         return InteractionResult.SUCCESS;
     }
 

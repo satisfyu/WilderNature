@@ -1,11 +1,13 @@
 package satisfy.wildernature.forge;
 
 import dev.architectury.platform.forge.EventBuses;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.bountyboard.contract.ContractReloader;
 import satisfy.wildernature.forge.registry.WilderNatureBiomeModifiers;
 
 @Mod(WilderNature.MOD_ID)
@@ -17,10 +19,14 @@ public class WilderNatureForge {
         WilderNatureBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::resourceLoaderEvent);
     }
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         WilderNature.commonInit();
+    }
+    private void resourceLoaderEvent(AddReloadListenerEvent event){
+        event.addListener(new ContractReloader());
     }
 }

@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier1",
+  "count": 5,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 5 entities of type allay",
+  "name": "allay killer",
+  "reward": {
+    "blockExpReward": 5,
+    "loot": "minecraft:entities/allay",
+    "playerExpReward": 40
+  },
+  "targetPredicate": "minecraft:allay",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

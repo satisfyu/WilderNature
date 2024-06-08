@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier5",
+  "count": 1,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 1 entities of type end_crystal",
+  "name": "end_crystal killer",
+  "reward": {
+    "blockExpReward": 25,
+    "loot": "minecraft:entities/end_crystal",
+    "playerExpReward": 200
+  },
+  "targetPredicate": "minecraft:end_crystal",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

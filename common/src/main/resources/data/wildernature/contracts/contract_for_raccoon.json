@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier5",
+  "count": 1,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 1 entities of type raccoon",
+  "name": "raccoon killer",
+  "reward": {
+    "blockExpReward": 25,
+    "loot": "wildernature:entities/raccoon",
+    "playerExpReward": 200
+  },
+  "targetPredicate": "wildernature:raccoon",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

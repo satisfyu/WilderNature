@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier2",
+  "count": 4,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 4 entities of type glow_item_frame",
+  "name": "glow_item_frame killer",
+  "reward": {
+    "blockExpReward": 10,
+    "loot": "minecraft:entities/glow_item_frame",
+    "playerExpReward": 80
+  },
+  "targetPredicate": "minecraft:glow_item_frame",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

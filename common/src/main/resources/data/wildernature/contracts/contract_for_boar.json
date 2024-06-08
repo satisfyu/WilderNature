@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier0",
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 6 entities of type boar",
+  "name": "boar killer",
+  "reward": {
+    "blockExpReward": 0,
+    "loot": "wildernature:entities/boar",
+    "playerExpReward": 0
+  },
+  "targetPredicate": "wildernature:boar",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

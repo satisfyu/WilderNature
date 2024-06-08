@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type cave_spider",
+  "name": "cave_spider killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/cave_spider",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:cave_spider",
+  "texture": "wildernature:textures/item/_contract.png"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier3",
+  "count": 3,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 3 entities of type lightning_bolt",
+  "name": "lightning_bolt killer",
+  "reward": {
+    "blockExpReward": 15,
+    "loot": "minecraft:entities/lightning_bolt",
+    "playerExpReward": 120
+  },
+  "targetPredicate": "minecraft:lightning_bolt",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

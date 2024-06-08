@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type piglin",
+  "name": "piglin killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/piglin",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:piglin",
+  "texture": "wildernature:textures/item/_contract.png"
+}

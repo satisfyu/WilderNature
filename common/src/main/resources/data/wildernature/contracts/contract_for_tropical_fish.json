@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier1",
+  "count": 5,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 5 entities of type tropical_fish",
+  "name": "tropical_fish killer",
+  "reward": {
+    "blockExpReward": 5,
+    "loot": "minecraft:entities/tropical_fish",
+    "playerExpReward": 40
+  },
+  "targetPredicate": "minecraft:tropical_fish",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

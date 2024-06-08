@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type drowned",
+  "name": "drowned killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/drowned",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:drowned",
+  "texture": "wildernature:textures/item/_contract.png"
+}

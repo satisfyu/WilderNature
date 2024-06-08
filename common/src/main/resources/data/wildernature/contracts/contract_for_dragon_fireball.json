@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type dragon_fireball",
+  "name": "dragon_fireball killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/dragon_fireball",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:dragon_fireball",
+  "texture": "wildernature:textures/item/_contract.png"
+}

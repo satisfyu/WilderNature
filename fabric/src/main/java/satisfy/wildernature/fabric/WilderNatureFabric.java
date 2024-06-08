@@ -5,12 +5,17 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.*;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -19,6 +24,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import satisfy.wildernature.WilderNature;
+import satisfy.wildernature.bountyboard.contract.ContractReloader;
 import satisfy.wildernature.fabric.config.ConfigFabric;
 import satisfy.wildernature.fabric.world.PlacedFeatures;
 import satisfy.wildernature.registry.EntityRegistry;
@@ -26,6 +32,8 @@ import satisfy.wildernature.registry.TagsRegistry;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
@@ -45,6 +53,7 @@ public class WilderNatureFabric implements ModInitializer {
         WilderNature.commonInit();
         addSpawns();
         addBiomeModification();
+        addResourcerLoader();
     }
 
     void addBiomeModification() {
@@ -57,6 +66,20 @@ public class WilderNatureFabric implements ModInitializer {
         } else {
             world.add(ModificationPhase.REMOVALS, spawns_patch_hazelnut_bush, ctx -> ctx.getGenerationSettings().removeFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeatures.PATCH_HAZELNUT_BUSH));
         }
+    }
+
+    private void addResourcerLoader() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
+            @Override
+            public ResourceLocation getFabricId() {
+                return new WilderNatureIdentifier("contractloader");
+            }
+            ContractReloader dataReloader = new ContractReloader();
+            @Override
+            public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
+                return dataReloader.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
+            }
+        });
     }
 
     void addSpawns() {
@@ -114,7 +137,7 @@ public class WilderNatureFabric implements ModInitializer {
     void removeSpawn(TagKey<Biome> tag, List<EntityType<?>> entityTypes) {
         entityTypes.forEach(entityType -> {
             ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-            Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.containsKey(id), "Unregistered entity type: %s", entityType);
+            Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.containsKey(id), "Unregistered entity tier: %s", entityType);
             BiomeModifications.create(id).add(ModificationPhase.REMOVALS, biomeSelector -> biomeSelector.hasTag(tag), context -> context.getSpawnSettings().removeSpawnsOfEntityType(entityType));
         });
     }

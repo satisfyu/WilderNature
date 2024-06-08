@@ -41,7 +41,7 @@ public class BetterFollowOwnerGoal extends Goal {
         this.leavesAllowed = leavesAllowed;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(tameable.getNavigation() instanceof GroundPathNavigation) && !(tameable.getNavigation() instanceof FlyingPathNavigation)) {
-            throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+            throw new IllegalArgumentException("Unsupported mob tier for FollowOwnerGoal");
         }
     }
 

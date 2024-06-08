@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type bat",
+  "name": "bat killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/bat",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:bat",
+  "texture": "wildernature:textures/item/_contract.png"
+}

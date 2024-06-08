@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier3",
+  "count": 3,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 3 entities of type spawner_minecart",
+  "name": "spawner_minecart killer",
+  "reward": {
+    "blockExpReward": 15,
+    "loot": "minecraft:entities/spawner_minecart",
+    "playerExpReward": 120
+  },
+  "targetPredicate": "minecraft:spawner_minecart",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

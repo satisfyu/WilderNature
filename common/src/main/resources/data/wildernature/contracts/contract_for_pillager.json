@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier0",
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 6 entities of type pillager",
+  "name": "pillager killer",
+  "reward": {
+    "blockExpReward": 0,
+    "loot": "minecraft:entities/pillager",
+    "playerExpReward": 0
+  },
+  "targetPredicate": "minecraft:pillager",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

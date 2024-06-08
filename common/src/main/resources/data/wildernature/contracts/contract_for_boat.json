@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier3",
+  "count": 3,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 3 entities of type boat",
+  "name": "boat killer",
+  "reward": {
+    "blockExpReward": 15,
+    "loot": "minecraft:entities/boat",
+    "playerExpReward": 120
+  },
+  "targetPredicate": "minecraft:boat",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

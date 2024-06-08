@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier3",
+  "count": 3,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 3 entities of type elder_guardian",
+  "name": "elder_guardian killer",
+  "reward": {
+    "blockExpReward": 15,
+    "loot": "minecraft:entities/elder_guardian",
+    "playerExpReward": 120
+  },
+  "targetPredicate": "minecraft:elder_guardian",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier0",
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 6 entities of type pelican",
+  "name": "pelican killer",
+  "reward": {
+    "blockExpReward": 0,
+    "loot": "wildernature:entities/pelican",
+    "playerExpReward": 0
+  },
+  "targetPredicate": "wildernature:pelican",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

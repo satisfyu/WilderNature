@@ -23,6 +23,9 @@
     ],
     "modmenu": [
       "satisfy.wildernature.fabric.config.ModMenu"
+    ],
+    "fabric-datagen": [
+      "satisfy.wildernature.fabric.datagen.WilderNatureDatagen"
     ]
   },
   "depends": {

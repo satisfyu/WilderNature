@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier1",
+  "count": 5,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 5 entities of type red_wolf",
+  "name": "red_wolf killer",
+  "reward": {
+    "blockExpReward": 5,
+    "loot": "wildernature:entities/red_wolf",
+    "playerExpReward": 40
+  },
+  "targetPredicate": "wildernature:red_wolf",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

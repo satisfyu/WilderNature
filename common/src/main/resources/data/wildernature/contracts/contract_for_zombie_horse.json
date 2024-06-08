@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier3",
+  "count": 3,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 3 entities of type zombie_horse",
+  "name": "zombie_horse killer",
+  "reward": {
+    "blockExpReward": 15,
+    "loot": "minecraft:entities/zombie_horse",
+    "playerExpReward": 120
+  },
+  "targetPredicate": "minecraft:zombie_horse",
+  "texture": "wildernature:textures/item/rare_contract.png"
+}

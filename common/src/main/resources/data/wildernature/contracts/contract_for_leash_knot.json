@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type leash_knot",
+  "name": "leash_knot killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/leash_knot",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:leash_knot",
+  "texture": "wildernature:textures/item/_contract.png"
+}

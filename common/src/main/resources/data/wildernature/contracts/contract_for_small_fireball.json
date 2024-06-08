@@ -1,0 +1,14 @@
+{
+  "type": "wildernature:tier4",
+  "count": 2,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "kill 2 entities of type small_fireball",
+  "name": "small_fireball killer",
+  "reward": {
+    "blockExpReward": 20,
+    "loot": "minecraft:entities/small_fireball",
+    "playerExpReward": 160
+  },
+  "targetPredicate": "minecraft:small_fireball",
+  "texture": "wildernature:textures/item/_contract.png"
+}
