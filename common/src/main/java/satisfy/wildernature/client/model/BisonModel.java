@@ -7,10 +7,10 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.entity.BisonEntity;
 import satisfy.wildernature.entity.animation.BisonAnimation;
+import satisfy.wildernature.entity.animation.MiniSheepAnimation;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 @SuppressWarnings("unused")
@@ -69,6 +69,7 @@ public class BisonModel<T extends BisonEntity> extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
         this.animateWalk(BisonAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
+        this.animate(entity.idleAnimationState, BisonAnimation.idle, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, BisonAnimation.attack, ageInTicks, 1f);
     }
 

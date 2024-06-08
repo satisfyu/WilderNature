@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": {
+    "tag": "minecraft:fishes"
+  },
+  "result": "wildernature:fish_oil"
+}

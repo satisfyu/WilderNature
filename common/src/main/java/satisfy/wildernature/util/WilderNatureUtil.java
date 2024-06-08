@@ -4,6 +4,9 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -18,16 +21,20 @@ import satisfy.wildernature.registry.ObjectRegistry;
 import java.util.function.Supplier;
 
 public class WilderNatureUtil {
+
     public static void init() {
-        makeHorn(ObjectRegistry.BISON_HORN.get());
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            makeHorn(ObjectRegistry.BISON_HORN.get());
+        }
     }
 
+    @Environment(EnvType.CLIENT)
     private static void makeHorn(Item item) {
         ItemProperties.register(item, new ResourceLocation("blowing"), (p_174635_, p_174636_, p_174637_, p_174638_) -> {
             if (p_174637_ == null) {
                 return 0.0F;
             } else {
-                return p_174637_.getUseItem() != p_174635_ ? 0.0F : (float)(p_174635_.getUseDuration() -
+                return p_174637_.getUseItem() != p_174635_ ? 0.0F : (float) (p_174635_.getUseDuration() -
                         p_174637_.getUseItemRemainingTicks()) / 20.0F;
             }
         });
@@ -39,10 +46,8 @@ public class WilderNatureUtil {
         VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
         int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
 
-        for(int i = 0; i < times; ++i) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                buffer[1] = Shapes.joinUnoptimized(buffer[1], Shapes.box(1.0 - maxZ, minY, minX, 1.0 - minZ, maxY, maxX), BooleanOp.OR);
-            });
+        for (int i = 0; i < times; ++i) {
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.joinUnoptimized(buffer[1], Shapes.box(1.0 - maxZ, minY, minX, 1.0 - minZ, maxY, maxX), BooleanOp.OR));
             buffer[0] = buffer[1];
             buffer[1] = Shapes.empty();
         }

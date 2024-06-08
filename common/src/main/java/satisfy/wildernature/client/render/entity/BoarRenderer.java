@@ -9,9 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.client.model.BoarModel;
-import satisfy.wildernature.client.model.DeerModel;
 import satisfy.wildernature.entity.BoarEntity;
-import satisfy.wildernature.entity.DeerEntity;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 @Environment(value = EnvType.CLIENT)

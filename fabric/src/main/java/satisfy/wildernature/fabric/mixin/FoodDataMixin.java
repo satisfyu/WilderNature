@@ -1,6 +1,5 @@
 package satisfy.wildernature.fabric.mixin;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -15,7 +14,8 @@ import satisfy.wildernature.util.Truffling;
 @Mixin(FoodData.class)
 public class FoodDataMixin {
     @Shadow
-    public void eat(int foodLevel, float saturationModifier) { }
+    public void eat(int foodLevel, float saturationModifier) {
+    }
 
     @Inject(method = "eat(Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), cancellable = true)

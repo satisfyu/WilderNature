@@ -22,9 +22,8 @@ import satisfy.wildernature.registry.SoundRegistry;
 public class DeerEntity extends Animal {
 
     public final AnimationState idleAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
-
     public final AnimationState lookAroundAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
     private int lookAroundAnimationTime = 0;
 
     public DeerEntity(EntityType<? extends Animal> entityType, Level world) {
@@ -38,7 +37,7 @@ public class DeerEntity extends Animal {
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
         float f;
-        if(this.getPose() == Pose.STANDING) {
+        if (this.getPose() == Pose.STANDING) {
             f = Math.min(pPartialTick * 6F, 1f);
         } else {
             f = 0f;
@@ -46,7 +45,7 @@ public class DeerEntity extends Animal {
 
         this.walkAnimation.update(f, 0.2f);
     }
-    
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));

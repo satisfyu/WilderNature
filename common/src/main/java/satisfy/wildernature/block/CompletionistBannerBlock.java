@@ -61,7 +61,7 @@ public class CompletionistBannerBlock extends BaseEntityBlock {
         context.getClickedPos();
         Direction clickedFace = context.getClickedFace();
         if (clickedFace == Direction.UP || clickedFace == Direction.DOWN) {
-            return this.defaultBlockState().setValue(ROTATION, Mth.floor((double)((180.0f + context.getRotation()) * 16.0f / 360.0f) + 0.5) & 0xF);
+            return this.defaultBlockState().setValue(ROTATION, Mth.floor((double) ((180.0f + context.getRotation()) * 16.0f / 360.0f) + 0.5) & 0xF);
         } else {
             if (this == ObjectRegistry.WOLF_TRAPPER_BANNER.get()) {
                 return ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, clickedFace.getOpposite());
@@ -107,8 +107,7 @@ public class CompletionistBannerBlock extends BaseEntityBlock {
             return new ResourceLocation("wildernature", "textures/banner/rabbit_hunter.png");
         } else if (this == ObjectRegistry.COD_CATCHER_BANNER.get()) {
             return new ResourceLocation("wildernature", "textures/banner/cod_catcher.png");
-        }
-        else if (this == ObjectRegistry.COD_CATCHER_WALL_BANNER.get()) {
+        } else if (this == ObjectRegistry.COD_CATCHER_WALL_BANNER.get()) {
             return new ResourceLocation("wildernature", "textures/banner/cod_catcher.png");
         }
 

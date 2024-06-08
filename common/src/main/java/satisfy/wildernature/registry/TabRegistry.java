@@ -25,27 +25,24 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.PELICAN_MEAT.get());
                 out.accept(ObjectRegistry.COOKED_PELICAN_MEAT.get());
                 out.accept(ObjectRegistry.HAZELNUT.get());
-
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
                 out.accept(ObjectRegistry.TRUFFLE.get());
                 out.accept(ObjectRegistry.LOOT_BAG.get());
-
+                out.accept(ObjectRegistry.FUR_CLOAK.get());
                 out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.COMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.RARE_CONTRACT.get());
                 out.accept(ObjectRegistry.BOUNTY_BOARD.get());
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());
                 out.accept(ObjectRegistry.BISON_TROPHY.get());
-
                 out.accept(ObjectRegistry.BLUNDERBUSS.get());
-                out.accept(ObjectRegistry.AMMO_BAG.get());
-
-                out.accept(ObjectRegistry.FUR_CLOAK.get());
-
+                out.accept(ObjectRegistry.FLINT_AMMUNITION.get());
+                out.accept(ObjectRegistry.DIAMOND_AMMUNITION.get());
                 out.accept(ObjectRegistry.WOLF_TRAPPER_BANNER.get());
                 out.accept(ObjectRegistry.BUNNY_STALKER_BANNER.get());
                 out.accept(ObjectRegistry.COD_CATCHER_BANNER.get());
-
                 out.accept(ObjectRegistry.DEER_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RED_WOLF_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RACCOON_SPAWN_EGG.get());
@@ -55,7 +52,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.OWL_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.BISON_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.TURKEY_SPAWN_EGG.get());
-
+                out.accept(ObjectRegistry.MINISHEEP_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.ANIMAL_COMPENDIUM.get());
 
 

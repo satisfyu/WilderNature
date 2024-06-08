@@ -16,7 +16,7 @@ public class WilderNatureClientFabric implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(WilderNatureClient.WOLF_FUR_CHESTPLATE_LAYER, WolfFurChestplateModel::createBodyLayer);
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if(entityRenderer instanceof PlayerRenderer renderer) {
+            if (entityRenderer instanceof PlayerRenderer renderer) {
                 registrationHelper.register(new WolfFurChestplateLayer<>(renderer));
             }
         });

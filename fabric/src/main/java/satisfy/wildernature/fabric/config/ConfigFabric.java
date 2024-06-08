@@ -8,18 +8,36 @@ import satisfy.wildernature.WilderNature;
 public class ConfigFabric implements ConfigData {
     public boolean removeSavannaAnimals = true;
     public boolean removeSwampAnimals = true;
-    public boolean removeForestAnimals = true;
     public boolean removeJungleAnimals = true;
+    public boolean removeForestAnimals = true;
     public boolean addJungleAnimals = true;
     public boolean spawnHazelnutBush = true;
 
     public int PelicanSpawnWeight = 5;
+    public int PelicanMinGroupSize = 3;
+    public int PelicanMaxGroupSize = 5;
     public int DeerSpawnWeight = 12;
+    public int DeerMinGroupSize = 2;
+    public int DeerMaxGroupSize = 4;
     public int RaccoonSpawnWeight = 8;
+    public int RaccoonMinGroupSize = 2;
+    public int RaccoonMaxGroupSize = 3;
     public int SquirrelSpawnWeight = 8;
+    public int SquirrelMinGroupSize = 2;
+    public int SquirrelMaxGroupSize = 2;
     public int RedWolfSpawnWeight = 10;
+    public int RedWolfMinGroupSize = 2;
+    public int RedWolfMaxGroupSize = 4;
     public int OwlSpawnWeight = 12;
+    public int OwlMinGroupSize = 3;
+    public int OwlMaxGroupSize = 3;
     public int BoarSpawnWeight = 14;
+    public int BoarMinGroupSize = 4;
+    public int BoarMaxGroupSize = 5;
     public int BisonSpawnWeight = 10;
+    public int BisonMinGroupSize = 3;
+    public int BisonMaxGroupSize = 6;
     public int TurkeySpawnWeight = 12;
+    public int TurkeyMinGroupSize = 3;
+    public int TurkeyMaxGroupSize = 5;
 }

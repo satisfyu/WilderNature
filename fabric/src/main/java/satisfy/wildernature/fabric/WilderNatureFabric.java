@@ -34,6 +34,10 @@ public class WilderNatureFabric implements ModInitializer {
         return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier(path)));
     }
 
+    private static Predicate<BiomeSelectionContext> getBloomingNatureSelector() {
+        return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_patch_hazelnut_bush")));
+    }
+
     @Override
     public void onInitialize() {
         AutoConfig.register(ConfigFabric.class, GsonConfigSerializer::new);
@@ -54,18 +58,18 @@ public class WilderNatureFabric implements ModInitializer {
             world.add(ModificationPhase.REMOVALS, spawns_patch_hazelnut_bush, ctx -> ctx.getGenerationSettings().removeFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeatures.PATCH_HAZELNUT_BUSH));
         }
     }
-    
+
     void addSpawns() {
         ConfigFabric config = AutoConfig.getConfigHolder(ConfigFabric.class).getConfig();
-        addMobSpawn(BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), config.PelicanSpawnWeight, 3, 5);
-        addMobSpawn(TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), config.DeerSpawnWeight, 2, 4);
-        addMobSpawn(TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), config.RaccoonSpawnWeight, 2, 3);
-        addMobSpawn(TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(),  config.SquirrelSpawnWeight, 2, 2);
-        addMobSpawn(TagsRegistry.SPAWNS_RED_WOLF, EntityRegistry.RED_WOLF.get(),  config.RedWolfSpawnWeight, 3, 4);
-        addMobSpawn(TagsRegistry.SPAWNS_OWL, EntityRegistry.OWL.get(),  config.OwlSpawnWeight, 3, 3);
-        addMobSpawn(TagsRegistry.SPAWNS_BOAR, EntityRegistry.BOAR.get(), config.BoarSpawnWeight, 5, 5);
-        addMobSpawn(TagsRegistry.SPAWNS_BISON, EntityRegistry.BISON.get(), config.BisonSpawnWeight, 3, 5);
-        addMobSpawn(TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), config.TurkeySpawnWeight, 3, 5);
+        addMobSpawn(BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), config.PelicanSpawnWeight, config.PelicanMinGroupSize, config.PelicanMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), config.DeerSpawnWeight, config.DeerMinGroupSize, config.DeerMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), config.RaccoonSpawnWeight, config.RaccoonMinGroupSize, config.RaccoonMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(), config.SquirrelSpawnWeight, config.SquirrelMinGroupSize, config.SquirrelMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_RED_WOLF, EntityRegistry.RED_WOLF.get(), config.RedWolfSpawnWeight, config.RedWolfMinGroupSize, config.RedWolfMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_OWL, EntityRegistry.OWL.get(), config.OwlSpawnWeight, config.OwlMinGroupSize, config.OwlMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_BOAR, EntityRegistry.BOAR.get(), config.BoarSpawnWeight, config.BoarMinGroupSize, config.BoarMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_BISON, EntityRegistry.BISON.get(), config.BisonSpawnWeight, config.BisonMinGroupSize, config.BisonMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), config.TurkeySpawnWeight, config.TurkeyMinGroupSize, config.TurkeyMaxGroupSize);
 
         if (config.removeSavannaAnimals) {
             removeSpawn(BiomeTags.IS_SAVANNA, List.of(EntityType.SHEEP, EntityType.PIG, EntityType.CHICKEN, EntityType.COW));
@@ -113,9 +117,5 @@ public class WilderNatureFabric implements ModInitializer {
             Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.containsKey(id), "Unregistered entity type: %s", entityType);
             BiomeModifications.create(id).add(ModificationPhase.REMOVALS, biomeSelector -> biomeSelector.hasTag(tag), context -> context.getSpawnSettings().removeSpawnsOfEntityType(entityType));
         });
-    }
-
-    private static Predicate<BiomeSelectionContext> getBloomingNatureSelector() {
-        return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_patch_hazelnut_bush")));
     }
 }

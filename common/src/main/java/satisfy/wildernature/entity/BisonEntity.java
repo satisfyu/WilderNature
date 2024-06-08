@@ -25,7 +25,6 @@ import satisfy.wildernature.entity.ai.BisonAttackGoal;
 import satisfy.wildernature.registry.EntityRegistry;
 import satisfy.wildernature.registry.SoundRegistry;
 
-import java.io.IOException;
 import java.util.UUID;
 
 //TODO: Add rolling animation / bison doesnt fight back when hit 
@@ -35,17 +34,24 @@ public class BisonEntity extends Animal implements NeutralMob {
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ANGRY = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Long> LAST_HURT_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.LONG);
+    public final AnimationState idleAnimationState = new AnimationState();
+    public final AnimationState attackAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
+    public int attackAnimationTimeout = 0;
     private UUID lastHurtBy;
-
     public BisonEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
-    public final AnimationState idleAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
-
-    public final AnimationState attackAnimationState = new AnimationState();
-    public int attackAnimationTimeout = 0;
+    public static @NotNull AttributeSupplier.Builder createMobAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 16.0)
+                .add(Attributes.ATTACK_DAMAGE, 1.5F)
+                .add(Attributes.ATTACK_SPEED, 1.25)
+                .add(Attributes.MOVEMENT_SPEED, 0.1800009838F)
+                .add(Attributes.ARMOR_TOUGHNESS, 0.0177774783F)
+                .add(Attributes.ATTACK_KNOCKBACK, 2F);
+    }
 
     @Override
     public void tick() {
@@ -59,7 +65,7 @@ public class BisonEntity extends Animal implements NeutralMob {
     }
 
     private void setupAnimationStates() {
-        if(this.idleAnimationTimeout <= 0) {
+        if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
             this.idleAnimationState.start(this.tickCount);
         } else {
@@ -70,8 +76,7 @@ public class BisonEntity extends Animal implements NeutralMob {
         if (this.isAttacking() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 80;
             attackAnimationState.start(this.tickCount);
-        }
-        else {
+        } else {
             this.attackAnimationTimeout--;
         }
 
@@ -94,7 +99,7 @@ public class BisonEntity extends Animal implements NeutralMob {
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
         float f;
-        if(this.getPose() == Pose.STANDING) {
+        if (this.getPose() == Pose.STANDING) {
             f = Math.min(pPartialTick * 6F, 1f);
         } else {
             f = 0f;
@@ -103,28 +108,28 @@ public class BisonEntity extends Animal implements NeutralMob {
         this.walkAnimation.update(f, 0.2f);
     }
 
-    public void setAttacking(boolean attacking) {
-        this.entityData.set(ATTACKING, attacking);
-    }
-
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }
 
-    public void setAngry(boolean angry) {
-        this.entityData.set(ANGRY, angry);
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(ATTACKING, attacking);
     }
 
     public boolean isAngry() {
         return this.entityData.get(ANGRY);
     }
 
-    public void setLastHurtTime(long time) {
-        this.entityData.set(LAST_HURT_TIME, time);
+    public void setAngry(boolean angry) {
+        this.entityData.set(ANGRY, angry);
     }
 
     public long getLastHurtTime() {
         return this.entityData.get(LAST_HURT_TIME);
+    }
+
+    public void setLastHurtTime(long time) {
+        this.entityData.set(LAST_HURT_TIME, time);
     }
 
     @Override
@@ -134,16 +139,6 @@ public class BisonEntity extends Animal implements NeutralMob {
         this.entityData.define(ANGER_TIME, 0);
         this.entityData.define(ANGRY, false);
         this.entityData.define(LAST_HURT_TIME, 0L);
-    }
-
-    public static @NotNull AttributeSupplier.Builder createMobAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 16.0)
-                .add(Attributes.ATTACK_DAMAGE, 1.5F)
-                .add(Attributes.ATTACK_SPEED, 1.25)
-                .add(Attributes.MOVEMENT_SPEED, 0.1800009838F)
-                .add(Attributes.ARMOR_TOUGHNESS, 0.0177774783F)
-                .add(Attributes.ATTACK_KNOCKBACK, 2F);
     }
 
     @Override
@@ -258,7 +253,6 @@ public class BisonEntity extends Animal implements NeutralMob {
             return this.mob.isBaby() && super.canUse();
         }
     }
-
 
 
 }

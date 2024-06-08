@@ -1,5 +1,7 @@
 package satisfy.wildernature.client.gui;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -8,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
+@Environment(EnvType.CLIENT)
 public abstract class CompendiumGui extends Screen {
 
     private static final ResourceLocation[] TEXTURES = new ResourceLocation[]{
