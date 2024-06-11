@@ -1,6 +1,7 @@
 package satisfy.wildernature.bountyboard;
 
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -182,7 +183,9 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
     public ResourceLocation c_tierId;
     public void c_onServerUpdate(Player player, FriendlyByteBuf buf) {
         var updateType = buf.readEnum(BountyBlockNetworking.BountyServerUpdateType.class);
-        WilderNature.info("Trying to handle server update of type {}",updateType.toString());
+        if(Platform.isDevelopmentEnvironment()){
+            WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
+        }
         if(updateType == BountyBlockNetworking.BountyServerUpdateType.MULTI){
             int count = buf.readShort();
             for(int i=0;i<count;i++){
