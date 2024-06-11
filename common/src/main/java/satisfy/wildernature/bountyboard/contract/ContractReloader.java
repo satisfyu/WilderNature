@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class ContractReloader implements ResourceManagerReloadListener {
     public static HashMap<ResourceLocation,Contract> contracts = new HashMap<>();
@@ -35,6 +36,11 @@ public class ContractReloader implements ResourceManagerReloadListener {
             }
             return allTiers.contains(contracts.get(key).tier());
         }).toList();
+    }
+
+    public static ResourceLocation getRandomContractOfTier(ResourceLocation tier) {
+        var tier1 = getContractsOfTier(tier);
+        return tier1.get(new Random().nextInt(tier1.size()));
     }
 
     public void onResourceManagerReload(ResourceManager manager) {

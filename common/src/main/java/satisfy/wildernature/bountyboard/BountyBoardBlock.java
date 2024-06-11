@@ -2,6 +2,7 @@ package satisfy.wildernature.bountyboard;
 
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -9,11 +10,14 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,6 +38,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import satisfy.wildernature.registry.EntityRegistry;
+import satisfy.wildernature.registry.ObjectRegistry;
 
 public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -114,7 +119,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
             return null;
         }
 
-        world.setBlock(pos, this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT), 3);
+        //world.setBlock(pos, this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT), 3);
         world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.TOP_LEFT), 3);
         world.setBlock(pos.east(), this.defaultBlockState().setValue(PART, Part.BOTTOM_RIGHT), 3);
         world.setBlock(pos.east().above(), this.defaultBlockState().setValue(PART, Part.TOP_RIGHT), 3);
@@ -172,6 +177,23 @@ public class BountyBoardBlock extends BaseEntityBlock {
             case TOP_LEFT -> SHAPE_TOP_LEFT;
             case TOP_RIGHT -> SHAPE_TOP_RIGHT;
         };
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        var pos = getBasePos(blockPos,blockState.getValue(PART));
+        var entity = level.getBlockEntity(pos);
+        assert entity instanceof BountyBoardBlockEntity;
+        if(entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity){
+            var blockEntityTag = new CompoundTag();
+            bountyBoardBlockEntity.saveAdditional(blockEntityTag);
+            var tag = new CompoundTag();
+            tag.put("BlockEntityTag",blockEntityTag);
+            var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
+            stack.setTag(tag);
+            level.addFreshEntity(new ItemEntity(level,blockPos.getX(),blockPos.getY(),blockPos.getZ(),stack));
+        }
+        super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Nullable

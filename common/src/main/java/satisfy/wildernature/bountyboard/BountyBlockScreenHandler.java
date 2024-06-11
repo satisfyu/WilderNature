@@ -132,9 +132,13 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             }
             var id = buf.readByte();
             var contract = s_targetEntity.getContracts()[id];
+            s_targetEntity.setRandomContactInSlot(id);
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,16,2048));
             ContractInProgress.progressPerPlayer.put(player.getUUID(),new ContractInProgress(contract, Contract.fromId(contract).count(),s_targetEntity.boardId));
+            newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
+            newBuf.writeShort(2);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf,player);
+            BountyBlockScreenHandler.s_writeUpdateContracts(newBuf,s_targetEntity.getContractsNbt());
             NetworkManager.sendToPlayer(player,BountyBlockNetworking.ID_SCREEN_UPDATE,newBuf);
         }
         if(action == BountyBlockNetworking.BountyClientActionType.FINISH_CONTRACT){

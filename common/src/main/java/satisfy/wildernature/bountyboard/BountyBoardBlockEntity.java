@@ -41,22 +41,23 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
     public Event onTick = new Event();
     public Event onBlockDataChange = new Event();
-    public long boardId;
-    private ResourceLocation[] contracts;
-    public ResourceLocation tier;
-    public int xp;
+    public long boardId = new Random().nextInt();
+    private ResourceLocation[] contracts = new ResourceLocation[3];
+    public ResourceLocation tier = new WilderNatureIdentifier("tier1");
+    public int xp=0;
 
     public ResourceLocation[] getContracts(){
-        return contracts.clone();
+            return contracts.clone();
     }
-    private void setContracts(ResourceLocation[] contracts){
-        this.contracts = contracts;
+    public void setContracts(ResourceLocation[] contracts){
+        this.contracts = contracts.clone();
     }
 
 
     public BountyBoardBlockEntity(BlockPos a, BlockState b) {
         super(EntityRegistry.BOUNTY_BLOCK.get(), a, b);
-        load(new CompoundTag());
+        fillWithRandomContracts();
+        //load(new CompoundTag());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         this.rerollCooldownLeft = compoundTag.contains(KEY_REROLL_COOLDOWN_LEFT) ? compoundTag.getInt(KEY_REROLL_COOLDOWN_LEFT) : 0;
         this.rerollsLeft = compoundTag.contains(KEY_REROLLS_LEFT) ? compoundTag.getInt(KEY_REROLLS_LEFT) : 3;
         this.boardId = compoundTag.contains(KEY_LONGID) ? compoundTag.getLong(KEY_LONGID) : new Random().nextInt();
-        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)) : new WilderNatureIdentifier("tier1");
+        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)): new WilderNatureIdentifier("tier1");
         this.xp = compoundTag.contains(KEY_EXP) ? compoundTag.getInt(KEY_EXP) : 0;
         if(compoundTag.contains(KEY_CONTRACTS)){
             setContracts(ResourceLocation.CODEC.listOf().parse(NbtOps.INSTANCE,(compoundTag.get(KEY_CONTRACTS))).getOrThrow(false,(error)->new RuntimeException(error)).toArray(new ResourceLocation[3]));
@@ -87,11 +88,14 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         return true;
     }
     private void fillWithRandomContracts() {
-        var contracts = new ResourceLocation[3];
-        var tier1 =  ContractReloader.getContractsOfTier(this.tier);
         for(int i=0;i<3;i++){
-            contracts[i] = tier1.get(new Random().nextInt(tier1.size()));
+            setRandomContactInSlot(i);
         }
+    }
+
+    public void setRandomContactInSlot(int i){
+        var contracts = getContracts();
+        contracts[i] = ContractReloader.getRandomContractOfTier(this.tier);
         setContracts(contracts);
     }
 

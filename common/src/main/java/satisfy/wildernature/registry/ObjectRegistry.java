@@ -23,6 +23,7 @@ import net.minecraft.world.level.material.PushReaction;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.block.*;
 import satisfy.wildernature.bountyboard.BountyBoardBlock;
+import satisfy.wildernature.bountyboard.BountyBoardBlockItem;
 import satisfy.wildernature.item.*;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 import satisfy.wildernature.util.WilderNatureUtil;
