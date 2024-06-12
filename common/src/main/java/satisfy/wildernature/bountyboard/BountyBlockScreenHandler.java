@@ -54,7 +54,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         {
             s_targetEntity.onTick.subscribe(() -> {
                 if(s_targetEntity.rerollCooldownLeft % 20 == 0 && inventory.player.containerMenu==this){
-                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,256));
+                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
                     s_writeBlockDataChange(buf, this.s_targetEntity.rerollsLeft, this.s_targetEntity.rerollCooldownLeft, this.s_targetEntity.boardId,s_targetEntity.tier,s_targetEntity.xp);
                     NetworkManager.sendToPlayer((ServerPlayer) inventory.player,BountyBlockNetworking.ID_SCREEN_UPDATE,buf);
                 }
