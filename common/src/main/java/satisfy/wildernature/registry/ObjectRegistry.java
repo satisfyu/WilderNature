@@ -65,7 +65,6 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> MINISHEEP_SPAWN_EGG = registerItem("minisheep_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.MINISHEEP, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TRUFFLE = registerItem("truffle", () -> new Item(getSettings()));
-    public static final RegistrySupplier<Item> ANIMAL_COMPENDIUM = registerItem("animal_compendium", () -> new CompendiumItem(getSettings()));
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK);
     public static final Registrar<Block> BLOCK_REGISTRAR = BLOCKS.getRegistrar();
     public static final RegistrySupplier<Block> HAZELNUT_BUSH = registerWithoutItem("hazelnut_bush", () -> new HazelnutBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY)));
@@ -84,7 +83,6 @@ public class ObjectRegistry {
     /**
      * Ideas for Items:
      * Animal Compendium
-     * <p>
      * Ideas for Animals:
      * Ram, rideable - just like a slow Horse with LOTS of health
      * Birds & birdnest & treehouses
