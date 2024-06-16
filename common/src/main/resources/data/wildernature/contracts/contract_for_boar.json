@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier0",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:common_contract"
+  },
   "count": 6,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 6 entities of type boar",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/boar",
     "playerExpReward": 0
   },
-  "targetPredicate": "wildernature:boar",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:boar"
 }

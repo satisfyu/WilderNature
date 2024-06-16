@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier1",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:common_contract"
+  },
   "count": 5,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 5 entities of type turkey",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/turkey",
     "playerExpReward": 40
   },
-  "targetPredicate": "wildernature:turkey",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:turkey"
 }

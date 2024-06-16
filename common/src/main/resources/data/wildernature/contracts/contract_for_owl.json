@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier2",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:uncommon_contract"
+  },
   "count": 4,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 4 entities of type owl",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/owl",
     "playerExpReward": 80
   },
-  "targetPredicate": "wildernature:owl",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:owl"
 }

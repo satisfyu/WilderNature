@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier5",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
   "count": 1,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 1 entities of type raccoon",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/raccoon",
     "playerExpReward": 200
   },
-  "targetPredicate": "wildernature:raccoon",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:raccoon"
 }

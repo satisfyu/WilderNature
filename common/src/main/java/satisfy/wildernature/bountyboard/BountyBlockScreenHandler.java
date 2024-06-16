@@ -7,6 +7,8 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledHeapByteBuf;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -23,6 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.bountyboard.contract.Contract;
 import satisfy.wildernature.bountyboard.contract.ContractInProgress;
+import satisfy.wildernature.bountyboard.contract.ContractItem;
+import satisfy.wildernature.bountyboard.contract.ContractReloader;
+import satisfy.wildernature.registry.ObjectRegistry;
 
 public class BountyBlockScreenHandler extends AbstractContainerMenu {
 
@@ -123,6 +128,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         if(action == BountyBlockNetworking.BountyClientActionType.REROLL){
             WilderNature.info("Player {} Rerolled",player.getScoreboardName());
             s_targetEntity.tryReroll();
+            s_targetEntity.getLevel();
         }
         if(action == BountyBlockNetworking.BountyClientActionType.CONFIRM_CONTRACT){
             var playerContract = ContractInProgress.progressPerPlayer.get(player.getUUID());
@@ -135,6 +141,11 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             var contract = s_targetEntity.getContracts()[id];
             s_targetEntity.setRandomContactInSlot(id);
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,16,2048));
+            var stack = Contract.fromId(contract).contractStack();
+            stack.setTag(new CompoundTag());
+            stack.getTag().putString(ContractItem.TAG_CONTRACT_ID,contract.toString());
+            stack.getTag().putUUID(ContractItem.TAG_PLAYER,player.getUUID());
+            player.spawnAtLocation(stack);
             ContractInProgress.progressPerPlayer.put(player.getUUID(),new ContractInProgress(contract, Contract.fromId(contract).count(),s_targetEntity.boardId));
             newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             newBuf.writeShort(2);
@@ -160,8 +171,8 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
             NetworkManager.sendToPlayer(player,BountyBlockNetworking.ID_SCREEN_UPDATE,newBuf);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf,player);
-
         }
+        s_targetEntity.setChanged();
     }
 
 
@@ -184,7 +195,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
     public void c_onServerUpdate(Player player, FriendlyByteBuf buf) {
         var updateType = buf.readEnum(BountyBlockNetworking.BountyServerUpdateType.class);
         if(Platform.isDevelopmentEnvironment()){
-            WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
+            //WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
         }
         if(updateType == BountyBlockNetworking.BountyServerUpdateType.MULTI){
             int count = buf.readShort();

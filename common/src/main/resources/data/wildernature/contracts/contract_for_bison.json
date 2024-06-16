@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:uncommon_contract"
+  },
   "count": 3,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 3 entities of type bison",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/bison",
     "playerExpReward": 120
   },
-  "targetPredicate": "wildernature:bison",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:bison"
 }

@@ -1,5 +1,9 @@
 {
   "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:uncommon_contract"
+  },
   "count": 3,
   "damagePredicate": "wildernature:damage_any",
   "description": "kill 3 entities of type deer",
@@ -9,6 +13,5 @@
     "loot": "wildernature:entities/deer",
     "playerExpReward": 120
   },
-  "targetPredicate": "wildernature:deer",
-  "texture": "wildernature:textures/item/rare_contract.png"
+  "targetPredicate": "wildernature:deer"
 }

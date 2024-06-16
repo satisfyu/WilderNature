@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import satisfy.wildernature.WilderNature;
 import satisfy.wildernature.bountyboard.contract.Contract;
@@ -61,18 +62,21 @@ public class WilderNatureDatagen implements DataGeneratorEntrypoint {
                     case 0:
                     case 1:
                         texture = "common";
+                        break;
                     case 2:
                     case 3:
                         texture = "uncommon";
+                        break;
                     case 5:
                     case 6:
                         texture = "rare";
+                        break;
                 }
                 var name = type.getDescriptionId();
                 name = name.split("\\.")[name.split("\\.").length-1];
                 provider.accept(BuiltInRegistries.ENTITY_TYPE.getKey(type).withPrefix("contract_for_"), new Contract(
                         new WilderNatureIdentifier("tier%d".formatted(tier)),
-                        new WilderNatureIdentifier("textures/item/%s_contract.png".formatted(texture)),
+                        new ItemStack(BuiltInRegistries.ITEM.get(new WilderNatureIdentifier("%s_contract".formatted(texture)))),
                         BuiltInRegistries.ENTITY_TYPE.getKey(type),
                         new WilderNatureIdentifier("damage_any"),
                         6-tier,
@@ -85,8 +89,6 @@ public class WilderNatureDatagen implements DataGeneratorEntrypoint {
                                 type.getDefaultLootTable()
 
                         )
-
-
                 ));
             }
         }

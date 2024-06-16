@@ -1,14 +1,17 @@
 {
-  "type": "wildernature:tier4",
-  "count": 2,
+  "type": "wildernature:tier5",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
+  "count": 1,
   "damagePredicate": "wildernature:damage_any",
-  "description": "kill 2 entities of type bullet",
+  "description": "kill 1 entities of type bullet",
   "name": "bullet killer",
   "reward": {
-    "blockExpReward": 20,
+    "blockExpReward": 25,
     "loot": "wildernature:entities/bullet",
-    "playerExpReward": 160
+    "playerExpReward": 200
   },
-  "targetPredicate": "wildernature:bullet",
-  "texture": "wildernature:textures/item/_contract.png"
+  "targetPredicate": "wildernature:bullet"
 }

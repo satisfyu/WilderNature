@@ -84,16 +84,18 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
                     yPos += rowsHeight + tooltipBorders + row1;
                 }
 
+                var list = new ArrayList<FormattedCharSequence>();
+
                 var contractSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.currentcontract"),tooltipTextWidth);
+                list.addAll(contractSplit);
+
                 var nameSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.getS_contract().name()),tooltipTextWidth);
                 var descriptionSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.getS_contract().description()),tooltipTextWidth);
                 var progressSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.progress", menu.c_activeContract.getS_contract().count()-menu.c_activeContract.count, menu.c_activeContract.getS_contract().count()),tooltipTextWidth);
-
-                var list = new ArrayList<FormattedCharSequence>();
-                list.addAll(contractSplit);
                 list.addAll(nameSplit);
                 list.addAll(descriptionSplit);
                 list.addAll(progressSplit);
+
                 guiGraphics.renderTooltip(minecraft.font,list,xPos,yPos);
             }
         });

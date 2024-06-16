@@ -30,7 +30,7 @@ public class ContractInProgress {
     private static ResourceLocation contract(Object o) {
         return ((ContractInProgress) o).s_contract;
     }
-    private final ResourceLocation s_contract;
+    public final ResourceLocation s_contract;
 
     private static long id(Object o) {
         return ((ContractInProgress)o).boardId;
@@ -50,11 +50,6 @@ public class ContractInProgress {
             Codec.INT.fieldOf("count").forGetter(ContractInProgress::count),
             Codec.LONG.fieldOf("id").forGetter(ContractInProgress::id)
             ).apply(instance, ContractInProgress::new));
-    public static final Codec<ContractInProgress> CLIENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Contract.CODEC.fieldOf("cl_contract").forGetter(ContractInProgress::getS_contract),
-            Codec.INT.fieldOf("count").forGetter(ContractInProgress::count),
-            Codec.LONG.fieldOf("id").forGetter(ContractInProgress::id)
-    ).apply(instance, ContractInProgress::createClient));
 
     private static ContractInProgress createClient(Contract contract, Integer count, Long boardId) {
         var contractInProgress = new ContractInProgress(null,count,boardId);
