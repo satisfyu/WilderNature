@@ -10,6 +10,7 @@ import satisfy.wildernature.util.WilderNatureIdentifier;
 public class BountyBlockNetworking {
     public static final ResourceLocation ID_SCREEN_UPDATE = new WilderNatureIdentifier("screen_update");
     public static final ResourceLocation ID_SCREEN_ACTION = new WilderNatureIdentifier("screen_action");
+    public static final int MAX_SIZE = 32768;
 
     static void c_onServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         Player player = context.getPlayer();

@@ -46,21 +46,21 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
         var guiY = height/2-169/2;
         rerollButton = new ImageButton(centerX-74,centerY-52,14,14,0,0,14, TEX_REROLL,14,42,this::onReroll);
         acceptButton = new ImageButton(centerX-176/2+135,centerY-169/2+51,14,14,0,0,14, TEX_ACCEPT,14,42,this::onAccept);
-        finishButton = new Button.Builder(Component.translatable("text.gui.wildernature.bounty.finish"),(button)->{
-            onFinish();
-        }).pos(centerX+176/2+4,centerY-169/2+14).width(120).build();
+        finishButton = new ImageButton(centerX-176/2+135,centerY-169/2+51,14,14,0,0,14, TEX_ACCEPT,14,42,(button)->onFinish());
+        finishButton.setTooltip(Tooltip.create(Component.translatable("text.gui.wildernature.bounty.finish")));
+        //new Button.Builder(Component.translatable("text.gui.wildernature.bounty.finish"),).pos(centerX+176/2+4,centerY-169/2+14).width(120).build();
 
         addRenderableWidget(rerollButton);
         addRenderableWidget(acceptButton);
         addRenderableWidget(finishButton);
         acceptButton.setTooltip(Tooltip.create(Component.translatable("text.gui.wildernature.bounty.accept")));
+        selectedContractButton = new ContractButton(centerX-176/2+97,centerY-169/2+49,null,(button)->{});
         for(int i=0;i<3;i++){
             var contract = menu.c_contracts[i];
             contractButtons[i] = addRenderableWidget(new ContractButton(centerX-176/2+25+i*18,centerY-169/2+49,contract,(button)->{
                 this.setSelectedContract(((ContractButton)button).getContract());
             }));
         }
-        selectedContractButton = new ContractButton(centerX-176/2+97,centerY-169/2+49,null,(button)->{});
         addRenderableWidget(selectedContractButton);
         menu.c_onContractUpdate.subscribe(()->{
             selectedContractButton.setContract(null);
@@ -72,7 +72,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
         addRenderableOnly((guiGraphics,mx,my,f)->{
             Tooltip.create(Component.literal("123"));
             int xPos = centerX+176/2-4;
-            int yPos = centerY-169/2+30-1+(menu.c_activeContract !=null&&menu.c_activeContract.isFinished()?24:0);
+            int yPos = centerY-169/2+30-1;
             if(menu.c_activeContract !=null){
                 var tooltipBorders = 9;
                 var tooltipTextWidth = 120-tooltipBorders;
@@ -107,7 +107,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     }
 
     private void onFinish() {
-        var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
+        var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
         buf.writeEnum(BountyBlockNetworking.BountyClientActionType.FINISH_CONTRACT);
         NetworkManager.sendToServer(BountyBlockNetworking.ID_SCREEN_ACTION,buf);
     }
@@ -116,7 +116,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     private void onAccept(Button button) {
         for(int i=0;i<3;i++){
             if(contractButtons[i].getContract() == selectedContractButton.getContract()){
-                var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,64));
+                var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
                 buf.writeEnum(BountyBlockNetworking.BountyClientActionType.CONFIRM_CONTRACT);
                 buf.writeByte(i);
                 NetworkManager.sendToServer(BountyBlockNetworking.ID_SCREEN_ACTION,buf);
@@ -131,7 +131,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     }
 
     private void onReroll(Button button) {
-        var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,64));
+        var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
         buf.writeEnum(BountyBlockNetworking.BountyClientActionType.REROLL);
         NetworkManager.sendToServer(BountyBlockNetworking.ID_SCREEN_ACTION,buf);
     }
@@ -140,7 +140,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     public void render(GuiGraphics guiGraphics, int mx, int my, float f) {
         finishButton.visible = menu.c_activeContract!=null && menu.c_activeContract.isFinished();
         updateTooltip();
-        acceptButton.visible = menu.c_activeContract == null;
+        acceptButton.visible = menu.c_activeContract == null && (selectedContractButton != null && selectedContractButton.getContract()!=null);
         acceptButton.active = menu.c_activeContract == null;
         super.render(guiGraphics, mx, my, f);
         renderTooltip(guiGraphics, mx, my);
