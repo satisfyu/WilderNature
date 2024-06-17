@@ -13,12 +13,7 @@ public record BountyBoardTier(int experience, Optional<ResourceLocation> nextTie
             ResourceLocation.CODEC.optionalFieldOf("nextTier").forGetter(BountyBoardTier::nextTier),
             ResourceLocation.CODEC.optionalFieldOf("previousTier").forGetter(BountyBoardTier::previousTier)
     ).apply(bountyBoardTierInstance,BountyBoardTier::new));
-    public boolean hasNextTier(){
-        return nextTier.isEmpty();
-    }
-    public boolean hasPreviousTier(){
-        return previousTier.isEmpty();
-    }
+
     public float progress(int xp){
         if(this.experience==-1)
             return 1;

@@ -137,6 +137,7 @@
   "text.gui.wildernature.bounty.reroll.left": "Rerolls left %d",
   "text.gui.wildernature.bounty.reroll.time": "Time to reroll reset: %d:%d",
   "text.gui.wildernature.bounty.currentcontract": "Active contract:",
+  "text.gui.wildernature.bounty.selectedcontract": "Selected contract:",
   "text.gui.wildernature.bounty.progress": "Progress: %d/%d",
   "text.gui.wildernature.bounty.finish" : "Finish contract",
   "text.gui.wildernature.bounty.finished" : "Finished contract %s ",

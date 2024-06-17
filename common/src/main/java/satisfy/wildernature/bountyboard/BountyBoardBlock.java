@@ -213,6 +213,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
         var pr = getMenuProvider(blockState, level, blockPos);
         MenuRegistry.openExtendedMenu((ServerPlayer) player, pr, friendlyByteBuf -> {
             var entity = (BountyBoardBlockEntity)level.getBlockEntity(blockPos);
+            /////
             friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             friendlyByteBuf.writeShort(3);
             BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity.getContractsNbt());

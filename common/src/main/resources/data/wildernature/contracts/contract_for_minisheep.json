@@ -1,8 +1,8 @@
 {
   "type": "wildernature:tier4",
   "contractStack": {
-    "Count": 0,
-    "id": "minecraft:air"
+    "Count": 1,
+    "id": "wildernature:uncommon_contract"
   },
   "count": 2,
   "damagePredicate": "wildernature:damage_any",

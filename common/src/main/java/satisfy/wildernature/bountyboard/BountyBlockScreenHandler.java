@@ -1,5 +1,6 @@
 package satisfy.wildernature.bountyboard;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -7,6 +8,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledHeapByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -33,7 +35,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int i) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -59,14 +61,15 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         {
             s_targetEntity.onTick.subscribe(() -> {
                 if(s_targetEntity.rerollCooldownLeft % 20 == 0 && inventory.player.containerMenu==this){
-                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
+                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
                     s_writeBlockDataChange(buf, this.s_targetEntity.rerollsLeft, this.s_targetEntity.rerollCooldownLeft, this.s_targetEntity.boardId,s_targetEntity.tier,s_targetEntity.xp);
                     NetworkManager.sendToPlayer((ServerPlayer) inventory.player,BountyBlockNetworking.ID_SCREEN_UPDATE,buf);
                 }
             });
             s_targetEntity.onBlockDataChange.subscribe(()->{
                 if(inventory.player.containerMenu==this){
-                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
+                    var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
+                    /////
                     buf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
                     buf.writeShort(3);
                     s_writeBlockDataChange(buf, this.s_targetEntity.rerollsLeft, this.s_targetEntity.rerollCooldownLeft, this.s_targetEntity.boardId,s_targetEntity.tier,s_targetEntity.xp);
@@ -140,13 +143,14 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             var id = buf.readByte();
             var contract = s_targetEntity.getContracts()[id];
             s_targetEntity.setRandomContactInSlot(id);
-            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,16,2048));
+            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
             var stack = Contract.fromId(contract).contractStack();
             stack.setTag(new CompoundTag());
             stack.getTag().putString(ContractItem.TAG_CONTRACT_ID,contract.toString());
             stack.getTag().putUUID(ContractItem.TAG_PLAYER,player.getUUID());
             player.spawnAtLocation(stack);
             ContractInProgress.progressPerPlayer.put(player.getUUID(),new ContractInProgress(contract, Contract.fromId(contract).count(),s_targetEntity.boardId));
+            /////
             newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             newBuf.writeShort(2);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf,player);
@@ -168,7 +172,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
 
             contract.onFinish(player);
 
-            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,2048));
+            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
             NetworkManager.sendToPlayer(player,BountyBlockNetworking.ID_SCREEN_UPDATE,newBuf);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf,player);
         }
@@ -194,36 +198,57 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
     public ResourceLocation c_tierId;
     public void c_onServerUpdate(Player player, FriendlyByteBuf buf) {
         var updateType = buf.readEnum(BountyBlockNetworking.BountyServerUpdateType.class);
-        if(Platform.isDevelopmentEnvironment()){
-            //WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
-        }
-        if(updateType == BountyBlockNetworking.BountyServerUpdateType.MULTI){
-            int count = buf.readShort();
-            for(int i=0;i<count;i++){
-                c_onServerUpdate(player, buf);
+        try {
+            if (Platform.isDevelopmentEnvironment()) {
+                //WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
+            }
+            if (updateType == BountyBlockNetworking.BountyServerUpdateType.MULTI) {
+                int count = buf.readShort();
+                for (int i = 0; i < count; i++) {
+                    c_onServerUpdate(player, buf);
+                }
+            }
+            if (updateType == BountyBlockNetworking.BountyServerUpdateType.UPDATE_CONTRACTS) {
+                this.c_contracts = Contract.CODEC.listOf().decode(NbtOps.INSTANCE, buf.readNbt().get("list")).getOrThrow(false, (er) -> {
+                    throw new RuntimeException(er);
+                }).getFirst().toArray(new Contract[3]);
+                c_onContractUpdate.invoke();
+            }
+            if (updateType == BountyBlockNetworking.BountyServerUpdateType.SEND_BOARD_DATA) {
+                this.c_time = buf.readInt();
+                this.c_rerolls = buf.readByte();
+                this.c_boardId = buf.readLong();
+                this.c_tierId = buf.readResourceLocation();
+                this.c_progress = buf.readFloat();
+            }
+            if (updateType == BountyBlockNetworking.BountyServerUpdateType.SEND_ACTIVE_CONTRACT) {
+                if(Platform.isDevelopmentEnvironment()){
+                    Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_handling SEND_ACTIVE_CONTRACT"));
+                }
+                var hasContract = buf.readBoolean();
+                if(Platform.isDevelopmentEnvironment()){
+                    Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_hasContract: %b".formatted(hasContract)));
+                }
+                if (hasContract) {
+                    var nbt = buf.readNbt();
+                    var contract = ContractInProgress.SERVER_CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow(false, (er) -> {
+                        throw new RuntimeException(er);
+                    }).getFirst();
+                    if(Platform.isDevelopmentEnvironment()){
+                        Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_active contract: %b".formatted(contract)));
+                    }
+                    this.c_activeContract = contract;
+                } else {
+                    this.c_activeContract = null;
+                    if(Platform.isDevelopmentEnvironment()){
+                        Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_active contract is now null"));
+                    }
+                }
             }
         }
-        if (updateType == BountyBlockNetworking.BountyServerUpdateType.UPDATE_CONTRACTS) {
-            this.c_contracts = Contract.CODEC.listOf().decode(NbtOps.INSTANCE,buf.readNbt().get("list")).getOrThrow(false,(er)->{throw new RuntimeException(er);}).getFirst().toArray(new Contract[3]);
-            c_onContractUpdate.invoke();
-        }
-        if(updateType == BountyBlockNetworking.BountyServerUpdateType.SEND_BOARD_DATA){
-            this.c_time = buf.readInt();
-            this.c_rerolls = buf.readByte();
-            this.c_boardId = buf.readLong();
-            this.c_tierId = buf.readResourceLocation();
-            this.c_progress = buf.readFloat();
-        }
-        if(updateType == BountyBlockNetworking.BountyServerUpdateType.SEND_ACTIVE_CONTRACT){
-            var hasContract = buf.readBoolean();
-            if(hasContract){
-                var nbt = buf.readNbt();
-                var contract = ContractInProgress.SERVER_CODEC.decode(NbtOps.INSTANCE,nbt).getOrThrow(false,(er)->{throw new RuntimeException(er);}).getFirst();
-                this.c_activeContract = contract;
-            }
-            else{
-                this.c_activeContract = null;
-            }
+        catch(Exception e){
+            Minecraft.getInstance().gui.getChat().addMessage(Component.literal("Error handling %s screen update packet: %s".formatted(updateType.toString(),e.getMessage())));
+            throw new RuntimeException(e);
         }
     }
 }
