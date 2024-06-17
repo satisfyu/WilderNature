@@ -46,15 +46,14 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.DEER_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RED_WOLF_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.RACCOON_SPAWN_EGG.get());
+                out.accept(ObjectRegistry.MINISHEEP_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.SQUIRREL_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.PELICAN_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.BOAR_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.OWL_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.BISON_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.TURKEY_SPAWN_EGG.get());
-                out.accept(ObjectRegistry.MINISHEEP_SPAWN_EGG.get());
-
-
+                out.accept(ObjectRegistry.DOG_SPAWN_EGG.get());
             })
             .build());
 

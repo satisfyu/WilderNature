@@ -62,6 +62,11 @@ public class EntityRegistry {
             () -> EntityType.Builder.of(BisonEntity::new, MobCategory.CREATURE)
                     .build(new WilderNatureIdentifier("bison").toString())
     );
+    public static final RegistrySupplier<EntityType<DogEntity>> DOG = createEntity("dog",
+            () -> EntityType.Builder.of(DogEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.3f)
+                    .build(new WilderNatureIdentifier("dog").toString())
+    );
     public static final RegistrySupplier<EntityType<MiniSheepEntity>> MINISHEEP = createEntity("minisheep",
             () -> EntityType.Builder.of(MiniSheepEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
@@ -99,9 +104,10 @@ public class EntityRegistry {
         EntityAttributeRegistry.register(BOAR, BoarEntity::createMobAttributes);
         EntityAttributeRegistry.register(BISON, BisonEntity::createMobAttributes);
         EntityAttributeRegistry.register(TURKEY, TurkeyEntity::createMobAttributes);
+        EntityAttributeRegistry.register(DOG, DogEntity::createMobAttributes);
+        EntityAttributeRegistry.register(MINISHEEP, MiniSheepEntity::createMobAttributes);
 
         BountyBlockScreenHandler.registerMenuTypes();
-        EntityAttributeRegistry.register(MINISHEEP, MiniSheepEntity::createMobAttributes);
 
     }
 

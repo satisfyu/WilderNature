@@ -7,7 +7,6 @@ import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -16,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import satisfy.wildernature.bountyboard.BountyBlockScreen;
 import satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
-import net.minecraft.world.item.Item;
 import satisfy.wildernature.bountyboard.BountyEntrypoints;
 import satisfy.wildernature.client.model.*;
 import satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
@@ -68,6 +66,7 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(BISON, BisonRenderer::new);
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
         EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
+        EntityRendererRegistry.register(DOG, DogRenderer::new);
         BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
     }
 
@@ -81,6 +80,7 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(DogModel.LAYER_LOCATION, DogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(MiniSheepModel.LAYER_LOCATION, MiniSheepModel::getTexturedModelData);
         EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
     }

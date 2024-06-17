@@ -75,7 +75,6 @@ public class DeerModel extends HierarchicalModel<DeerEntity> {
         this.animateWalk(DeerAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         this.animate(entity.lookAroundAnimationState, DeerAnimation.look_around, ageInTicks, 1.0f);
 
-
     }
 
     @Override

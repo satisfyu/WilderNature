@@ -13,8 +13,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import satisfy.wildernature.entity.BoarEntity;
-import satisfy.wildernature.entity.animation.BisonAnimation;
-import satisfy.wildernature.entity.animation.BoarAnimations;
+import satisfy.wildernature.entity.animation.BoarAnimation;
 import satisfy.wildernature.util.WilderNatureIdentifier;
 
 @Environment(EnvType.CLIENT)
@@ -70,10 +69,10 @@ public class BoarModel<T extends BoarEntity> extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.head.yRot = netHeadYaw * 0.017453292F;
 
-        this.animate(entity.idleAnimationState, BoarAnimations.idle, ageInTicks, 1f);
-        this.animateWalk(BoarAnimations.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
+        this.animate(entity.idleAnimationState, BoarAnimation.idle, ageInTicks, 1f);
+        this.animateWalk(BoarAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         if (entity.isDigging()) {
-            AnimationDefinition digAnimation = BoarAnimations.dig;
+            AnimationDefinition digAnimation = BoarAnimation.dig;
             this.animate(entity.idleAnimationState, digAnimation, ageInTicks, 1.0F);
         }
     }
