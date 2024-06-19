@@ -48,7 +48,19 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     public int xp=0;
 
     public ResourceLocation[] getContracts(){
-            return contracts.clone();
+        if(contracts==null){
+            contracts = new ResourceLocation[3];
+            fillWithRandomContracts();
+        }
+        if(contracts.length!=3){
+            contracts=null;
+            return getContracts();
+        }
+        for(int i=0;i<3;i++){
+            if(contracts[i] == null)
+                contracts[i] = getRandomContract();
+        }
+        return contracts.clone();
     }
     public void setContracts(ResourceLocation[] contracts){
         this.contracts = contracts.clone();
@@ -57,7 +69,6 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
     public BountyBoardBlockEntity(BlockPos a, BlockState b) {
         super(EntityRegistry.BOUNTY_BLOCK.get(), a, b);
-        fillWithRandomContracts();
         //load(new CompoundTag());
     }
 
@@ -96,8 +107,11 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
     public void setRandomContactInSlot(int i){
         var contracts = getContracts();
-        contracts[i] = ContractReloader.getRandomContractOfTier(this.tier);
+        contracts[i] = getRandomContract();
         setContracts(contracts);
+    }
+    private ResourceLocation getRandomContract(){
+        return ContractReloader.getRandomContractOfTier(this.tier);
     }
 
     @Override
@@ -110,12 +124,12 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         compoundTag.putInt(KEY_EXP, xp);
         compoundTag.put(
                 KEY_CONTRACTS,
-                ResourceLocation.CODEC.listOf().encode(Arrays.stream(contracts).toList(),NbtOps.INSTANCE,new ListTag()).getOrThrow(false,(err)->{throw new RuntimeException(err);})
+                ResourceLocation.CODEC.listOf().encode(Arrays.stream(getContracts()).toList(),NbtOps.INSTANCE,new ListTag()).getOrThrow(false,(err)->{throw new RuntimeException(err);})
         );
     }
 
     public CompoundTag getContractsNbt() {
-        var encode = Contract.CODEC.listOf().encode(Arrays.stream(contracts).map(resourceLocation -> ContractReloader.contracts.get(resourceLocation)).toList(), NbtOps.INSTANCE, new ListTag());
+        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(resourceLocation -> ContractReloader.contracts.get(resourceLocation)).toList(), NbtOps.INSTANCE, new ListTag());
         Tag orThrow = encode.getOrThrow(
                 false,
                 (error) -> {

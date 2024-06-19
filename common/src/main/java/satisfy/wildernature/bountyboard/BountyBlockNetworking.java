@@ -21,7 +21,8 @@ public class BountyBlockNetworking {
     public enum BountyServerUpdateType{
         SEND_BOARD_DATA,
         UPDATE_CONTRACTS,
-        SEND_ACTIVE_CONTRACT,
+        SET_ACTIVE_CONTRACT,
+        CLEAR_ACTIVE_CONTRACT,
         MULTI
     }
     static void s_handleClientAction(FriendlyByteBuf buf, NetworkManager.PacketContext context) {

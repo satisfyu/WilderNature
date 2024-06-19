@@ -1,11 +1,8 @@
 package satisfy.wildernature.bountyboard.contract;
 
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlag;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -13,9 +10,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 public class ContractItem extends Item {
 
@@ -52,15 +46,17 @@ public class ContractItem extends Item {
             return;
         }
         if(entity instanceof Player player){
+            if(player.getUUID()!=itemStack.getTag().getUUID(TAG_PLAYER))
+                return;
             var progress = ContractInProgress.progressPerPlayer.get(itemStack.getTag().getUUID(TAG_PLAYER));
             if(progress==null){
                 itemStack.setCount(0);
                 return;
             }
             itemStack.getTag().putString(TAG_CONTRACT_ID,progress.s_contract.toString());
-            itemStack.getTag().putString(TAG_NAME,progress.getS_contract().name());
-            itemStack.getTag().putString(TAG_DESCRIPTION,progress.getS_contract().description());
-            itemStack.getTag().putInt(TAG_COUNT_TOTAL,progress.getS_contract().count());
+            itemStack.getTag().putString(TAG_NAME,progress.s_getContract().name());
+            itemStack.getTag().putString(TAG_DESCRIPTION,progress.s_getContract().description());
+            itemStack.getTag().putInt(TAG_COUNT_TOTAL,progress.s_getContract().count());
             itemStack.getTag().putInt(TAG_COUNT_LEFT,progress.count);
         }
     }

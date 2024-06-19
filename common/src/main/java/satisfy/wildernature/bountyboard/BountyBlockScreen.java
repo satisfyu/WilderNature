@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
@@ -89,9 +88,9 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
                 var contractSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.currentcontract"),tooltipTextWidth);
                 list.addAll(contractSplit);
 
-                var nameSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.getS_contract().name()),tooltipTextWidth);
-                var descriptionSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.getS_contract().description()),tooltipTextWidth);
-                var progressSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.progress", menu.c_activeContract.getS_contract().count()-menu.c_activeContract.count, menu.c_activeContract.getS_contract().count()),tooltipTextWidth);
+                var nameSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.s_getContract().name()),tooltipTextWidth);
+                var descriptionSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.s_getContract().description()),tooltipTextWidth);
+                var progressSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.progress", menu.c_activeContract.s_getContract().count()-menu.c_activeContract.count, menu.c_activeContract.s_getContract().count()),tooltipTextWidth);
                 list.addAll(nameSplit);
                 list.addAll(descriptionSplit);
                 list.addAll(progressSplit);

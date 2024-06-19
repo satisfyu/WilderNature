@@ -216,7 +216,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
             /////
             friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             friendlyByteBuf.writeShort(3);
-            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity.getContractsNbt());
+            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity);
             BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf,entity.rerollsLeft,entity.rerollCooldownLeft,entity.boardId,entity.tier,entity.xp);
             BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf,(ServerPlayer) player);
         });
