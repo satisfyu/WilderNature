@@ -167,8 +167,8 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             contract.onFinish(player);
 
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
-            NetworkManager.sendToPlayer(player,BountyBlockNetworking.ID_SCREEN_UPDATE,newBuf);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf,player);
+            NetworkManager.sendToPlayer(player,BountyBlockNetworking.ID_SCREEN_UPDATE,newBuf);
         }
         s_targetEntity.setChanged();
     }

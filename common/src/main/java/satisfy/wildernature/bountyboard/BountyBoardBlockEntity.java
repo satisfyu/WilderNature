@@ -54,10 +54,11 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         }
         if(contracts.length!=3){
             contracts=null;
-            return getContracts();
+            contracts = getContracts();
+            return contracts;
         }
         for(int i=0;i<3;i++){
-            if(contracts[i] == null)
+            if(contracts[i] == null)// || ContractReloader.contracts.get(contracts[i]) == null) //uncomment this to autogenerate new contract on error
                 contracts[i] = getRandomContract();
         }
         return contracts.clone();
@@ -129,7 +130,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public CompoundTag getContractsNbt() {
-        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(resourceLocation -> ContractReloader.contracts.get(resourceLocation)).toList(), NbtOps.INSTANCE, new ListTag());
+        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(resourceLocation -> Contract.fromId(resourceLocation)).toList(), NbtOps.INSTANCE, new ListTag());
         Tag orThrow = encode.getOrThrow(
                 false,
                 (error) -> {

@@ -19,8 +19,8 @@ public record Contract(ResourceLocation tier, ItemStack contractStack, ResourceL
             Codec.STRING.fieldOf("description").forGetter(Contract::description),
             ContractReward.CODEC.fieldOf("reward").forGetter(Contract::reward)
     ).apply(contractInstance,Contract::new));
-
     public static Contract fromId(ResourceLocation contract) {
-        return ContractReloader.contracts.get(contract);
+        return ContractReloader.contracts.getOrDefault(contract,ERROR_CONTRACT);
     }
+    public static final Contract ERROR_CONTRACT = new Contract(new WilderNatureIdentifier("tier1"),ItemStack.EMPTY,new WilderNatureIdentifier("damage_any"),new WilderNatureIdentifier("_error"),0,"Deleted contract","Error: This contract was deleted from datapack",new ContractReward(0,0,new WilderNatureIdentifier("_error")));
 }

@@ -134,7 +134,7 @@ public class ContractInProgress {
         catch (Exception e){
             WilderNature.info("error while handling entity death. Some debug data:");
             WilderNature.info("Contract progress: {}",this.toString());
-            WilderNature.info("Contract data: {}",s_getContract().toString());
+            WilderNature.info("Contract data: {}",s_getContract());
             WilderNature.info("Player {} with uuid {}",sourcePlayer.getName().toString(),sourcePlayer.getUUID());
             WilderNature.info("Progress per player id's:");
             progressPerPlayer.forEach((uuid,data)->{
