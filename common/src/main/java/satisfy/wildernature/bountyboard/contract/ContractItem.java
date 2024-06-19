@@ -46,7 +46,7 @@ public class ContractItem extends Item {
             return;
         }
         if(entity instanceof Player player){
-            if(player.getUUID()!=itemStack.getTag().getUUID(TAG_PLAYER))
+            if(!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER)))
                 return;
             var progress = ContractInProgress.progressPerPlayer.get(itemStack.getTag().getUUID(TAG_PLAYER));
             if(progress==null){
