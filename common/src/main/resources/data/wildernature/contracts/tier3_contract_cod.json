@@ -1,0 +1,17 @@
+{
+  "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
+  "count": 200,
+  "damagePredicate": "wildernature:tnt",
+  "description": "contract.wildernature.tier3_cod.desc",
+  "name": "contract.wildernature.tier3_cod",
+  "reward": {
+    "blockExpReward": 50,
+    "loot": "wildernature:block/cod_catcher_banner",
+    "playerExpReward": 250
+  },
+  "targetPredicate": "minecraft:cod"
+}

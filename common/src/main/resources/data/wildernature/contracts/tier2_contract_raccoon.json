@@ -1,0 +1,18 @@
+{
+  "type": "wildernature:tier2",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:common_contract"
+  },
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "contract.wildernature.tier2_raccoon.desc",
+  "name": "contract.wildernature.tier2_raccoon",
+  "reward": {
+    "blockExpReward": 8,
+    "loot": "wildernature:lootbag",
+    "count": 2,
+    "playerExpReward": 25
+  },
+  "targetPredicate": "wildernature:raccoon"
+}

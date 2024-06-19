@@ -1,0 +1,17 @@
+{
+  "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
+  "count": 50,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "contract.wildernature.tier3_bison.desc",
+  "name": "contract.wildernature.tier3_bison",
+  "reward": {
+    "blockExpReward": 50,
+    "loot": "wildernature:block/bison_trophy",
+    "playerExpReward": 250
+  },
+  "targetPredicate": "minecraft:bison"
+}

@@ -1,0 +1,18 @@
+{
+  "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
+  "count": 50,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "contract.wildernature.tier3_rabbit.desc",
+  "name": "contract.wildernature.tier3_rabbit",
+  "reward": {
+    "blockExpReward": 50,
+    "loot": "minecraft:bunny_stalker_banner",
+    "count": 3,
+    "playerExpReward": 50
+  },
+  "targetPredicate": "minecraft:rabbit"
+}

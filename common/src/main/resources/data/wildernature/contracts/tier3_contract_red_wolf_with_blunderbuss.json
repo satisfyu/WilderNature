@@ -1,0 +1,18 @@
+{
+  "type": "wildernature:tier3",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:rare_contract"
+  },
+  "count": 50,
+  "damagePredicate": "wildernature:blunderbuss",
+  "description": "contract.wildernature.tier3_red_wolf_with_blunderbuss.desc",
+  "name": "contract.wildernature.tier3_red_wolf_with_blunderbuss",
+  "reward": {
+    "blockExpReward": 40,
+    "loot": "wildernature:fur_cloak",
+    "count": 1,
+    "playerExpReward": 100
+  },
+  "targetPredicate": "wildernature:red_wolf"
+}

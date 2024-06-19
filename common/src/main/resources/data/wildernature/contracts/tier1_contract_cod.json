@@ -1,0 +1,18 @@
+{
+  "type": "wildernature:tier1",
+  "contractStack": {
+    "Count": 1,
+    "id": "wildernature:uncommon_contract"
+  },
+  "count": 6,
+  "damagePredicate": "wildernature:damage_any",
+  "description": "contract.wildernature.tier1_cod.desc",
+  "name": "contract.wildernature.tier1_cod",
+  "reward": {
+    "blockExpReward": 2,
+    "loot": "minecraft:cod",
+    "count": 12,
+    "playerExpReward": 10
+  },
+  "targetPredicate": "minecraft:cod"
+}
