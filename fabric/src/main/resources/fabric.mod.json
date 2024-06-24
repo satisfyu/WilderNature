@@ -16,16 +16,16 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "satisfy.wildernature.fabric.WilderNatureFabric"
+      "net.satisfy.wildernature.fabric.WilderNatureFabric"
     ],
     "client": [
-      "satisfy.wildernature.fabric.client.WilderNatureClientFabric"
+      "net.satisfy.wildernature.fabric.client.WilderNatureClientFabric"
     ],
     "modmenu": [
-      "satisfy.wildernature.fabric.config.ModMenu"
+      "net.satisfy.wildernature.fabric.config.ModMenu"
     ],
     "fabric-datagen": [
-      "satisfy.wildernature.fabric.datagen.WilderNatureDatagen"
+      "net.satisfy.wildernature.fabric.datagen.WilderNatureDatagen"
     ]
   },
   "depends": {
