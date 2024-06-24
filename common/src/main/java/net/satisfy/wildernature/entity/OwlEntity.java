@@ -74,7 +74,7 @@ public class OwlEntity extends ShoulderRidingEntity {
 
 
     public static AttributeSupplier.Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, 0.8D).add(Attributes.MAX_HEALTH, 9.0).add(Attributes.MOVEMENT_SPEED, 0.4D).add(Attributes.ATTACK_DAMAGE, 2D);
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, 0.8D).add(Attributes.MAX_HEALTH, 8.0).add(Attributes.MOVEMENT_SPEED, 0.4D).add(Attributes.ATTACK_DAMAGE, 2D);
     }
 
     @Override

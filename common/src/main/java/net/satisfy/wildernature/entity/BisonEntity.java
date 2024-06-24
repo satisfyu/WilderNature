@@ -45,7 +45,7 @@ public class BisonEntity extends Animal implements NeutralMob {
 
     public static @NotNull AttributeSupplier.Builder createMobAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 16.0)
+                .add(Attributes.MAX_HEALTH, 28.0)
                 .add(Attributes.ATTACK_DAMAGE, 1.5F)
                 .add(Attributes.ATTACK_SPEED, 1.25)
                 .add(Attributes.MOVEMENT_SPEED, 0.1800009838F)

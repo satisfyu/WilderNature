@@ -12,12 +12,11 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.bountyboard.contract.Contract;
 import net.satisfy.wildernature.bountyboard.contract.ContractReward;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Random;
 import java.util.function.BiConsumer;
 

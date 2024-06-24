@@ -1,14 +1,14 @@
 package net.satisfy.wildernature;
 
 import dev.architectury.event.events.common.LifecycleEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.satisfy.wildernature.bountyboard.BountyEntrypoints;
 import net.satisfy.wildernature.bountyboard.contract.ContractInProgress;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TabRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class WilderNature {
     public static final String MOD_ID = "wildernature";
