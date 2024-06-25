@@ -40,4 +40,7 @@ public class ConfigFabric implements ConfigData {
     public int TurkeySpawnWeight = 12;
     public int TurkeyMinGroupSize = 3;
     public int TurkeyMaxGroupSize = 5;
+    public int DogSpawnWeight = 2;
+    public int DogMinGroupSize = 1;
+    public int DogMaxGroupSize = 1;
 }
