@@ -18,7 +18,7 @@ import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DogEntity extends Animal {
+public class DogEntity extends TamableAnimal {
     public final AnimationState walkAnimationState = new AnimationState();
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
