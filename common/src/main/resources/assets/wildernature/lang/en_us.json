@@ -176,6 +176,7 @@
   "text.autoconfig.wildernature.title": "WilderNature Config",
   "text.gui.wildernature.bounty.accept": "Accept contract",
   "text.gui.wildernature.bounty.currentcontract": "Active contract:",
+  "text.gui.wildernature.bounty.readytofinishcontract": "Ready to finish:",
   "text.gui.wildernature.bounty.finish": "Finish contract",
   "text.gui.wildernature.bounty.finish.warning": "§6This is not bounty board in which you started contract. You can finish contract but this board won't receive experience",
   "text.gui.wildernature.bounty.finished": "Finished contract %s ",

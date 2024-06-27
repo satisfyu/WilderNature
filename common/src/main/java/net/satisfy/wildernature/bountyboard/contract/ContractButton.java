@@ -4,29 +4,52 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class ContractButton extends Button {
     private Contract contract;
-    private ContractInProgress progress;
+    public ContractInProgress progress;
 
     public Contract getContract() {
         return contract;
     }
-
     public void setContract(Contract contract){
-        setContract(contract,false);
+        setContractSelected(contract,false);
     }
-    public void setContract(Contract contract, boolean selected){
+    public void setContractSelected(Contract contract, boolean selected){
+        setContract(contract, null,selected);
+    }
+    public void setContractProgress(Contract contract,ContractInProgress progress) {
+        setContract(contract,progress,false);
+    }
+    private void setContract(Contract contract, ContractInProgress progress, boolean selected){
         this.contract = contract;
+        this.progress = progress;
         if(contract==null)
         {
             setTooltip(null);
             return;
         }
-        var text = Component.translatable(contract.name()).append("\n")
-                .append(Component.translatable(contract.description()));
+        MutableComponent text = Component.empty();
+
         if(selected){
-            text = Component.translatable("text.gui.wildernature.bounty.selectedcontract").append(text);
+            text.append(Component.translatable("text.gui.wildernature.bounty.selectedcontract")).append("\n");
+        }
+        if(progress!=null) {
+            if (progress.count == 0) {
+                text.append(Component.translatable("text.gui.wildernature.bounty.readytofinishcontract")).append("\n");
+            } else {
+                text.append(Component.translatable("text.gui.wildernature.bounty.currentcontract")).append("\n");
+            }
+        }
+        text
+                .append(Component.translatable(contract.name()))
+                .append("\n")
+                .append(Component.translatable(contract.description()));
+
+        if(progress !=null){
+            text.append("\n");
+            text.append(Component.translatable("text.gui.wildernature.bounty.progress", contract.count()-progress.count, contract.count()));
         }
         setTooltip(Tooltip.create(text));
     }
@@ -46,7 +69,4 @@ public class ContractButton extends Button {
         }
     }
 
-    public void setContractProgress(ContractInProgress progress) {
-        this.progress = progress;
-    }
 }

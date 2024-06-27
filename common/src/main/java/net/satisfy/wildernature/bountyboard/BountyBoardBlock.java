@@ -181,6 +181,9 @@ public class BountyBoardBlock extends BaseEntityBlock {
         var entity = level.getBlockEntity(pos);
         assert entity instanceof BountyBoardBlockEntity;
         if(entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity){
+            if(level.isClientSide()){
+                return;
+            }
             var blockEntityTag = new CompoundTag();
             bountyBoardBlockEntity.saveAdditional(blockEntityTag);
             var tag = new CompoundTag();

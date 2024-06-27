@@ -24,10 +24,13 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     private WilderNatureIdentifier TEX_BACKGROUND = new WilderNatureIdentifier("textures/gui/bounty_board/background.png");
     private WilderNatureIdentifier TEX_REROLL = new WilderNatureIdentifier("textures/gui/bounty_board/reroll.png");
     private WilderNatureIdentifier TEX_ACCEPT = new WilderNatureIdentifier("textures/gui/bounty_board/accept.png");
+    private WilderNatureIdentifier TEX_ACCEPTLOCK = new WilderNatureIdentifier("textures/gui/bounty_board/accept_locked.png");
+    private WilderNatureIdentifier TEX_FINISHEDSLOT = new WilderNatureIdentifier("textures/gui/bounty_board/finished_bg.png");
     private WilderNatureIdentifier TEX_BAR = new WilderNatureIdentifier("textures/gui/bounty_board/bar.png");
     private Tooltip getTooltip;
     private ImageButton rerollButton;
     private ImageButton acceptButton;
+    private ImageButton acceptLockButton;
     private Button finishButton;
     private ContractButton contractButtons[] = new ContractButton[3];
     private ContractButton targetContractButton;
@@ -45,6 +48,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
         var guiY = height/2-169/2;
         rerollButton = new ImageButton(centerX-74,centerY-52,14,14,0,0,14, TEX_REROLL,14,42,this::onReroll);
         acceptButton = new ImageButton(centerX-176/2+135,centerY-169/2+51,14,14,0,0,14, TEX_ACCEPT,14,42,this::onAccept);
+        acceptLockButton = new ImageButton(centerX-176/2+135,centerY-169/2+51,14,14,0,0,14, TEX_ACCEPTLOCK,14,42,(i)->{});
         finishButton = new ImageButton(centerX-176/2+135,centerY-169/2+51,14,14,0,0,14, TEX_ACCEPT,14,42,(button)->onFinish());
         finishButton.setTooltip(Tooltip.create(Component.translatable("text.gui.wildernature.bounty.finish")));
         //new Button.Builder(Component.translatable("text.gui.wildernature.bounty.finish"),).pos(centerX+176/2+4,centerY-169/2+14).width(120).build();
@@ -52,6 +56,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
         addRenderableWidget(rerollButton);
         addRenderableWidget(acceptButton);
         addRenderableWidget(finishButton);
+        //addRenderableWidget(acceptLockButton);
         acceptButton.setTooltip(Tooltip.create(Component.translatable("text.gui.wildernature.bounty.accept")));
         targetContractButton = new ContractButton(centerX-176/2+97,centerY-169/2+49,null,(button)->{});
         for(int i=0;i<3;i++){
@@ -69,6 +74,11 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
             }
         });
         addRenderableOnly((guiGraphics,mx,my,f)->{
+            if(menu.c_activeContractProgress != null && menu.c_activeContractProgress.isFinished()){
+                guiGraphics.blit(TEX_FINISHEDSLOT,centerX-176/2+97-2,centerY-169/2+49-2,0,0,22,22,22,22);
+            }
+        });
+        addRenderableOnly((guiGraphics,mx,my,f)->{
             Tooltip.create(Component.literal("123"));
             int xPos = centerX+176/2-4;
             int yPos = centerY-169/2+30-1;
@@ -83,6 +93,9 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
                     yPos += rowsHeight + tooltipBorders + row1;
                 }
 
+                if(menu.c_activeContractProgress.isFinished()){
+                    return;
+                }
                 var list = new ArrayList<FormattedCharSequence>();
 
                 var contractSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.currentcontract"),tooltipTextWidth);
@@ -126,7 +139,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     }
 
     private void setSelectedContract(Contract contract) {
-        targetContractButton.setContract(contract);
+        targetContractButton.setContractSelected(contract,true);
     }
 
     private void onReroll(Button button) {
@@ -137,11 +150,15 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
 
     @Override
     public void render(GuiGraphics guiGraphics, int mx, int my, float f) {
-        if(menu.c_activeContractProgress !=null){
-            //targetContractButton.setContract(menu.c_activeContract.);
-            //targetContractButton.setContractProgress(menu.c_activeContract);
+        if(menu.c_activeContractProgress != null){
+            targetContractButton.setContractProgress(menu.c_activeContract,menu.c_activeContractProgress);
+            if(!menu.c_activeContractProgress.isFinished()){
+                targetContractButton.setContract(null);
+            }
         }
-
+        if(menu.c_activeContractProgress==null && targetContractButton.progress != null){
+            targetContractButton.setContract(null);
+        }
         finishButton.visible = menu.c_activeContractProgress !=null && menu.c_activeContractProgress.isFinished();
         updateTooltip();
         acceptButton.visible = menu.c_activeContractProgress == null && (targetContractButton != null && targetContractButton.getContract()!=null);
