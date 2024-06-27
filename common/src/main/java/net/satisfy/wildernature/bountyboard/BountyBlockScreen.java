@@ -30,7 +30,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     private ImageButton acceptButton;
     private Button finishButton;
     private ContractButton contractButtons[] = new ContractButton[3];
-    private ContractButton selectedContractButton;
+    private ContractButton targetContractButton;
 
     public BountyBlockScreen(BountyBlockScreenHandler abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
@@ -53,17 +53,17 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
         addRenderableWidget(acceptButton);
         addRenderableWidget(finishButton);
         acceptButton.setTooltip(Tooltip.create(Component.translatable("text.gui.wildernature.bounty.accept")));
-        selectedContractButton = new ContractButton(centerX-176/2+97,centerY-169/2+49,null,(button)->{});
+        targetContractButton = new ContractButton(centerX-176/2+97,centerY-169/2+49,null,(button)->{});
         for(int i=0;i<3;i++){
             var contract = menu.c_contracts[i];
             contractButtons[i] = addRenderableWidget(new ContractButton(centerX-176/2+25+i*18,centerY-169/2+49,contract,(button)->{
                 this.setSelectedContract(((ContractButton)button).getContract());
             }));
         }
-        addRenderableWidget(selectedContractButton);
+        addRenderableWidget(targetContractButton);
         menu.c_onContractUpdate.subscribe(()->{
-            selectedContractButton.setContract(null);
-            finishButton.visible = menu.c_activeContract!=null && menu.c_activeContract.isFinished();
+            targetContractButton.setContract(null);
+            finishButton.visible = menu.c_activeContractProgress !=null && menu.c_activeContractProgress.isFinished();
             for(int i=0;i<3;i++){
                 contractButtons[i].setContract(menu.c_contracts[i]);
             }
@@ -72,10 +72,10 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
             Tooltip.create(Component.literal("123"));
             int xPos = centerX+176/2-4;
             int yPos = centerY-169/2+30-1;
-            if(menu.c_activeContract !=null){
+            if(menu.c_activeContractProgress !=null){
                 var tooltipBorders = 9;
                 var tooltipTextWidth = 120-tooltipBorders;
-                if(menu.c_boardId != menu.c_activeContract.boardId) {
+                if(menu.c_boardId != menu.c_activeContractProgress.boardId) {
                     var tip = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.finish.warning"), tooltipTextWidth);
                     guiGraphics.renderTooltip(minecraft.font, tip, xPos, yPos);
                     var rowsHeight = (tip.size() * 10);
@@ -88,9 +88,9 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
                 var contractSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.currentcontract"),tooltipTextWidth);
                 list.addAll(contractSplit);
 
-                var nameSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.s_getContract().name()),tooltipTextWidth);
-                var descriptionSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.s_getContract().description()),tooltipTextWidth);
-                var progressSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.progress", menu.c_activeContract.s_getContract().count()-menu.c_activeContract.count, menu.c_activeContract.s_getContract().count()),tooltipTextWidth);
+                var nameSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.name()),tooltipTextWidth);
+                var descriptionSplit = minecraft.font.split(Component.translatable(menu.c_activeContract.description()),tooltipTextWidth);
+                var progressSplit = minecraft.font.split(Component.translatable("text.gui.wildernature.bounty.progress", menu.c_activeContract.count()-menu.c_activeContractProgress.count, menu.c_activeContract.count()),tooltipTextWidth);
                 list.addAll(nameSplit);
                 list.addAll(descriptionSplit);
                 list.addAll(progressSplit);
@@ -114,7 +114,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
 
     private void onAccept(Button button) {
         for(int i=0;i<3;i++){
-            if(contractButtons[i].getContract() == selectedContractButton.getContract()){
+            if(contractButtons[i].getContract() == targetContractButton.getContract()){
                 var buf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT,0,BountyBlockNetworking.MAX_SIZE));
                 buf.writeEnum(BountyBlockNetworking.BountyClientActionType.CONFIRM_CONTRACT);
                 buf.writeByte(i);
@@ -126,7 +126,7 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
     }
 
     private void setSelectedContract(Contract contract) {
-        selectedContractButton.setContract(contract);
+        targetContractButton.setContract(contract);
     }
 
     private void onReroll(Button button) {
@@ -137,10 +137,15 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
 
     @Override
     public void render(GuiGraphics guiGraphics, int mx, int my, float f) {
-        finishButton.visible = menu.c_activeContract!=null && menu.c_activeContract.isFinished();
+        if(menu.c_activeContractProgress !=null){
+            //targetContractButton.setContract(menu.c_activeContract.);
+            //targetContractButton.setContractProgress(menu.c_activeContract);
+        }
+
+        finishButton.visible = menu.c_activeContractProgress !=null && menu.c_activeContractProgress.isFinished();
         updateTooltip();
-        acceptButton.visible = menu.c_activeContract == null && (selectedContractButton != null && selectedContractButton.getContract()!=null);
-        acceptButton.active = menu.c_activeContract == null;
+        acceptButton.visible = menu.c_activeContractProgress == null && (targetContractButton != null && targetContractButton.getContract()!=null);
+        acceptButton.active = menu.c_activeContractProgress == null;
         super.render(guiGraphics, mx, my, f);
         renderTooltip(guiGraphics, mx, my);
 

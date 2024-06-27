@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 
 public class ContractButton extends Button {
     private Contract contract;
+    private ContractInProgress progress;
 
     public Contract getContract() {
         return contract;
@@ -43,6 +44,9 @@ public class ContractButton extends Button {
         if(this.isHoveredOrFocused()){
             guiGraphics.fill( getX()+1,getY()+1,getX()+17,getY()+17,0x7fFFFFFF);
         }
+    }
 
+    public void setContractProgress(ContractInProgress progress) {
+        this.progress = progress;
     }
 }
