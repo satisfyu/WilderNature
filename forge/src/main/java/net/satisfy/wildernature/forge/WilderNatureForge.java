@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.bountyboard.contract.ContractReloader;
+import net.satisfy.wildernature.util.contract.ContractReloader;
 import net.satisfy.wildernature.forge.registry.WilderNatureBiomeModifiers;
 
 @Mod(WilderNature.MOD_ID)

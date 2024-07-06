@@ -1,10 +1,12 @@
-package net.satisfy.wildernature.bountyboard.contract;
+package net.satisfy.wildernature.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.satisfy.wildernature.util.contract.Contract;
+import net.satisfy.wildernature.util.contract.ContractInProgress;
 
 public class ContractButton extends Button {
     private Contract contract;

@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard;
+package net.satisfy.wildernature.client.gui.handlers;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
@@ -22,14 +22,22 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.bountyboard.contract.Contract;
-import net.satisfy.wildernature.bountyboard.contract.ContractInProgress;
-import net.satisfy.wildernature.bountyboard.contract.ContractItem;
+import net.satisfy.wildernature.network.BountyBlockNetworking;
+import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
+import net.satisfy.wildernature.util.BountyBoardTier;
+import net.satisfy.wildernature.event.Event;
+import net.satisfy.wildernature.util.contract.Contract;
+import net.satisfy.wildernature.util.contract.ContractInProgress;
+import net.satisfy.wildernature.item.ContractItem;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
+@SuppressWarnings("all")
 public class BountyBlockScreenHandler extends AbstractContainerMenu {
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
+    public @NotNull ItemStack quickMoveStack(Player player, int i) {
         return ItemStack.EMPTY;
     }
 
@@ -43,7 +51,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
     public static final RegistrySupplier<MenuType<BountyBlockScreenHandler>> BOUNTY_BLOCK = MENUS.register("bounty_menu",
             () -> MenuRegistry.ofExtended((id, inventory, buf) -> {
                 BountyBlockScreenHandler bountyBlockScreenHandler = BountyBlockScreenHandler.c_createClient(id, inventory);
-                bountyBlockScreenHandler.c_onServerUpdate(inventory.player, buf);
+                bountyBlockScreenHandler.c_onServerUpdate(buf);
                 return bountyBlockScreenHandler;
             })
     );
@@ -87,11 +95,6 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             addSlot(new Slot(inventory, j, j * 18 + 8, 144));
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////// SERVER STUFF ////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////
-
 
     public static AbstractContainerMenu s_createServer(int i, Inventory inventory, BountyBoardBlockEntity bountyBoardBlockEntity) {
         return new BountyBlockScreenHandler(i, inventory, bountyBoardBlockEntity);
@@ -144,11 +147,11 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT, 0, BountyBlockNetworking.MAX_SIZE));
             var stack = Contract.fromId(contract).contractStack();
             stack.setTag(new CompoundTag());
+            assert stack.getTag() != null;
             stack.getTag().putString(ContractItem.TAG_CONTRACT_ID, contract.toString());
             stack.getTag().putUUID(ContractItem.TAG_PLAYER, player.getUUID());
             player.spawnAtLocation(stack);
             ContractInProgress.progressPerPlayer.put(player.getUUID(), new ContractInProgress(contract, Contract.fromId(contract).count(), s_targetEntity.boardId));
-            /////
             newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             newBuf.writeShort(2);
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf, player);
@@ -177,11 +180,6 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         s_targetEntity.setChanged();
     }
 
-
-    //////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////// CLIENT STUFF ////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////
-
     private static BountyBlockScreenHandler c_createClient(int id, Inventory inventory) {
         return new BountyBlockScreenHandler(id, inventory, null);
     }
@@ -197,20 +195,18 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
     public float c_progress;
     public ResourceLocation c_tierId;
 
-    public void c_onServerUpdate(Player player, FriendlyByteBuf buf) {
+    public void c_onServerUpdate(FriendlyByteBuf buf) {
         var updateType = buf.readEnum(BountyBlockNetworking.BountyServerUpdateType.class);
         try {
-            if (Platform.isDevelopmentEnvironment()) {
-                //WilderNature.info("_Trying to handle server update of type {}",updateType.toString());
-            }
+            Platform.isDevelopmentEnvironment();
             if (updateType == BountyBlockNetworking.BountyServerUpdateType.MULTI) {
                 int count = buf.readShort();
                 for (int i = 0; i < count; i++) {
-                    c_onServerUpdate(player, buf);
+                    c_onServerUpdate(buf);
                 }
             }
             if (updateType == BountyBlockNetworking.BountyServerUpdateType.UPDATE_CONTRACTS) {
-                this.c_contracts = Contract.CODEC.listOf().decode(NbtOps.INSTANCE, buf.readNbt().get("list")).getOrThrow(false, (er) -> {
+                this.c_contracts = Contract.CODEC.listOf().decode(NbtOps.INSTANCE, Objects.requireNonNull(buf.readNbt()).get("list")).getOrThrow(false, (er) -> {
                     throw new RuntimeException(er);
                 }).getFirst().toArray(new Contract[3]);
                 c_onContractUpdate.invoke();

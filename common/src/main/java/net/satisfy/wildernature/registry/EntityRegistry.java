@@ -9,8 +9,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.block.entity.CompletionistBannerEntity;
-import net.satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
-import net.satisfy.wildernature.bountyboard.BountyBoardBlockEntity;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
+import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
 import net.satisfy.wildernature.entity.*;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 

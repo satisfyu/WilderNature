@@ -4,7 +4,7 @@
     "Count": 1,
     "id": "wildernature:uncommon_contract"
   },
-  "count": 10,
+  "count": 6,
   "damagePredicate": "wildernature:damage_any",
   "description": "contract.wildernature.tier1_boar.desc",
   "name": "contract.wildernature.tier1_boar",

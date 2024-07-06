@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.bountyboard.contract.ContractInProgress;
+import net.satisfy.wildernature.util.contract.ContractInProgress;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

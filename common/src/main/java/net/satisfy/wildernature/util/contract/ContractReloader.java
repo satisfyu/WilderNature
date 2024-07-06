@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard.contract;
+package net.satisfy.wildernature.util.contract;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.bountyboard.BountyBoardTier;
+import net.satisfy.wildernature.util.BountyBoardTier;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

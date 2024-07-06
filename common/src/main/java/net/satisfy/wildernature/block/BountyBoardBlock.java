@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard;
+package net.satisfy.wildernature.block;
 
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,11 +31,15 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
+import net.satisfy.wildernature.network.BountyBlockNetworking;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
@@ -76,7 +80,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState) {
+    public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.MODEL;
     }
 
@@ -180,18 +184,17 @@ public class BountyBoardBlock extends BaseEntityBlock {
         var pos = getBasePos(blockPos,blockState.getValue(PART));
         var entity = level.getBlockEntity(pos);
         assert entity instanceof BountyBoardBlockEntity;
-        if(entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity){
-            if(level.isClientSide()){
-                return;
-            }
-            var blockEntityTag = new CompoundTag();
-            bountyBoardBlockEntity.saveAdditional(blockEntityTag);
-            var tag = new CompoundTag();
-            tag.put("BlockEntityTag",blockEntityTag);
-            var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
-            stack.setTag(tag);
-            level.addFreshEntity(new ItemEntity(level,blockPos.getX(),blockPos.getY(),blockPos.getZ(),stack));
+        BountyBoardBlockEntity bountyBoardBlockEntity = (BountyBoardBlockEntity) entity;
+        if (level.isClientSide()) {
+            return;
         }
+        var blockEntityTag = new CompoundTag();
+        bountyBoardBlockEntity.saveAdditional(blockEntityTag);
+        var tag = new CompoundTag();
+        tag.put("BlockEntityTag",blockEntityTag);
+        var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
+        stack.setTag(tag);
+        level.addFreshEntity(new ItemEntity(level,blockPos.getX(),blockPos.getY(),blockPos.getZ(),stack));
         super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
@@ -205,16 +208,16 @@ public class BountyBoardBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos originalBlockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos originalBlockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(level.isClientSide())
             return InteractionResult.SUCCESS;
         final var blockPos = getBasePos(originalBlockPos,blockState.getValue(PART));
         var pr = getMenuProvider(blockState, level, blockPos);
         MenuRegistry.openExtendedMenu((ServerPlayer) player, pr, friendlyByteBuf -> {
             var entity = (BountyBoardBlockEntity)level.getBlockEntity(blockPos);
-            /////
             friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             friendlyByteBuf.writeShort(3);
+            assert entity != null;
             BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity);
             BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf,entity.rerollsLeft,entity.rerollCooldownLeft,entity.boardId,entity.tier,entity.xp);
             BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf,(ServerPlayer) player);

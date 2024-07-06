@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard.contract;
+package net.satisfy.wildernature.util.contract;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

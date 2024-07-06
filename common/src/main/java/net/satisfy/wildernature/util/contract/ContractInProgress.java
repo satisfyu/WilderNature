@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard.contract;
+package net.satisfy.wildernature.util.contract;
 
 import com.google.gson.GsonBuilder;
 import com.mojang.serialization.Codec;
@@ -20,9 +20,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ContractInProgress {
@@ -76,7 +77,6 @@ public class ContractInProgress {
             WilderNature.info("_Contract progress: {}",this.toString());
         }
         try {
-            //don't ask me why loot stuff is here, i have no idea why predicates use loot context
             if (isFinished())
                 return;
             var entityLootParams = new LootParams.Builder((ServerLevel) livingEntity.level())
@@ -85,15 +85,8 @@ public class ContractInProgress {
                     .create(LootContextParamSets.COMMAND);
             var entityLootContext = new LootContext.Builder(entityLootParams).create(null);
             var entityCondition = (LootItemCondition) livingEntity.getServer().getLootData().getElement(LootDataType.PREDICATE, contract.targetPredicate());
-            var entityResult = entityCondition != null ? entityCondition.test(entityLootContext) : false;
+            var entityResult = entityCondition != null && entityCondition.test(entityLootContext);
 
-            //builder
-            // .required(LootContextParams.THIS_ENTITY)
-            // .required(LootContextParams.ORIGIN)
-            // .required(LootContextParams.DAMAGE_SOURCE)
-            // .optional(LootContextParams.KILLER_ENTITY)
-            // .optional(LootContextParams.DIRECT_KILLER_ENTITY)
-            // .optional(LootContextParams.LAST_DAMAGE_PLAYER);
             var damageLootParams = new LootParams.Builder((ServerLevel) livingEntity.level())
                     .withParameter(LootContextParams.THIS_ENTITY, livingEntity)
                     .withParameter(LootContextParams.ORIGIN, livingEntity.getPosition(0))
@@ -148,7 +141,7 @@ public class ContractInProgress {
             });
 
             e.printStackTrace();
-            sourcePlayer.getServer().halt(false);
+            Objects.requireNonNull(sourcePlayer.getServer()).halt(false);
         }
     }
 
@@ -168,8 +161,8 @@ public class ContractInProgress {
             }
         }
 
-        sourcePlayer.level()
-                .getServer()
+        Objects.requireNonNull(sourcePlayer.level()
+                        .getServer())
                 .getLootData()
                 .getLootTable(
                         s_getContract()

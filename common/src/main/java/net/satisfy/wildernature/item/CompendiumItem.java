@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.client.gui.CompendiumGui;
+import net.satisfy.wildernature.client.gui.screens.CompendiumScreen;
 import org.jetbrains.annotations.NotNull;
 
 public class CompendiumItem extends Item {
@@ -33,7 +33,7 @@ public class CompendiumItem extends Item {
 
     @Environment(EnvType.CLIENT)
     private void openCompendiumGui() {
-        Minecraft.getInstance().setScreen(new CompendiumGui() {
+        Minecraft.getInstance().setScreen(new CompendiumScreen() {
             @Override
             public @NotNull Component getTitle() {
                 return super.getTitle();

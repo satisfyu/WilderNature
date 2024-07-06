@@ -1,9 +1,9 @@
-package net.satisfy.wildernature.bountyboard;
+package net.satisfy.wildernature.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.satisfy.wildernature.bountyboard.contract.ContractReloader;
+import net.satisfy.wildernature.util.contract.ContractReloader;
 
 import java.util.Optional;
 

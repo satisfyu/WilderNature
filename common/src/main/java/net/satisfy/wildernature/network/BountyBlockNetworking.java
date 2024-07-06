@@ -1,10 +1,11 @@
-package net.satisfy.wildernature.bountyboard;
+package net.satisfy.wildernature.network;
 
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 
 public class BountyBlockNetworking {
@@ -15,7 +16,7 @@ public class BountyBlockNetworking {
     static void c_onServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         Player player = context.getPlayer();
         if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-            screenHandler.c_onServerUpdate(player, buf);
+            screenHandler.c_onServerUpdate(buf);
         }
     }
     public enum BountyServerUpdateType{

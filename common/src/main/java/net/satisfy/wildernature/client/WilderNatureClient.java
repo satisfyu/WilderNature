@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.satisfy.wildernature.bountyboard.BountyBlockScreen;
-import net.satisfy.wildernature.bountyboard.BountyBlockScreenHandler;
-import net.satisfy.wildernature.bountyboard.BountyEntrypoints;
+import net.satisfy.wildernature.client.gui.screens.BountyBlockScreen;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
+import net.satisfy.wildernature.network.BountyEntrypoints;
 import net.satisfy.wildernature.client.model.*;
 import net.satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
 import net.satisfy.wildernature.client.render.entity.*;
@@ -40,7 +40,6 @@ public class WilderNatureClient {
 
     }
 
-    //taken from WilderNatureUtil
     private static void makeHorn(Item item) {
         ItemProperties.register(item, new ResourceLocation("blowing"), (p_174635_, p_174636_, p_174637_, p_174638_) -> {
             if (p_174637_ == null) {

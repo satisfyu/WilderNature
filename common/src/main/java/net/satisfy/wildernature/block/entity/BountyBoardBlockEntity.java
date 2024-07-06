@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.bountyboard;
+package net.satisfy.wildernature.block.entity;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.core.BlockPos;
@@ -15,11 +15,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.satisfy.wildernature.util.BountyBoardTier;
+import net.satisfy.wildernature.event.Event;
+import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.satisfy.wildernature.bountyboard.contract.Contract;
-import net.satisfy.wildernature.bountyboard.contract.ContractReloader;
+import net.satisfy.wildernature.util.contract.Contract;
+import net.satisfy.wildernature.util.contract.ContractReloader;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 
 import java.util.Arrays;
@@ -115,7 +118,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
+    public void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
         compoundTag.putInt(KEY_REROLL_COOLDOWN_LEFT,rerollCooldownLeft);
         compoundTag.putInt(KEY_REROLLS_LEFT,rerollsLeft);

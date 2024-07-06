@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.client.gui;
+package net.satisfy.wildernature.client.gui.screens;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
-public abstract class CompendiumGui extends Screen {
+public abstract class CompendiumScreen extends Screen {
 
     private static final ResourceLocation[] TEXTURES = new ResourceLocation[]{
             new ResourceLocation("wildernature:textures/gui/compendium/page1.png"),
@@ -105,7 +105,7 @@ public abstract class CompendiumGui extends Screen {
 
     private int currentPage;
 
-    protected CompendiumGui() {
+    protected CompendiumScreen() {
         super(Component.translatable("compendium.wildernature.title"));
         this.currentPage = 0;
     }
