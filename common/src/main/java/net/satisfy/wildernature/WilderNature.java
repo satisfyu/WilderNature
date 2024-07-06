@@ -27,10 +27,8 @@ public class WilderNature {
     }
 
     public static void commonInit() {
-        LifecycleEvent.SERVER_BEFORE_START.register(instance -> {
-            ContractInProgress.progressPerPlayer.clear();
-        });
-        // InteractionEvent.RIGHT_CLICK_ITEM.register(Truffling::onPlayerUseEat); // same as: (player, hand) -> Truffling.onPlayerUseItem(player, hand)
+        ObjectRegistry.FuelRegistry();
+        LifecycleEvent.SERVER_BEFORE_START.register(instance -> ContractInProgress.progressPerPlayer.clear());
     }
 }
 

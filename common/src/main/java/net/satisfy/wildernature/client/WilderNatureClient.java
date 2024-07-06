@@ -29,14 +29,20 @@ import static net.satisfy.wildernature.registry.ObjectRegistry.*;
 public class WilderNatureClient {
     public static final ModelLayerLocation WOLF_FUR_CHESTPLATE_LAYER = new ModelLayerLocation(new ResourceLocation("minecraft:player"), "wolf_fur_chestplate");
 
-    public static void preInitClient() {
+    public static void onInitializeClient() {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get(), BOUNTY_BOARD.get());
+
+        BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
+
+        MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(),BountyBlockScreen::new);
+        makeHorn(ObjectRegistry.BISON_HORN.get());
+
+    }
+        public static void preInitClient() {
         registerEntityRenderers();
         registerEntityModelLayer();
-        registerScreens();
         WilderNatureUtil.init();
         BountyEntrypoints.clientEntry();
-        makeHorn(ObjectRegistry.BISON_HORN.get());
 
     }
 
@@ -66,7 +72,6 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
         EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
         EntityRendererRegistry.register(DOG, DogRenderer::new);
-        BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
@@ -82,9 +87,5 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(DogModel.LAYER_LOCATION, DogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(MiniSheepModel.LAYER_LOCATION, MiniSheepModel::getTexturedModelData);
         EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
-    }
-
-    public static void registerScreens(){
-        MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(),BountyBlockScreen::new);
     }
 }

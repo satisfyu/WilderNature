@@ -39,6 +39,7 @@ public abstract class ServerPlayerMixin extends Player {
             );
     }
     @Inject(method = "readAdditionalSaveData",at = @At("RETURN"))
+    @SuppressWarnings("all")
     void read(CompoundTag compoundTag, CallbackInfo ci){
         try {
             if (compoundTag.contains("wn_contract")) {

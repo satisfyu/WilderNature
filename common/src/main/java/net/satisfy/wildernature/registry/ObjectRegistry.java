@@ -107,10 +107,9 @@ public class ObjectRegistry {
         WilderNature.LOGGER.debug("Registering Mod Block and Items for " + WilderNature.MOD_ID);
         ITEMS.register();
         BLOCKS.register();
-        commonInit();
     }
 
-    public static void commonInit() {
+    public static void FuelRegistry() {
         FuelRegistry.register(1400, FISH_OIL.get());
     }
 

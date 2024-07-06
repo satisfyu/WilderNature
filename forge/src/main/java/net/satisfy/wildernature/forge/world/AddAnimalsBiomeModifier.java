@@ -49,27 +49,27 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
         if (phase.equals(Phase.ADD)) {
             registerEntities();
 
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, MobCategory.CREATURE, EntityRegistry.DEER.get(), 12, 2, 4);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, MobCategory.CREATURE, EntityRegistry.DEER.get(), 12, 2, 4);
-            addMobSpawn(builder, biome, BiomeTags.IS_BEACH, MobCategory.CREATURE, EntityRegistry.PELICAN.get(), 5, 3, 4);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.EVOKER, 4, 1, 2);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.VINDICATOR, 4, 1, 2);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, MobCategory.CREATURE, EntityType.PILLAGER, 4, 1, 3);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RACCOON, MobCategory.CREATURE, EntityRegistry.RACCOON.get(), 8, 2, 3);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_SQUIRREL, MobCategory.CREATURE, EntityRegistry.SQUIRREL.get(), 8, 2, 2);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RED_WOLF, MobCategory.CREATURE, EntityRegistry.RED_WOLF.get(), 10, 3, 4);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_OWL, MobCategory.CREATURE, EntityRegistry.OWL.get(), 12, 3, 3);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BOAR, MobCategory.CREATURE, EntityRegistry.BOAR.get(), 14, 5, 5);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BISON, MobCategory.CREATURE, EntityRegistry.BISON.get(), 10, 3, 5);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, MobCategory.CREATURE, EntityRegistry.TURKEY.get(), 12, 3, 5);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, MobCategory.CREATURE, EntityRegistry.TURKEY.get(), 12, 3, 5);
-            addMobSpawn(builder, biome, BiomeTags.IS_JUNGLE, MobCategory.CREATURE, EntityType.FROG, 8, 3, 4);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), 12, 2, 4);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), 12, 2, 4);
+            addMobSpawn(builder, biome, BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), 5, 3, 4);
+            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.EVOKER, 4, 1, 2);
+            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.VINDICATOR, 4, 1, 2);
+            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.PILLAGER, 4, 1, 3);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), 8, 2, 3);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(), 8, 2, 2);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RED_WOLF, EntityRegistry.RED_WOLF.get(), 10, 3, 4);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_OWL, EntityRegistry.OWL.get(), 12, 3, 3);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BOAR, EntityRegistry.BOAR.get(), 14, 5, 5);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BISON, EntityRegistry.BISON.get(), 10, 3, 5);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), 12, 3, 5);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), 12, 3, 5);
+            addMobSpawn(builder, biome, BiomeTags.IS_JUNGLE, EntityType.FROG, 8, 3, 4);
         }
     }
 
-    void addMobSpawn(ModifiableBiomeInfo.BiomeInfo.Builder builder, Holder<Biome> biome, TagKey<Biome> tag, MobCategory mobCategory, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
+    void addMobSpawn(ModifiableBiomeInfo.BiomeInfo.Builder builder, Holder<Biome> biome, TagKey<Biome> tag, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
         if (biome.is(tag)) {
-            builder.getMobSpawnSettings().addSpawn(mobCategory, new MobSpawnSettings.SpawnerData(entityType, weight, minGroupSize, maxGroupSize));
+            builder.getMobSpawnSettings().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(entityType, weight, minGroupSize, maxGroupSize));
         }
     }
 

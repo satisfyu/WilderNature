@@ -4,9 +4,7 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.architectury.utils.Env;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -23,12 +21,15 @@ import java.util.function.Supplier;
 public class WilderNatureUtil {
 
     public static void init() {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            makeHorn(ObjectRegistry.BISON_HORN.get());
+        if (Platform.isFabric() && Platform.getEnvironment() == Env.CLIENT) {
+            initClient();
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    private static void initClient() {
+        makeHorn(ObjectRegistry.BISON_HORN.get());
+    }
+
     private static void makeHorn(Item item) {
         ItemProperties.register(item, new ResourceLocation("blowing"), (p_174635_, p_174636_, p_174637_, p_174638_) -> {
             if (p_174637_ == null) {
