@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.client.model.TurkeyModel;
+import net.satisfy.wildernature.client.model.entity.TurkeyModel;
 import net.satisfy.wildernature.entity.TurkeyEntity;
 import org.jetbrains.annotations.NotNull;
 

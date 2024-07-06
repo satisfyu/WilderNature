@@ -26,11 +26,12 @@ import net.satisfy.wildernature.util.contract.ContractReloader;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider {
     private static final String KEY_CONTRACTS = "contracts";
-    private static final int rerollCooldown = 15 * 60 * 20; //15 minutes
+    private static final int rerollCooldown = 15 * 60 * 20;
     public int rerollCooldownLeft = 0;
     private static final String KEY_REROLL_COOLDOWN_LEFT = "reroll_cooldown_left";
 
@@ -60,7 +61,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
             return contracts;
         }
         for(int i=0;i<3;i++){
-            if(contracts[i] == null)// || ContractReloader.contracts.get(contracts[i]) == null) //uncomment this to autogenerate new contract on error
+            if(contracts[i] == null)
                 contracts[i] = getRandomContract();
         }
         return contracts.clone();
@@ -71,8 +72,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
 
     public BountyBoardBlockEntity(BlockPos a, BlockState b) {
-        super(EntityRegistry.BOUNTY_BLOCK.get(), a, b);
-        //load(new CompoundTag());
+        super(EntityRegistry.BOUNTY_BOARD_ENTITY.get(), a, b);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         this.rerollCooldownLeft = compoundTag.contains(KEY_REROLL_COOLDOWN_LEFT) ? compoundTag.getInt(KEY_REROLL_COOLDOWN_LEFT) : 0;
         this.rerollsLeft = compoundTag.contains(KEY_REROLLS_LEFT) ? compoundTag.getInt(KEY_REROLLS_LEFT) : 3;
         this.boardId = compoundTag.contains(KEY_LONGID) ? compoundTag.getLong(KEY_LONGID) : new Random().nextInt();
-        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)): new WilderNatureIdentifier("tier1");
+        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)): new WilderNatureIdentifier("");
         this.xp = compoundTag.contains(KEY_EXP) ? compoundTag.getInt(KEY_EXP) : 0;
         if(compoundTag.contains(KEY_CONTRACTS)){
             setContracts(ResourceLocation.CODEC.listOf().parse(NbtOps.INSTANCE,(compoundTag.get(KEY_CONTRACTS))).getOrThrow(false,(error)->new RuntimeException(error)).toArray(new ResourceLocation[3]));
@@ -90,9 +90,9 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    public boolean tryReroll(){
+    public void tryReroll(){
         if(rerollsLeft<=0){
-            return false;
+            return;
         }
         if(rerollsLeft == rerolls){
             rerollCooldownLeft = rerollCooldown;
@@ -100,7 +100,6 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         rerollsLeft--;
         fillWithRandomContracts();
         onBlockDataChange.invoke();
-        return true;
     }
     private void fillWithRandomContracts() {
         for(int i=0;i<3;i++){
@@ -132,7 +131,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public CompoundTag getContractsNbt() {
-        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(resourceLocation -> Contract.fromId(resourceLocation)).toList(), NbtOps.INSTANCE, new ListTag());
+        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(Contract::fromId).toList(), NbtOps.INSTANCE, new ListTag());
         Tag orThrow = encode.getOrThrow(
                 false,
                 (error) -> {
@@ -148,7 +147,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
     @Override
     public @NotNull Component getDisplayName() {
-        return Component.literal("[Replace me 1]");
+        return Component.literal("");
     }
 
 
@@ -172,7 +171,6 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         return BountyBoardTier.byId(this.tier).get();
     }
     public void addXp(int addXp) {
-        //e
         var nextTierXp = getTier().experience();
         this.xp+=addXp;
         if(this.xp>=nextTierXp){
@@ -181,7 +179,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
             if(getTier().nextTier().isEmpty()) {
                 if(Platform.isDevelopmentEnvironment()) {
-                    this.getLevel().getServer().getPlayerList().broadcastSystemMessage(Component.literal("_info: next tier is empty, impossible to upgrade"),true);
+                    Objects.requireNonNull(Objects.requireNonNull(this.getLevel()).getServer()).getPlayerList().broadcastSystemMessage(Component.literal("_info: next tier is empty, impossible to upgrade"),true);
                 }
                 return;
             }

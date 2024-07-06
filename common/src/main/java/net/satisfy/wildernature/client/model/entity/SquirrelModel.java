@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.client.model;
+package net.satisfy.wildernature.client.model.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;

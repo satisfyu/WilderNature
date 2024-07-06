@@ -10,20 +10,21 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.satisfy.wildernature.client.gui.screens.BountyBlockScreen;
 import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
-import net.satisfy.wildernature.network.BountyEntrypoints;
-import net.satisfy.wildernature.client.model.*;
+import net.satisfy.wildernature.client.gui.screens.BountyBlockScreen;
+import net.satisfy.wildernature.client.model.block.BountyBoardModel;
+import net.satisfy.wildernature.client.model.entity.*;
+import net.satisfy.wildernature.client.render.block.BountyBoardRenderer;
 import net.satisfy.wildernature.client.render.block.CompletionistBannerRenderer;
 import net.satisfy.wildernature.client.render.entity.*;
+import net.satisfy.wildernature.network.BountyEntrypoints;
 import net.satisfy.wildernature.registry.ObjectRegistry;
 import net.satisfy.wildernature.util.WilderNatureUtil;
 
 import static net.satisfy.wildernature.registry.EntityRegistry.*;
 import static net.satisfy.wildernature.registry.ObjectRegistry.*;
+import static net.satisfy.wildernature.util.WilderNatureUtil.makeHorn;
 
 @Environment(EnvType.CLIENT)
 public class WilderNatureClient {
@@ -33,8 +34,10 @@ public class WilderNatureClient {
         RenderTypeRegistry.register(RenderType.cutout(), DEER_TROPHY.get(), HAZELNUT_BUSH.get(), BOUNTY_BOARD.get());
 
         BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
+        BlockEntityRendererRegistry.register(BOUNTY_BOARD_ENTITY.get(), BountyBoardRenderer::new);
 
         MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(),BountyBlockScreen::new);
+
         makeHorn(ObjectRegistry.BISON_HORN.get());
 
     }
@@ -43,20 +46,6 @@ public class WilderNatureClient {
         registerEntityModelLayer();
         WilderNatureUtil.init();
         BountyEntrypoints.clientEntry();
-
-    }
-
-    private static void makeHorn(Item item) {
-        ItemProperties.register(item, new ResourceLocation("blowing"), (p_174635_, p_174636_, p_174637_, p_174638_) -> {
-            if (p_174637_ == null) {
-                return 0.0F;
-            } else {
-                return p_174637_.getUseItem() != p_174635_ ? 0.0F : (float)(p_174635_.getUseDuration() -
-                        p_174637_.getUseItemRemainingTicks()) / 20.0F;
-            }
-        });
-
-        ItemProperties.register(item, new ResourceLocation("using"), (p_174630_, p_174631_, p_174632_, p_174633_) -> p_174632_ != null && p_174632_.isUsingItem() && p_174632_.getUseItem() == p_174630_ ? 1.0F : 0.0F);
     }
 
     public static void registerEntityRenderers() {
@@ -87,5 +76,6 @@ public class WilderNatureClient {
         EntityModelLayerRegistry.register(DogModel.LAYER_LOCATION, DogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(MiniSheepModel.LAYER_LOCATION, MiniSheepModel::getTexturedModelData);
         EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
+        EntityModelLayerRegistry.register(BountyBoardModel.LAYER_LOCATION, BountyBoardModel::getTexturedModelData);
     }
 }

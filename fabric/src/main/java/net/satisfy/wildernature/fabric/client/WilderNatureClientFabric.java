@@ -12,6 +12,7 @@ public class WilderNatureClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         WilderNatureClient.preInitClient();
+        WilderNatureClient.onInitializeClient();
 
         EntityModelLayerRegistry.registerModelLayer(WilderNatureClient.WOLF_FUR_CHESTPLATE_LAYER, WolfFurChestplateModel::createBodyLayer);
 

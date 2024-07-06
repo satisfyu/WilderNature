@@ -106,7 +106,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return createTicker(level, blockEntityType, EntityRegistry.BOUNTY_BLOCK.get());
+        return createTicker(level, blockEntityType, EntityRegistry.BOUNTY_BOARD_ENTITY.get());
     }
 
     @Override

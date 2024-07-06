@@ -229,5 +229,6 @@
   "compendium.wildernature.page6_left_alignment": "Neutral",
   "compendium.wildernature.page6_left_health": "8 Health Points",
   "compendium.wildernature.title": "Animal Compendium",
-  "item.wildernature.animal_compendium": "Animal Compendium"
+  "item.wildernature.animal_compendium": "Animal Compendium",
+  "wildernature.tier1": ""
 }

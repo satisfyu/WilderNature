@@ -30,7 +30,7 @@ public class WilderNatureUtil {
         makeHorn(ObjectRegistry.BISON_HORN.get());
     }
 
-    private static void makeHorn(Item item) {
+    public static void makeHorn(Item item) {
         ItemProperties.register(item, new ResourceLocation("blowing"), (p_174635_, p_174636_, p_174637_, p_174638_) -> {
             if (p_174637_ == null) {
                 return 0.0F;

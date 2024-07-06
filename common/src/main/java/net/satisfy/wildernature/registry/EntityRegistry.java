@@ -19,13 +19,15 @@ import java.util.function.Supplier;
 public class EntityRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(WilderNature.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(WilderNature.MOD_ID, Registries.ENTITY_TYPE);
+
+    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner", () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<BountyBoardBlockEntity>> BOUNTY_BOARD_ENTITY = createBlockEntity("bounty_board", () -> BlockEntityType.Builder.of(BountyBoardBlockEntity::new, ObjectRegistry.BOUNTY_BOARD.get()).build(null));
+
     public static final RegistrySupplier<EntityType<RedWolfEntity>> RED_WOLF = createEntity("red_wolf",
             () -> EntityType.Builder.of(RedWolfEntity::new, MobCategory.CREATURE)
                     .sized(0.4f, 1.5f)
                     .clientTrackingRange(10)
                     .build(new WilderNatureIdentifier("red_wolf").toString()));
-    public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner",
-            () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
     public static final RegistrySupplier<EntityType<PelicanEntity>> PELICAN = createEntity("pelican",
             () -> EntityType.Builder.of(PelicanEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.3f)
@@ -76,11 +78,6 @@ public class EntityRegistry {
             () -> EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC)
                     .sized(0.3125f, 0.3125f).clientTrackingRange(64).updateInterval(2)
                     .build(new WilderNatureIdentifier("bullet").toString())
-    );
-
-    public static final RegistrySupplier<BlockEntityType<BountyBoardBlockEntity>> BOUNTY_BLOCK = createBlockEntity("bounty_block",
-            () -> BlockEntityType.Builder.of((a, b)->new BountyBoardBlockEntity(a,b), ObjectRegistry.BOUNTY_BOARD.get())
-                    .build(null)
     );
 
     public static <T extends EntityType<?>> RegistrySupplier<T> createEntity(final String path, final Supplier<T> type) {
