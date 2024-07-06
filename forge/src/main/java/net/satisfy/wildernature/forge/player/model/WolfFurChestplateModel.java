@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.player.model;
+package net.satisfy.wildernature.forge.player.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

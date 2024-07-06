@@ -1,4 +1,4 @@
-package net.satisfy.wildernature.player.layer;
+package net.satisfy.wildernature.forge.player.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.satisfy.wildernature.client.WilderNatureClient;
-import net.satisfy.wildernature.player.model.WolfFurChestplateModel;
+import net.satisfy.wildernature.forge.player.model.WolfFurChestplateModel;
 import org.jetbrains.annotations.NotNull;
 
 public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {

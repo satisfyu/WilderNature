@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.satisfy.wildernature.client.WilderNatureClient;
-import net.satisfy.wildernature.player.layer.WolfFurChestplateLayer;
-import net.satisfy.wildernature.player.model.WolfFurChestplateModel;
+import net.satisfy.wildernature.fabric.player.layer.WolfFurChestplateLayer;
+import net.satisfy.wildernature.fabric.player.model.WolfFurChestplateModel;
 
 public class WilderNatureClientFabric implements ClientModInitializer {
     @Override

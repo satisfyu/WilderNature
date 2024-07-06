@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegisterEvent;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.client.WilderNatureClient;
-import net.satisfy.wildernature.player.layer.WolfFurChestplateLayer;
-import net.satisfy.wildernature.player.model.WolfFurChestplateModel;
+import net.satisfy.wildernature.forge.player.layer.WolfFurChestplateLayer;
+import net.satisfy.wildernature.forge.player.model.WolfFurChestplateModel;
 
 import java.util.function.Function;
 
