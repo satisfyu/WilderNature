@@ -1,6 +1,7 @@
 package net.satisfy.wildernature.block;
 
 import dev.architectury.registry.menu.MenuRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,24 +26,31 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.Direction;
 import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
 import net.satisfy.wildernature.network.BountyBlockNetworking;
 import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
+import net.satisfy.wildernature.util.WilderNatureUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
-
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE_BOTTOM_LEFT = makeBottomLeftShape();
     private static final VoxelShape SHAPE_BOTTOM_RIGHT = makeBottomRightShape();
     private static final VoxelShape SHAPE_TOP_LEFT = makeTopLeftShape();
@@ -50,7 +58,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
 
     public BountyBoardBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.BOTTOM_LEFT));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.BOTTOM_LEFT).setValue(FACING, Direction.NORTH));
     }
 
     private static VoxelShape makeBottomLeftShape() {
@@ -79,6 +87,17 @@ public class BountyBoardBlock extends BaseEntityBlock {
         return shape;
     }
 
+    public static final Map<Direction, Map<Part, VoxelShape>> SHAPE = Util.make(new HashMap<>(), map -> {
+        for (Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
+            Map<Part, VoxelShape> partShapeMap = new HashMap<>();
+            partShapeMap.put(Part.BOTTOM_LEFT, WilderNatureUtil.rotateShape(Direction.NORTH, direction, SHAPE_BOTTOM_LEFT));
+            partShapeMap.put(Part.BOTTOM_RIGHT, WilderNatureUtil.rotateShape(Direction.NORTH, direction, SHAPE_BOTTOM_RIGHT));
+            partShapeMap.put(Part.TOP_LEFT, WilderNatureUtil.rotateShape(Direction.NORTH, direction, SHAPE_TOP_LEFT));
+            partShapeMap.put(Part.TOP_RIGHT, WilderNatureUtil.rotateShape(Direction.NORTH, direction, SHAPE_TOP_RIGHT));
+            map.put(direction, partShapeMap);
+        }
+    });
+
     @Override
     public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.MODEL;
@@ -96,7 +115,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(PART);
+        builder.add(PART, FACING);
     }
 
     private static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<BountyBoardBlockEntity> blockEntityType2){
@@ -114,15 +133,15 @@ public class BountyBoardBlock extends BaseEntityBlock {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
         Player player = context.getPlayer();
+        Direction direction = context.getHorizontalDirection().getOpposite();
 
         if (!canPlaceAt(world, pos)) {
             return null;
         }
 
-        //world.setBlock(pos, this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT), 3);
-        world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.TOP_LEFT), 3);
-        world.setBlock(pos.east(), this.defaultBlockState().setValue(PART, Part.BOTTOM_RIGHT), 3);
-        world.setBlock(pos.east().above(), this.defaultBlockState().setValue(PART, Part.TOP_RIGHT), 3);
+        world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.TOP_LEFT).setValue(FACING, direction), 3);
+        world.setBlock(pos.relative(direction.getClockWise()), this.defaultBlockState().setValue(PART, Part.BOTTOM_RIGHT).setValue(FACING, direction), 3);
+        world.setBlock(pos.relative(direction.getClockWise()).above(), this.defaultBlockState().setValue(PART, Part.TOP_RIGHT).setValue(FACING, direction), 3);
 
         world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
         world.playSound(null, pos, SoundEvents.CHERRY_WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -131,14 +150,14 @@ public class BountyBoardBlock extends BaseEntityBlock {
             context.getItemInHand().shrink(1);
         }
 
-        return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT);
+        return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT).setValue(FACING, direction);
     }
 
     private boolean canPlaceAt(Level world, BlockPos pos) {
         return world.getBlockState(pos).canBeReplaced() &&
                 world.getBlockState(pos.above()).canBeReplaced() &&
-                world.getBlockState(pos.east()).canBeReplaced() &&
-                world.getBlockState(pos.east().above()).canBeReplaced();
+                world.getBlockState(pos.relative(Direction.EAST)).canBeReplaced() &&
+                world.getBlockState(pos.relative(Direction.EAST).above()).canBeReplaced();
     }
 
 
@@ -170,13 +189,9 @@ public class BountyBoardBlock extends BaseEntityBlock {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(FACING);
         Part part = state.getValue(PART);
-        return switch (part) {
-            case BOTTOM_LEFT -> SHAPE_BOTTOM_LEFT;
-            case BOTTOM_RIGHT -> SHAPE_BOTTOM_RIGHT;
-            case TOP_LEFT -> SHAPE_TOP_LEFT;
-            case TOP_RIGHT -> SHAPE_TOP_RIGHT;
-        };
+        return SHAPE.get(direction).get(part);
     }
 
     @Override
