@@ -10,6 +10,7 @@ import net.satisfy.wildernature.util.WilderNatureIdentifier;
 
 public class TagsRegistry {
     public static final TagKey<Item> SQUIRREL_HOLDABLE = TagKey.create(Registries.ITEM, new WilderNatureIdentifier("squirrel_holdable"));
+    public static final TagKey<Item> CAN_BE_TRUFFLED = TagKey.create(Registries.ITEM, new WilderNatureIdentifier("can_be_truffled"));
     public static final TagKey<Block> MAKES_BLOCK_GLOW = TagKey.create(Registries.BLOCK, new WilderNatureIdentifier("makes_block_glow"));
     public static final TagKey<Biome> SPAWNS_DEER = TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_deer"));
     public static final TagKey<Biome> SPAWNS_BOAR = TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_boar"));
