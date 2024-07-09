@@ -1,4 +1,4 @@
-<p align="center"><img src="https://imgur.com/xyz.png" width="1200"></p>
+<p align="center"><img src="https://imgur.com/XawqxIF.png" width="1200"></p>
 
 <h1 align="center">Welcome to WilderNature</h1>
 
