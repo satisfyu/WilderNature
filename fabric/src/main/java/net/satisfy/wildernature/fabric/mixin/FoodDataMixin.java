@@ -13,29 +13,26 @@ import net.satisfy.wildernature.util.Truffling;
 
 @Mixin(FoodData.class)
 public class FoodDataMixin {
+
     @Shadow
-    public void eat(int foodLevel, float saturationModifier) {
-    }
+    public void eat(int foodLevel, float saturationModifier) {}
 
     @Inject(method = "eat(Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), cancellable = true)
-    // private void onEat(Item pItem, ItemStack pStack, LivingEntity entity, CallbackInfo ci) {
     private void onEat(Item item, ItemStack itemStack, CallbackInfo ci) {
-        if (!Truffling.isTruffled(itemStack))
+
+        if (!Truffling.isTruffled(itemStack)) {
             return;
-
-        FoodProperties foodProperties = itemStack.getItem().getFoodProperties();
-        Truffling.FoodValue additionalFoodValues = Truffling.getAdditionalFoodValue(itemStack);
-
-        if (foodProperties != null) {
-            eat(foodProperties.getNutrition() + additionalFoodValues.nutrition(),
-                    foodProperties.getSaturationModifier() + additionalFoodValues.saturationModifier());
         }
 
-        // if (entity instanceof ServerPlayer serverPlayer && !serverPlayer.isCreative())
-        //     Salt.Advancements.SALTED_FOOD_CONSUMED.trigger(serverPlayer);
+        FoodProperties foodProperties = itemStack.getItem().getFoodProperties();
+
+        Truffling.FoodValue additionalFoodValues = Truffling.getAdditionalFoodValue();
+
+        if (foodProperties != null) {
+            eat((foodProperties.getNutrition() + (int) (foodProperties.getNutrition() * 0.20F) ) + additionalFoodValues.nutrition(), (foodProperties.getSaturationModifier() + (foodProperties.getSaturationModifier() * .20F)) + additionalFoodValues.saturationModifier());
+        }
 
         ci.cancel();
     }
 }
-

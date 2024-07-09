@@ -1,6 +1,7 @@
 package net.satisfy.wildernature;
 
 import dev.architectury.event.events.common.LifecycleEvent;
+import net.satisfy.wildernature.registry.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.satisfy.wildernature.network.BountyEntrypoints;
@@ -9,6 +10,7 @@ import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TabRegistry;
+
 
 public class WilderNature {
     public static final String MOD_ID = "wildernature";
@@ -21,6 +23,7 @@ public class WilderNature {
     public static void init() {
         ObjectRegistry.init();
         EntityRegistry.init();
+        RecipeRegistry.init();
         TabRegistry.init();
         SoundRegistry.init();
         BountyEntrypoints.serverEntry();
@@ -29,6 +32,9 @@ public class WilderNature {
     public static void commonInit() {
         ObjectRegistry.FuelRegistry();
         LifecycleEvent.SERVER_BEFORE_START.register(instance -> ContractInProgress.progressPerPlayer.clear());
+        LifecycleEvent.SERVER_BEFORE_START.register(instance -> {
+            ContractInProgress.progressPerPlayer.clear();
+        });
     }
 }
 

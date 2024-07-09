@@ -42,11 +42,11 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> PELICAN_MEAT = registerItem("pelican_meat", () -> new Item(getSettings().food(Foods.SALMON)));
     public static final RegistrySupplier<Item> COOKED_PELICAN_MEAT = registerItem("cooked_pelican_meat", () -> new Item(getSettings().food(Foods.COOKED_SALMON)));
     public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", BlunderBussItem::new);
-    public static final RegistrySupplier<Item> FLINT_AMMUNITION = registerItem("flint_ammunition", () -> new AmmunitionItem(getSettings(), 5));
-    public static final RegistrySupplier<Item> DIAMOND_AMMUNITION = registerItem("diamond_ammunition", () -> new AmmunitionItem(getSettings(), 9));
+    public static final RegistrySupplier<Item> FLINT_AMMUNITION = registerItem("flint_ammunition", () -> new AmmunitionItem(getSettings().rarity(Rarity.UNCOMMON), 5));
+    public static final RegistrySupplier<Item> DIAMOND_AMMUNITION = registerItem("diamond_ammunition", () -> new AmmunitionItem(getSettings().rarity(Rarity.COMMON), 9));
     public static final RegistrySupplier<Item> FUR_CLOAK = registerItem("fur_cloak", () -> new FurCloakItem(ArmorMaterials.LEATHER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static final RegistrySupplier<Item> FISH_OIL = registerItem("fish_oil", () -> new Item(getSettings().stacksTo(16)));
-    public static final RegistrySupplier<Item> LOOT_BAG = registerItem("loot_bag", () -> new LootBagItem(getSettings()));
+    public static final RegistrySupplier<Item> LOOT_BAG = registerItem("loot_bag", () -> new LootBagItem(getSettings().rarity(Rarity.COMMON)));
     public static final RegistrySupplier<Item> BISON_HORN = registerItem("bison_horn", () -> new BisonHornItem(new Item.Properties().stacksTo(1), SoundRegistry.BISON_HORN.get()));
     public static final RegistrySupplier<Item> UNCOMMON_CONTRACT = registerItem("uncommon_contract", () -> new ContractItem(getSettings().rarity(Rarity.UNCOMMON)));
     public static final RegistrySupplier<Item> COMMON_CONTRACT = registerItem("common_contract", () -> new ContractItem(getSettings().rarity(Rarity.RARE)));
@@ -62,7 +62,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> DOG_SPAWN_EGG = registerItem("dog_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.DOG, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> MINISHEEP_SPAWN_EGG = registerItem("minisheep_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.MINISHEEP, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
-    public static final RegistrySupplier<Item> TRUFFLE = registerItem("truffle", () -> new Item(getSettings()));
+    public static final RegistrySupplier<Item> TRUFFLE = registerItem("truffle", () -> new Item(getSettings().rarity(Rarity.RARE)));
     public static final RegistrySupplier<Block> HAZELNUT_BUSH = registerWithoutItem("hazelnut_bush", () -> new HazelnutBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY)));
     public static final RegistrySupplier<Item> HAZELNUT = registerItem("hazelnut", () -> new ItemNameBlockItem(ObjectRegistry.HAZELNUT_BUSH.get(), getSettings().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).fast().build())));
     public static final RegistrySupplier<Block> BOUNTY_BOARD = registerWithItem("bounty_board", () -> new BountyBoardBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
@@ -75,7 +75,7 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> BUNNY_STALKER_WALL_BANNER = registerWithoutItem("bunny_stalker_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> COD_CATCHER_BANNER = registerWithItem("cod_catcher_banner", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> COD_CATCHER_WALL_BANNER = registerWithoutItem("cod_catcher_wall_banner", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
-    public static final RegistrySupplier<Item> ANIMAL_COMPENDIUM = registerItem("animal_compendium", () -> new CompendiumItem(getSettings()));
+    public static final RegistrySupplier<Item> ANIMAL_COMPENDIUM = registerItem("animal_compendium", () -> new CompendiumItem(getSettings().rarity(Rarity.EPIC)));
 
     /**
      * Ideas for Items:

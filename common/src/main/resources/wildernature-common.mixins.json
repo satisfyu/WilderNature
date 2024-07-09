@@ -7,6 +7,7 @@
   ],
   "mixins": [
     "CreeperMixin",
+    "ItemMixin",
     "MobAccessor",
     "ServerPlayerMixin"
   ],

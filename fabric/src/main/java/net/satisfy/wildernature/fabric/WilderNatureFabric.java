@@ -46,6 +46,7 @@ public class WilderNatureFabric implements ModInitializer {
         return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier("spawns_patch_hazelnut_bush")));
     }
 
+
     @Override
     public void onInitialize() {
         AutoConfig.register(ConfigFabric.class, GsonConfigSerializer::new);
