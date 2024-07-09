@@ -28,7 +28,7 @@ public class FoodDataMixin {
 
         FoodProperties foodProperties = pStack.getFoodProperties(entity);
 
-        Truffling.FoodValue additionalFoodValues = Truffling.getAdditionalFoodValue(pStack);
+        Truffling.FoodValue additionalFoodValues = Truffling.getAdditionalFoodValue();
 
         if (foodProperties != null) {
             eat(foodProperties.getNutrition() + additionalFoodValues.nutrition(), foodProperties.getSaturationModifier() + additionalFoodValues.saturationModifier());

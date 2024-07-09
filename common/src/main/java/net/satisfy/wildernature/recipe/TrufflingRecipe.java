@@ -48,7 +48,7 @@ public class TrufflingRecipe extends CustomRecipe {
 
             itemsCount++;
 
-            if (stackInSlot.is(TagsRegistry.CAN_BE_TRUFFLED) && !hasFoodInput && !Truffling.isTruffled(stackInSlot))
+            if ((stackInSlot.is(TagsRegistry.CAN_BE_TRUFFLED) || stackInSlot.getItem().isEdible()) && !hasFoodInput && !Truffling.isTruffled(stackInSlot))
                 hasFoodInput = true;
 
             for (int ingredientIndex = 0; ingredientIndex < this.ingredients.size(); ingredientIndex++) {
@@ -65,7 +65,7 @@ public class TrufflingRecipe extends CustomRecipe {
         for (int index = 0; index < craftingContainer.getContainerSize(); index++) {
             ItemStack itemStack = craftingContainer.getItem(index);
 
-            if (itemStack.is(TagsRegistry.CAN_BE_TRUFFLED)) {
+            if (itemStack.is(TagsRegistry.CAN_BE_TRUFFLED) || itemStack.getItem().isEdible()) {
                 ItemStack resultStack = itemStack.copy();
                 resultStack.setCount(1);
 
@@ -91,10 +91,6 @@ public class TrufflingRecipe extends CustomRecipe {
         return ingredients;
     }
 
-    public Ingredient getFoodIngredient() {
-        return Ingredient.of(TagsRegistry.CAN_BE_TRUFFLED);
-    }
-
     public static class Serializer implements RecipeSerializer<TrufflingRecipe> {
         public @NotNull TrufflingRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
@@ -118,15 +114,12 @@ public class TrufflingRecipe extends CustomRecipe {
             return ingredients;
         }
 
-        public TrufflingRecipe fromNetwork(@NotNull ResourceLocation recipeID, FriendlyByteBuf buffer) {
+        public @NotNull TrufflingRecipe fromNetwork(@NotNull ResourceLocation recipeID, FriendlyByteBuf buffer) {
             String group = buffer.readUtf();
             int ingredientsCount = buffer.readVarInt();
             NonNullList<Ingredient> ingredients = NonNullList.withSize(ingredientsCount, Ingredient.EMPTY);
 
-            //noinspection Java8ListReplaceAll
-            for(int i = 0; i < ingredients.size(); ++i) {
-                ingredients.set(i, Ingredient.fromNetwork(buffer));
-            }
+            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
 
             return new TrufflingRecipe(recipeID, group, ingredients);
         }

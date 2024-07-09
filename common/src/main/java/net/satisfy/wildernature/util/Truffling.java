@@ -1,8 +1,11 @@
 package net.satisfy.wildernature.util;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Truffling {
@@ -20,23 +23,21 @@ public class Truffling {
         return itemStack.hasTag() && Objects.requireNonNull(itemStack.getTag()).contains(TRUFFLED_KEY);
     }
 
-    /**
-     * Same ItemStack is returned.
-     */
     public static ItemStack setTruffled(ItemStack itemStack) {
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.putBoolean(TRUFFLED_KEY, true);
         return itemStack;
     }
 
-    public static FoodValue getAdditionalFoodValue(ItemStack stack) {
-
-        // here we are adding a flat value to the amount already on the food.
-        // satisfy requested 20% opposed to a flat amount, so we're leaving these as 0
+    public static FoodValue getAdditionalFoodValue() {
         return new FoodValue(0, 0.0F);
-        
-        // original implementation relying on config
-        // @Nullable FoodValue foodValue = Configuration.FOOD_VALUES.get(Objects.requireNonNull( BuiltInRegistries.ITEM.getKey(stack.getItem()) ).toString());
-        // return foodValue != null ? foodValue : new FoodValue(Configuration.TRUFFLING_ADDITIONAL_NUTRITION.get(), Configuration.TRUFFLING_ADDITIONAL_SATURATION_MODIFIER.get().floatValue());
+    }
+
+    public static void addTruffledTooltip(ItemStack itemStack, List<Component> tooltip) {
+        if (isTruffled(itemStack)) {
+            tooltip.add(Component.translatable("tooltip.wildernature.truffled").withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable("tooltip.wildernature.truffled.nutrition").withStyle(ChatFormatting.GREEN));
+            tooltip.add(Component.translatable("tooltip.wildernature.truffled.saturationModifier").withStyle(ChatFormatting.GREEN));
+        }
     }
 }

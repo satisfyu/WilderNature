@@ -13,6 +13,7 @@ import net.satisfy.wildernature.forge.registry.WilderNatureBiomeModifiers;
 @Mod(WilderNature.MOD_ID)
 public class WilderNatureForge {
     public WilderNatureForge() {
+        
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         EventBuses.registerModEventBus(WilderNature.MOD_ID, modEventBus);
         WilderNature.init();
