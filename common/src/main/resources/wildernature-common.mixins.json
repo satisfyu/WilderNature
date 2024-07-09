@@ -6,7 +6,6 @@
   "client": [
   ],
   "mixins": [
-    "CreeperMixin",
     "ItemMixin",
     "MobAccessor",
     "ServerPlayerMixin"

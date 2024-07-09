@@ -1,10 +1,13 @@
-package net.satisfy.wildernature.mixin;
+package net.satisfy.wildernature.fabric.mixin;
 
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
-import net.satisfy.wildernature.item.FurCloakItem;
+import net.satisfy.wildernature.fabric.api.FurCloakTrinket;
+import net.satisfy.wildernature.mixin.MobAccessor;
+import net.satisfy.wildernature.registry.ObjectRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +25,8 @@ public abstract class CreeperMixin {
         Creeper creeper = (Creeper) (Object) this;
         if (!wilderNature$addedGoal) {
             ((MobAccessor) creeper).getGoalSelector().addGoal(3, new AvoidEntityGoal<>(creeper, Player.class, 6.0F, 1.0, 1.2, target ->
-                    target != null && FurCloakItem.isEquippedBy((Player) target) && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)));
+                    target != null && (FurCloakTrinket.isEquippedBy((Player) target) || TrinketsApi.getTrinketComponent((Player) target).map(component -> component.isEquipped(ObjectRegistry.FUR_CLOAK.get())).orElse(false))
+                    && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)));
             wilderNature$addedGoal = true;
         }
     }

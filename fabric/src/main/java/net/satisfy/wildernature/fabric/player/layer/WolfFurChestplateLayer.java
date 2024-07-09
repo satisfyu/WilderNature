@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.satisfy.wildernature.client.WilderNatureClient;
 import net.satisfy.wildernature.fabric.api.FurCloakTrinket;
 import net.satisfy.wildernature.fabric.player.model.WolfFurChestplateModel;
+import net.satisfy.wildernature.item.FurCloakItem;
 import org.jetbrains.annotations.NotNull;
 
 public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
@@ -26,25 +27,23 @@ public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidMo
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        boolean shouldRender = false;
+        if (entity instanceof Player player) {
+            ItemStack chestItem = player.getInventory().armor.get(2);
+            boolean hasFurCloakTrinket = FurCloakTrinket.isEquippedBy(player);
 
-        for (ItemStack stack : ((Player) entity).getInventory().armor) {
-            if (stack.getItem().getDescriptionId().toLowerCase().contains("fur")) {
-                shouldRender = true;
+            boolean chestSlotEmpty = chestItem.isEmpty();
+            boolean chestSlotHasFurCloak = chestItem.getItem() instanceof FurCloakItem;
+
+            boolean shouldRender = (hasFurCloakTrinket && chestSlotEmpty) || chestSlotHasFurCloak;
+
+            if (shouldRender) {
+                this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+                poseStack.pushPose();
+                poseStack.translate(0.0d, 0.0d, 0.0d);
+                renderColoredCutoutModel(this.model, getTextureLocation(entity), poseStack, multiBufferSource, i, entity, 1.0f, 1.0f, 1.0f);
+                poseStack.popPose();
             }
-        }
-
-        if (FurCloakTrinket.isEquippedBy((Player) entity)) {
-            shouldRender = true;
-        }
-
-        if (shouldRender) {
-            this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-
-            poseStack.pushPose();
-            poseStack.translate(0.0d, 0.0d, 0.0d);
-            renderColoredCutoutModel(this.model, getTextureLocation(entity), poseStack, multiBufferSource, i, entity, 1.0f, 1.0f, 1.0f);
-            poseStack.popPose();
         }
     }
 
