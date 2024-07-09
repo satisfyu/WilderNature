@@ -6,16 +6,13 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.client.WilderNatureClient;
 import net.satisfy.wildernature.forge.player.layer.WolfFurChestplateLayer;
 import net.satisfy.wildernature.forge.player.model.WolfFurChestplateModel;
-import net.satisfy.wildernature.util.Truffling;
 
 import java.util.function.Function;
 
@@ -25,11 +22,6 @@ public class WilderNatureClientForge {
     @SubscribeEvent
     public static void beforeClientSetup(RegisterEvent event) {
         WilderNatureClient.preInitClient();
-    }
-
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        WilderNatureClient.onInitializeClient();
     }
 
     @SubscribeEvent
@@ -48,10 +40,5 @@ public class WilderNatureClientForge {
     void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName, Function<LivingEntityRenderer<E, M>, ? extends RenderLayer<E, M>> factory) {
         LivingEntityRenderer renderer = event.getSkin(skinName);
         if (renderer != null) renderer.addLayer(factory.apply(renderer));
-    }
-
-    @SubscribeEvent
-    public static void onItemTooltip(ItemTooltipEvent event) {
-        Truffling.addTruffledTooltip(event.getItemStack(), event.getToolTip());
     }
 }

@@ -31,6 +31,11 @@ public class CompendiumItem extends Item {
         return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
     }
 
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return true;
+    }
+
     @Environment(EnvType.CLIENT)
     private void openCompendiumGui() {
         Minecraft.getInstance().setScreen(new CompendiumScreen() {
