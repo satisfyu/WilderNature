@@ -1,0 +1,13 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wildernature:red_wolf_trophy"
+        }
+      ]
+    }
+  ]
+}

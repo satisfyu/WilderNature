@@ -1,0 +1,13 @@
+{
+  "pools": [
+    {
+      "rolls": 7,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald"
+        }
+      ]
+    }
+  ]
+}

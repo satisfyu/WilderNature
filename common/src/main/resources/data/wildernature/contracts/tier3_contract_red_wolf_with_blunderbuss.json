@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_red_wolf_with_blunderbuss",
   "reward": {
     "blockExpReward": 40,
-    "loot": "wildernature:fur_cloak",
-    "count": 1,
+    "loot": "wildernature:bountyboard/tier3_contract_red_wolf_with_blunderbuss",
     "playerExpReward": 100
   },
   "targetPredicate": "wildernature:red_wolf"

@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_pelican",
   "reward": {
     "blockExpReward": 2,
-    "loot": "wildernature:pelican_meat",
-    "count": 12,
+    "loot": "wildernature:bountyboard/tier2_contract_pelican",
     "playerExpReward": 10
   },
   "targetPredicate": "wildernature:pelican"

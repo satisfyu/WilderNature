@@ -25,7 +25,7 @@ import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.network.BountyBlockNetworking;
 import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
 import net.satisfy.wildernature.util.BountyBoardTier;
-import net.satisfy.wildernature.event.Event;
+import net.satisfy.wildernature.event.EventManager;
 import net.satisfy.wildernature.util.contract.Contract;
 import net.satisfy.wildernature.util.contract.ContractInProgress;
 import net.satisfy.wildernature.item.ContractItem;
@@ -184,7 +184,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         return new BountyBlockScreenHandler(id, inventory, null);
     }
 
-    public Event c_onContractUpdate = new Event();
+    public EventManager c_onContractUpdate = new EventManager();
     public ContractInProgress c_activeContractProgress;
     public Contract c_activeContract;
 

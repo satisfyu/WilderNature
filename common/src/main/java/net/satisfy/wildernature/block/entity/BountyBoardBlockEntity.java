@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.satisfy.wildernature.util.BountyBoardTier;
-import net.satisfy.wildernature.event.Event;
+import net.satisfy.wildernature.event.EventManager;
 import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -43,8 +43,8 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     private static final String KEY_LONGID = "longid";
 
 
-    public Event onTick = new Event();
-    public Event onBlockDataChange = new Event();
+    public EventManager onTick = new EventManager();
+    public EventManager onBlockDataChange = new EventManager();
     public long boardId = new Random().nextInt();
     private ResourceLocation[] contracts = new ResourceLocation[3];
     public ResourceLocation tier = new WilderNatureIdentifier("tier1");

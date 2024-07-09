@@ -1,0 +1,13 @@
+{
+  "pools": [
+    {
+      "rolls": 37,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:arrow"
+        }
+      ]
+    }
+  ]
+}

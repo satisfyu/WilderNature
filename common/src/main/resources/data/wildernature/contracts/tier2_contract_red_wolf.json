@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_red_wolf",
   "reward": {
     "blockExpReward": 4,
-    "loot": "wildernature:flint_ammunition",
-    "count": 32,
+    "loot": "wildernature:bountyboard/tier2_contract_red_wolf",
     "playerExpReward": 15
   },
   "targetPredicate": "wildernature:red_wolf"

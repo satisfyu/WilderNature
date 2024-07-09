@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_turkey_blunderbuss",
   "reward": {
     "blockExpReward": 10,
-    "loot": "minecraft:diamond",
-    "count": 3,
+    "loot": "wildernature:bountyboard/tier3_contract_turkey_with_blunderbuss",
     "playerExpReward": 50
   },
   "targetPredicate": "wildernature:turkey"

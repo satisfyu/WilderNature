@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier1_boar",
   "reward": {
     "blockExpReward": 2,
-    "loot": "wildernature:truffle",
-    "count": 32,
+    "loot": "wildernature:bountyboard/tier1_contract_boar",
     "playerExpReward": 12
   },
   "targetPredicate": "wildernature:boar"

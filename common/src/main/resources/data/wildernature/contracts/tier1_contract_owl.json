@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier1_owl",
   "reward": {
     "blockExpReward": 5,
-    "loot": "minecraft:feather",
-    "count": 32,
+    "loot": "wildernature:bountyboard/tier1_contract_cod",
     "playerExpReward": 12
   },
   "targetPredicate": "wildernature:owl"

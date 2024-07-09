@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_deer_with_bow",
   "reward": {
     "blockExpReward": 20,
-    "loot": "minecraft:arrow",
-    "count": 64,
+    "loot": "wildernature:bountyboard/tier2_contract_deer_with_bow",
     "playerExpReward": 25
   },
   "targetPredicate": "wildernature:deer"

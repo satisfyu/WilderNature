@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_squirrel",
   "reward": {
     "blockExpReward": 4,
-    "loot": "wildernature:flint_ammunition",
-    "count": 32,
+    "loot": "wildernature:bountyboard/tier2_contract_squirrel",
     "playerExpReward": 15
   },
   "targetPredicate": "wildernature:red_wolf"

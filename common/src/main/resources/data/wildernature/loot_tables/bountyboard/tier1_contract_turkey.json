@@ -1,0 +1,13 @@
+{
+  "pools": [
+    {
+      "rolls": 33,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:feather"
+        }
+      ]
+    }
+  ]
+}

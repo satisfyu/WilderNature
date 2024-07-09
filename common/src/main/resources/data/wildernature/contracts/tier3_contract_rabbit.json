@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_rabbit",
   "reward": {
     "blockExpReward": 50,
-    "loot": "minecraft:bunny_stalker_banner",
-    "count": 3,
+    "loot": "wildernature:bountyboard/tier3_contract_rabbit",
     "playerExpReward": 50
   },
   "targetPredicate": "minecraft:rabbit"

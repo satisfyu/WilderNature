@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_raccoon",
   "reward": {
     "blockExpReward": 8,
-    "loot": "wildernature:lootbag",
-    "count": 2,
+    "loot": "wildernature:bountyboard/tier2_contract_raccoon",
     "playerExpReward": 25
   },
   "targetPredicate": "wildernature:raccoon"

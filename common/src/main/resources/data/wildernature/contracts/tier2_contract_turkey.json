@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_turkey",
   "reward": {
     "blockExpReward": 8,
-    "loot": "minecraft:feather",
-    "count": 24,
+    "loot": "wildernature:bountyboard/tier2_contract_turkey",
     "playerExpReward": 40
   },
   "targetPredicate": "wildernature:turkey"

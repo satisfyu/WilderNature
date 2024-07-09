@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_red_wolf_with_blunderbuss",
   "reward": {
     "blockExpReward": 40,
-    "loot": "wildernature:wolf_trapper_banner",
-    "count": 1,
+    "loot": "wildernature:bountyboard/tier3_contract_red_wolf_with_blunderbuss_master",
     "playerExpReward": 500
   },
   "targetPredicate": "wildernature:red_wolf"

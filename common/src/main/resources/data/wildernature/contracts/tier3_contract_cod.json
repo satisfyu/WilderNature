@@ -10,7 +10,7 @@
   "name": "contract.wildernature.tier3_cod",
   "reward": {
     "blockExpReward": 50,
-    "loot": "wildernature:block/cod_catcher_banner",
+    "loot": "wildernature:bountyboard/tier3_contract_cod",
     "playerExpReward": 250
   },
   "targetPredicate": "minecraft:cod"

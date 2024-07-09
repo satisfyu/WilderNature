@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier1_cod",
   "reward": {
     "blockExpReward": 2,
-    "loot": "minecraft:cod",
-    "count": 12,
+    "loot": "wildernature:bountyboard/tier1_contract_cod",
     "playerExpReward": 10
   },
   "targetPredicate": "minecraft:cod"

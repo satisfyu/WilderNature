@@ -233,5 +233,7 @@
   "compendium.wildernature.page6_left_health": "8 Health Points",
   "compendium.wildernature.title": "Animal Compendium",
   "item.wildernature.animal_compendium": "Animal Compendium",
-  "wildernature.tier1": ""
+  "wildernature.tier1": "",
+  "contract.wildernature.tier2_elder_guardian": "Horror of the Seas",
+  "contract.wildernature.tier2_elder_guardian.desc": "§6Hunt an Elder Guardian"
 }

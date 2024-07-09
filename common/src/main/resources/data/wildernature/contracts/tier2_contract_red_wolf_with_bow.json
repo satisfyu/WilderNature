@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_red_wolf_with_bow",
   "reward": {
     "blockExpReward": 4,
-    "loot": "wildernature:arrow",
-    "count": 40,
+    "loot": "wildernature:bountyboard/tier2_contract_red_wolf_with_bow",
     "playerExpReward": 15
   },
   "targetPredicate": "wildernature:red_wolf"

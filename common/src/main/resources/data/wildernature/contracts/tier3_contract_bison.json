@@ -10,7 +10,7 @@
   "name": "contract.wildernature.tier3_bison",
   "reward": {
     "blockExpReward": 50,
-    "loot": "wildernature:block/bison_trophy",
+    "loot": "wildernature:bountyboard/tier3_contract_bison",
     "playerExpReward": 250
   },
   "targetPredicate": "minecraft:bison"

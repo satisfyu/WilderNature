@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier2_pelican_small",
   "reward": {
     "blockExpReward": 2,
-    "loot": "wildernature:fish_oil",
-    "count": 6,
+    "loot": "wildernature:bountyboard/tier2_contract_pelican_small",
     "playerExpReward": 10
   },
   "targetPredicate": "wildernature:pelican"

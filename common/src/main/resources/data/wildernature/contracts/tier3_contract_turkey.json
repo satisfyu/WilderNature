@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_turkey",
   "reward": {
     "blockExpReward": 4,
-    "loot": "wildernature:cooked_turkey_meat",
-    "count": 16,
+    "loot": "wildernature:bountyboard/tier3_contract_turkey",
     "playerExpReward": 40
   },
   "targetPredicate": "wildernature:turkey"

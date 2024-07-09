@@ -10,8 +10,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.satisfy.wildernature.registry.TagsRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LootBagItem extends Item {
     public LootBagItem(Properties properties) {
@@ -19,6 +24,7 @@ public class LootBagItem extends Item {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         if (world.isClientSide || user.isCrouching()) {
             return super.use(world, user, hand);
@@ -26,20 +32,26 @@ public class LootBagItem extends Item {
 
         ItemStack itemStack = user.getItemInHand(hand);
         ItemStack spawnedItem;
-        int randomNumber = world.random.nextInt(100);
+        int randomNumber = world.random.nextInt(10000);
 
-        if (randomNumber < 2) {
+        if (randomNumber < 5) {
             spawnedItem = new ItemStack(Items.DIAMOND);
-        } else if (randomNumber < 7) {
+        } else if (randomNumber < 105) {
             spawnedItem = new ItemStack(Items.EMERALD);
-        } else if (randomNumber < 17) {
-            spawnedItem = new ItemStack(Items.BEETROOT);
-        } else if (randomNumber < 47) {
-            spawnedItem = new ItemStack(Items.CARROT);
-        } else if (randomNumber < 97) {
-            spawnedItem = new ItemStack(Items.APPLE);
-        } else {
+        } else if (randomNumber < 2105) {
             spawnedItem = new ItemStack(ObjectRegistry.HAZELNUT.get());
+        } else {
+            List<Item> edibleItems = new ArrayList<>();
+            for (Item item : BuiltInRegistries.ITEM) {
+                if (item.isEdible() && !item.builtInRegistryHolder().is(TagsRegistry.LOOT_BAG_BLACKLIST)) {
+                    edibleItems.add(item);
+                }
+            }
+            if (!edibleItems.isEmpty()) {
+                spawnedItem = new ItemStack(edibleItems.get(world.random.nextInt(edibleItems.size())));
+            } else {
+                spawnedItem = new ItemStack(Items.APPLE);
+            }
         }
 
         world.addFreshEntity(new ItemEntity(world, user.getX(), user.getY(), user.getZ(), spawnedItem));

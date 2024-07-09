@@ -10,8 +10,7 @@
   "name": "contract.wildernature.tier3_deer_with_bow",
   "reward": {
     "blockExpReward": 25,
-    "loot": "wildernature:deer_trophy",
-    "count": 64,
+    "loot": "wildernature:bountyboard/tier3_contract_deer_with_bow",
     "playerExpReward": 100
   },
   "targetPredicate": "wildernature:deer"
