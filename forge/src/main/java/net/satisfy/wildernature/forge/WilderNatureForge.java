@@ -7,7 +7,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.satisfy.wildernature.WilderNature;
+import net.satisfy.wildernature.forge.registry.WilderNatureConfig;
 import net.satisfy.wildernature.util.contract.ContractReloader;
 import net.satisfy.wildernature.forge.registry.WilderNatureBiomeModifiers;
 
@@ -19,6 +21,7 @@ public class WilderNatureForge {
         EventBuses.registerModEventBus(WilderNature.MOD_ID, modEventBus);
         WilderNature.init();
         WilderNatureBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
+        WilderNatureConfig.loadConfig(WilderNatureConfig.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("wildernature.toml").toString());
 
         modEventBus.addListener(this::commonSetup);
 

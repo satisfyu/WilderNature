@@ -8,6 +8,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.client.WilderNatureClient;
@@ -20,10 +21,14 @@ import java.util.function.Function;
 public class WilderNatureClientForge {
 
     @SubscribeEvent
-    public static void beforeClientSetup(RegisterEvent event) {
+    public static void onClientSetup(RegisterEvent event) {
         WilderNatureClient.preInitClient();
     }
 
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        WilderNatureClient.onInitializeClient();
+    }
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(WilderNatureClient.WOLF_FUR_CHESTPLATE_LAYER, WolfFurChestplateModel::createBodyLayer);
