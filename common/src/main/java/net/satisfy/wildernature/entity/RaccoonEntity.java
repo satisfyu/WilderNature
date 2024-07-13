@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,6 +13,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -69,16 +72,19 @@ public class RaccoonEntity extends Animal {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(8, new RaccoonWashingGoal(this));
-        this.goalSelector.addGoal(9, new OpenDoorGoal(this,false){
+        int i=0;
+        this.goalSelector.addGoal(++i, new FloatGoal(this));
+        this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
+        this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
+        this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
+        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Player.class,16.0F, 2, 2));
+        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Villager.class,16.0F, 2, 2));
+        this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(++i, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(++i, new RaccoonWashingGoal(this));
+        this.goalSelector.addGoal(++i, new OpenDoorGoal(this,false){
             @Override
             public void stop() {
                 //cancel door closing
