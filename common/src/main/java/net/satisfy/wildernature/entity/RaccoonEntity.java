@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.satisfy.wildernature.entity.ai.RaccoonWashingGoal;
+import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +31,11 @@ public class RaccoonEntity extends Animal {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Integer> DATA_TYPE_ID;
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID;
-    private static final int FLAG_SITTING = 1;
-    private static final int FLAG_SLEEPING = 32;
-    private static final int FLAG_FACEPLANTED = 64;
-    private static final int FLAG_DEFENDING = 128;
+    private static final int FLAG_SITTING     = 0x00000001;
+    private static final int FLAG_WASHING     = 0b00000010;
+    private static final int FLAG_SLEEPING    = 0b00100000;
+    private static final int FLAG_FACEPLANTED = 0b01000000;
+    private static final int FLAG_DEFENDING   = 0b10000000;
 
     static {
         DATA_TYPE_ID = SynchedEntityData.defineId(RaccoonEntity.class, EntityDataSerializers.INT);
@@ -40,11 +43,19 @@ public class RaccoonEntity extends Animal {
         FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
     }
 
+
     private int ticksSinceEaten;
+    private int washTicks;
 
     public RaccoonEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
+        getBoundingBox().deflate(1);
+        this.getNavigation().setCanFloat(true);
+        this.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
+        this.getNavigation().getNodeEvaluator().setCanPassDoors(true);
     }
+
+
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.20000001192092896).add(Attributes.MAX_HEALTH, 6.0).add(Attributes.ATTACK_DAMAGE, 1.5);
@@ -66,6 +77,13 @@ public class RaccoonEntity extends Animal {
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new RaccoonWashingGoal(this));
+        this.goalSelector.addGoal(9, new OpenDoorGoal(this,false){
+            @Override
+            public void stop() {
+                //cancel door closing
+            }
+        });
 
     }
 
@@ -98,6 +116,15 @@ public class RaccoonEntity extends Animal {
         if (this.isDefending() && this.random.nextFloat() < 0.05F) {
             this.playSound(SoundEvents.FOX_AGGRO, 1.0F, 1.0F);
         }
+        if(isWashing()){
+            washTicks++;
+            if(washTicks > RaccoonAnimation.wash.lengthInSeconds()/20){
+                stopWash();
+            }
+        }
+        else{
+            washTicks=0;
+        }
     }
 
     public float getTailAngle() {
@@ -106,7 +133,17 @@ public class RaccoonEntity extends Animal {
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-        return this.isBaby() ? entityDimensions.height * 0.4F : entityDimensions.height * 0.5F;
+         return this.isBaby() ? entityDimensions.height * 0.4F : entityDimensions.height * 0.5F;
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        return new EntityDimensions(0.1f,0.1f,false);
+    }
+
+    @Override
+    public void refreshDimensions() {
+        super.refreshDimensions();
     }
 
     @Override
@@ -157,4 +194,18 @@ public class RaccoonEntity extends Animal {
     public boolean isFood(ItemStack itemStack) {
         return FOOD_ITEMS.test(itemStack);
     }
+
+    public void startWash(){
+        this.setFlag(FLAG_WASHING,true);
+
+    }
+    public void stopWash(){
+        this.setFlag(FLAG_WASHING,false);
+    }
+
+    public boolean isWashing() {
+        return getFlag(FLAG_WASHING);
+    }
+
+
 }

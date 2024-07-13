@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class BountyBoardBlock extends BaseEntityBlock {
+public class  BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE_BOTTOM_LEFT = makeBottomLeftShape();

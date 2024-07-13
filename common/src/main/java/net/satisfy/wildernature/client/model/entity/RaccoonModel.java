@@ -10,8 +10,12 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.IllusionerRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.monster.Illusioner;
 import net.satisfy.wildernature.entity.RaccoonEntity;
+import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -124,6 +128,10 @@ public class RaccoonModel<T extends RaccoonEntity> extends HierarchicalModel<T> 
             this.leftHindLeg.xRot = Mth.cos(this.legMotionPos * 0.4662F + 3.1415927F) * 0.1F;
             this.rightFrontLeg.xRot = Mth.cos(this.legMotionPos * 0.4662F + 3.1415927F) * 0.1F;
             this.leftFrontLeg.xRot = Mth.cos(this.legMotionPos * 0.4662F) * 0.1F;
+        }
+        if (raccoon.isWashing()){
+            this.animate(new AnimationState(), RaccoonAnimation.wash,h);
+            //IllusionerRenderer
         }
     }
 
