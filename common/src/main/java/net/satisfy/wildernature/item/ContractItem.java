@@ -26,7 +26,7 @@ public class ContractItem extends Item {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         if(itemStack.getTag() == null){
-            list.add(Component.literal("Error: item contains no data"));
+            list.add(Component.translatable("tooltip.wildernature.contract_error"));
             return;
         }
         var nameSplit = Component.translatable(itemStack.getTag().getString(TAG_NAME));

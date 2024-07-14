@@ -10,7 +10,6 @@
             "state": {
               "Name": "wildernature:hazelnut_bush",
               "Properties": {
-                "half": "lower",
                 "age": "0"
               }
             }
