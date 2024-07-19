@@ -185,6 +185,7 @@
   "text.gui.wildernature.bounty.reroll.time": "Time until reroll reset: %d:%d",
   "text.gui.wildernature.bounty.selectedcontract": "Selected contract:",
   "tooltip.wildernature.ammunition": "Damage: %d",
+  "tooltip.wildernature.contract_error": "Error: This item has no associated data",
   "tooltip.wildernature.truffled": "This item has been refined with truffle:",
   "tooltip.wildernature.truffled.nutrition": "+20% Nutrition",
   "tooltip.wildernature.truffled.saturationModifier": "+20% Saturation",
