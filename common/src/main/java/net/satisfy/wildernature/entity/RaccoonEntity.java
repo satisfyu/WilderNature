@@ -4,7 +4,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,16 +12,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.WilderNature;
+import net.satisfy.wildernature.entity.ai.RaccoonAvoidEntityGoal;
+import net.satisfy.wildernature.entity.ai.RaccoonDoorInteractGoal;
 import net.satisfy.wildernature.entity.ai.RaccoonWashingGoal;
-import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -86,9 +84,9 @@ public class RaccoonEntity extends Animal {
         int i=0;
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
-        this.goalSelector.addGoal(++i, new RaccoonDoorInteractGoal());
-        this.goalSelector.addGoal(++i, new AvoidEntityWithFlagGoal(Player.class));
-        this.goalSelector.addGoal(++i, new AvoidEntityWithFlagGoal(Villager.class));
+        this.goalSelector.addGoal(++i, new RaccoonDoorInteractGoal(this));
+        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal(this, Player.class));
+        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal(this, Villager.class));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
@@ -102,12 +100,8 @@ public class RaccoonEntity extends Animal {
     public void tick() {
         super.tick();
         if(this.level().isClientSide()){
-            if(isOpeningDoor()) {
-                this.openDoorState.startIfStopped(this.tickCount);
-            }
-            if(!isOpeningDoor()){
-                this.openDoorState.stop();
-            }
+            this.openDoorState.animateWhen(isOpeningDoor(),this.tickCount);
+            this.washingState.animateWhen(isWashing(),this.tickCount);
         }
     }
 
@@ -145,12 +139,6 @@ public class RaccoonEntity extends Animal {
         super.aiStep();
         if (this.isDefending() && this.random.nextFloat() < 0.05F) {
             this.playSound(SoundEvents.FOX_AGGRO, 1.0F, 1.0F);
-        }
-        if(isWashing()){
-            washTicks++;
-            if(washTicks > RaccoonAnimation.wash.lengthInSeconds()){
-                stopWash();
-            }
         }
         else{
             washTicks=0;
@@ -228,6 +216,7 @@ public class RaccoonEntity extends Animal {
     public void startWash(){
         this.setFlag(FLAG_WASHING,true);
 
+
     }
     public void stopWash(){
         this.setFlag(FLAG_WASHING,false);
@@ -241,71 +230,19 @@ public class RaccoonEntity extends Animal {
         return getFlag(FLAG_RUNNING);
     }
 
-    private class AvoidEntityWithFlagGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
-        public AvoidEntityWithFlagGoal(Class<T> tClass) {
-            super(RaccoonEntity.this, tClass, 16.0F, 2, 2);
-        }
-
-        @Override
-        public void start() {
-            setFlag(FLAG_RUNNING,true);
-            super.start();
-        }
-
-        @Override
-        public void stop() {
-            setFlag(FLAG_RUNNING,false);
-            super.stop();
-        }
+    public void startRunningAnim() {
+        this.setFlag(FLAG_RUNNING,true);
+    }
+    public void stopRunningAnim() {
+        this.setFlag(FLAG_RUNNING,false);
     }
 
-    private class RaccoonDoorInteractGoal extends DoorInteractGoal {
 
-        int counter=0;
-
-        public RaccoonDoorInteractGoal() {
-            super(RaccoonEntity.this);
-        }
-
-        @Override
-        public boolean canUse() {
-            //WilderNature.infoDebug("canuseticks {}: {}/{}",counter>0&&counter<= RaccoonAnimation.opening_door_length*20,counter,RaccoonAnimation.opening_door_length*20);
-            return super.canUse();
-        }
-
-        @Override
-        public void start() {
-            counter=0;
-            super.start();
-            setFlag(FLAG_OPENDOOR,true);
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return counter>0 && counter < RaccoonAnimation.opening_door_length && (!isOpen() || counter >= RaccoonAnimation.opening_door_tick);
-        }
-
-        @Override
-        public void tick() {
-            setFlag(FLAG_OPENDOOR,canContinueToUse());
-            if (counter < RaccoonAnimation.opening_door_length) {
-                counter++;
-            }
-            if (counter == RaccoonAnimation.opening_door_tick) {
-                setOpen(true);
-            }
-            if(counter == RaccoonAnimation.opening_door_length){
-                super.tick();
-            }
-        }
-
-        @Override
-        public void stop() {
-            counter=0;
-            super.stop();
-            setOpen(true);
-            setFlag(FLAG_OPENDOOR,false);
-            //cancel door closing
-        }
+    public void startOpenDoorAnim() {
+        setFlag(FLAG_OPENDOOR,true);
     }
+    public void stopOpenDoorAnim() {
+        setFlag(FLAG_OPENDOOR,false);
+    }
+
 }

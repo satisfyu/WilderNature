@@ -160,6 +160,9 @@ public class ContractInProgress {
                 sourcePlayer.sendSystemMessage(Component.literal("_not given xp to block because contract taken in other board"));
             }
         }
+        if(s_getContract().reward().playerRewardLoot().isEmpty()){
+            return;
+        }
 
         Objects.requireNonNull(sourcePlayer.level()
                         .getServer())
@@ -167,7 +170,7 @@ public class ContractInProgress {
                 .getLootTable(
                         s_getContract()
                                 .reward()
-                                .playerRewardLoot()
+                                .playerRewardLoot().get()
                 )
                 .getRandomItems(
                         new LootParams.Builder((ServerLevel) sourcePlayer.level())

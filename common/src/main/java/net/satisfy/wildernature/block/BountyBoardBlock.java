@@ -210,7 +210,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
         stack.setTag(tag);
         level.addFreshEntity(new ItemEntity(level,blockPos.getX(),blockPos.getY(),blockPos.getZ(),stack));
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        super.playerWillDestroy(level, pos, blockState, player);
     }
 
     @Nullable

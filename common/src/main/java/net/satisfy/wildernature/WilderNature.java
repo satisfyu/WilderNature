@@ -30,7 +30,7 @@ public class WilderNature {
         if(Platform.isDevelopmentEnvironment()){
             info("_"+info, objects);
         }
-        Minecraft.getInstance().gui.getChat().addMessage(Component.literal(("_"+info).formatted(objects)));
+        //Minecraft.getInstance().gui.getChat().addMessage(Component.literal(("_"+info).formatted(objects)));
     }
 
     public static void init() {
