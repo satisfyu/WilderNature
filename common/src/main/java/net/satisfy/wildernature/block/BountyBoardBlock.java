@@ -135,7 +135,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         Player player = context.getPlayer();
         Direction direction = context.getHorizontalDirection().getOpposite();
 
-        if (!canPlaceAt(world, pos)) {
+        if (!canPlaceAt(world, pos,direction)) {
             return null;
         }
 
@@ -153,38 +153,41 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT).setValue(FACING, direction);
     }
 
-    private boolean canPlaceAt(Level world, BlockPos pos) {
+    private boolean canPlaceAt(Level world, BlockPos pos, Direction direction) {
         return world.getBlockState(pos).canBeReplaced() &&
                 world.getBlockState(pos.above()).canBeReplaced() &&
-                world.getBlockState(pos.relative(Direction.EAST)).canBeReplaced() &&
-                world.getBlockState(pos.relative(Direction.EAST).above()).canBeReplaced();
+                world.getBlockState(pos.relative(direction.getClockWise())).canBeReplaced() &&
+                world.getBlockState(pos.relative(direction.getClockWise()).above()).canBeReplaced();
     }
 
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            Part part = state.getValue(PART);
-            BlockPos basePos = getBasePos(pos, part);
-            destroyAdjacentBlocks(world, basePos);
+
         }
         super.onRemove(state, world, pos, newState, isMoving);
     }
 
-    private BlockPos getBasePos(BlockPos pos, Part part) {
+    private BlockPos getBasePos(BlockState state,BlockPos pos) {
+        Part part = state.getValue(PART);
+        Direction direction = state.getValue(FACING);
         return switch (part) {
+            case BOTTOM_LEFT -> pos;
             case TOP_LEFT -> pos.below();
-            case BOTTOM_RIGHT -> pos.west();
-            case TOP_RIGHT -> pos.below().west();
-            default -> pos;
+            case BOTTOM_RIGHT -> pos.relative(direction.getCounterClockWise(),1);
+            case TOP_RIGHT -> pos.relative(direction.getCounterClockWise(   ),1).below();
         };
     }
 
     private void destroyAdjacentBlocks(Level world, BlockPos basePos) {
-        world.removeBlock(basePos, false);
-        world.removeBlock(basePos.above(), false);
-        world.removeBlock(basePos.east(), false);
-        world.removeBlock(basePos.east().above(), false);
+        var blockstate = world.getBlockState(basePos);
+        var facing = blockstate.getValue(FACING);
+
+            world.removeBlock(basePos, false);
+            world.removeBlock(basePos.above(), false);
+            world.removeBlock(basePos.relative(facing.getClockWise(),1), false);
+            world.removeBlock(basePos.relative(facing.getClockWise(),1).above(), false);
     }
 
     @Override
@@ -195,28 +198,32 @@ public class  BountyBoardBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        var pos = getBasePos(blockPos,blockState.getValue(PART));
-        var entity = level.getBlockEntity(pos);
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        Part part = state.getValue(PART);
+        BlockPos basePos = getBasePos(world.getBlockState(pos), pos);
+        var entity = world.getBlockEntity(basePos);
         assert entity instanceof BountyBoardBlockEntity;
         BountyBoardBlockEntity bountyBoardBlockEntity = (BountyBoardBlockEntity) entity;
-        if (level.isClientSide()) {
+        if (world.isClientSide()) {
             return;
         }
         var blockEntityTag = new CompoundTag();
-        bountyBoardBlockEntity.saveAdditional(blockEntityTag);
-        var tag = new CompoundTag();
-        tag.put("BlockEntityTag",blockEntityTag);
-        var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
-        stack.setTag(tag);
-        level.addFreshEntity(new ItemEntity(level,blockPos.getX(),blockPos.getY(),blockPos.getZ(),stack));
-        super.playerWillDestroy(level, pos, blockState, player);
+        if(bountyBoardBlockEntity!=null) {
+            bountyBoardBlockEntity.saveAdditional(blockEntityTag);
+            var tag = new CompoundTag();
+            tag.put("BlockEntityTag", blockEntityTag);
+            var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
+            stack.setTag(tag);
+            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+            destroyAdjacentBlocks(world, basePos);
+        }
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        if(blockPos!=getBasePos(blockPos,blockState.getValue(PART))){
+        if(blockPos!=getBasePos(blockState,blockPos)){
             return null;
         }
         return new BountyBoardBlockEntity(blockPos,blockState);
@@ -226,7 +233,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
     public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos originalBlockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(level.isClientSide())
             return InteractionResult.SUCCESS;
-        final var blockPos = getBasePos(originalBlockPos,blockState.getValue(PART));
+        final var blockPos = getBasePos(blockState,originalBlockPos);
         var pr = getMenuProvider(blockState, level, blockPos);
         MenuRegistry.openExtendedMenu((ServerPlayer) player, pr, friendlyByteBuf -> {
             var entity = (BountyBoardBlockEntity)level.getBlockEntity(blockPos);
