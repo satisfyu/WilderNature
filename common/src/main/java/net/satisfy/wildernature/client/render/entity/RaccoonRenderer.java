@@ -43,7 +43,6 @@ public class RaccoonRenderer extends MobRenderer<RaccoonEntity, RaccoonModel<Rac
         if (pEntity.isBaby()) {
             pMatrixStack.scale(0.4f, 0.4f, 0.4f);
         }
-        WilderNature.infoDebug("partialTicks %f", pPartialTicks);
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 }

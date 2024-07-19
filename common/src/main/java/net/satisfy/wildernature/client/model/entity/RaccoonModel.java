@@ -108,7 +108,6 @@ public class RaccoonModel<T extends RaccoonEntity> extends HierarchicalModel<T> 
 
     public void setupAnim(T raccoon, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        WilderNature.infoDebug("ageIntTicks: %f".formatted(ageInTicks));
         if(raccoon.isRaccoonRunning()) {
             this.animateWalk(RaccoonAnimation.run,limbSwing,limbSwingAmount,1f, 2.5f);
         } else {
