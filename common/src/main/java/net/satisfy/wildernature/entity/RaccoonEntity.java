@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.RaccoonWashingGoal;
 import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
@@ -33,16 +34,26 @@ public class RaccoonEntity extends Animal {
     public static final int FLAG_POUNCING = 16;
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Integer> DATA_TYPE_ID;
-    private static final EntityDataAccessor<Byte> DATA_FLAGS_ID;
+    private static final EntityDataAccessor<Integer> DATA_FLAGS_ID;
     private static final int FLAG_SITTING     = 0x00000001;
     private static final int FLAG_WASHING     = 0b00000010;
+    private static final int FLAG_RUNNING     = 0x00000100;
+    private static final int FLAG_OPENDOOR     = 0x00001000;
+    private static final int FLAG_UNUSED2     = 0x00010000;
     private static final int FLAG_SLEEPING    = 0b00100000;
     private static final int FLAG_FACEPLANTED = 0b01000000;
     private static final int FLAG_DEFENDING   = 0b10000000;
 
+    public final AnimationState walkState = new AnimationState();
+    public final AnimationState runState = new AnimationState();
+    public final AnimationState washingState = new AnimationState();
+    public final AnimationState openDoorState = new AnimationState();
+
+    public int openDoorAnimationTimeout = 0;
+
     static {
         DATA_TYPE_ID = SynchedEntityData.defineId(RaccoonEntity.class, EntityDataSerializers.INT);
-        DATA_FLAGS_ID = SynchedEntityData.defineId(RaccoonEntity.class, EntityDataSerializers.BYTE);
+        DATA_FLAGS_ID = SynchedEntityData.defineId(RaccoonEntity.class, EntityDataSerializers.INT);
         FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.BEETROOT, Items.SWEET_BERRIES, Items.POTATO, Items.COOKED_COD, Items.COOKED_SALMON, Items.CARROT);
     }
 
@@ -67,7 +78,7 @@ public class RaccoonEntity extends Animal {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_TYPE_ID, 0);
-        this.entityData.define(DATA_FLAGS_ID, (byte) 0);
+        this.entityData.define(DATA_FLAGS_ID,  0);
     }
 
     @Override
@@ -75,25 +86,38 @@ public class RaccoonEntity extends Animal {
         int i=0;
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
+        this.goalSelector.addGoal(++i, new RaccoonDoorInteractGoal());
+        this.goalSelector.addGoal(++i, new AvoidEntityWithFlagGoal(Player.class));
+        this.goalSelector.addGoal(++i, new AvoidEntityWithFlagGoal(Villager.class));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Player.class,16.0F, 2, 2));
-        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Villager.class,16.0F, 2, 2));
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(++i, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(++i, new RaccoonWashingGoal(this));
-        this.goalSelector.addGoal(++i, new OpenDoorGoal(this,false){
-            @Override
-            public void stop() {
-                //cancel door closing
-            }
-        });
 
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.level().isClientSide()){
+            if(isOpeningDoor()) {
+                this.openDoorState.startIfStopped(this.tickCount);
+            }
+            if(!isOpeningDoor()){
+                this.openDoorState.stop();
+            }
+        }
+    }
+
+    private boolean isOpeningDoor() {
+        return getFlag(FLAG_OPENDOOR);
+    }
+
+
     public void aiStep() {
+
         if (!this.level().isClientSide && this.isAlive() && this.isEffectiveAi()) {
             ++this.ticksSinceEaten;
             ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
@@ -124,7 +148,7 @@ public class RaccoonEntity extends Animal {
         }
         if(isWashing()){
             washTicks++;
-            if(washTicks > RaccoonAnimation.wash.lengthInSeconds()/20){
+            if(washTicks > RaccoonAnimation.wash.lengthInSeconds()){
                 stopWash();
             }
         }
@@ -186,14 +210,14 @@ public class RaccoonEntity extends Animal {
 
     private void setFlag(int i, boolean bl) {
         if (bl) {
-            this.entityData.set(DATA_FLAGS_ID, (byte) ((Byte) this.entityData.get(DATA_FLAGS_ID) | i));
+            this.entityData.set(DATA_FLAGS_ID, (this.entityData.get(DATA_FLAGS_ID) | i));
         } else {
-            this.entityData.set(DATA_FLAGS_ID, (byte) ((Byte) this.entityData.get(DATA_FLAGS_ID) & ~i));
+            this.entityData.set(DATA_FLAGS_ID, (this.entityData.get(DATA_FLAGS_ID) & ~i));
         }
     }
 
     private boolean getFlag(int i) {
-        return ((Byte) this.entityData.get(DATA_FLAGS_ID) & i) != 0;
+        return (this.entityData.get(DATA_FLAGS_ID) & i) != 0;
     }
 
     @Override
@@ -213,5 +237,75 @@ public class RaccoonEntity extends Animal {
         return getFlag(FLAG_WASHING);
     }
 
+    public boolean isRaccoonRunning() {
+        return getFlag(FLAG_RUNNING);
+    }
 
+    private class AvoidEntityWithFlagGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+        public AvoidEntityWithFlagGoal(Class<T> tClass) {
+            super(RaccoonEntity.this, tClass, 16.0F, 2, 2);
+        }
+
+        @Override
+        public void start() {
+            setFlag(FLAG_RUNNING,true);
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            setFlag(FLAG_RUNNING,false);
+            super.stop();
+        }
+    }
+
+    private class RaccoonDoorInteractGoal extends DoorInteractGoal {
+
+        int counter=0;
+
+        public RaccoonDoorInteractGoal() {
+            super(RaccoonEntity.this);
+        }
+
+        @Override
+        public boolean canUse() {
+            //WilderNature.infoDebug("canuseticks {}: {}/{}",counter>0&&counter<= RaccoonAnimation.opening_door_length*20,counter,RaccoonAnimation.opening_door_length*20);
+            return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            counter=0;
+            super.start();
+            setFlag(FLAG_OPENDOOR,true);
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter>0 && counter < RaccoonAnimation.opening_door_length && (!isOpen() || counter >= RaccoonAnimation.opening_door_tick);
+        }
+
+        @Override
+        public void tick() {
+            setFlag(FLAG_OPENDOOR,canContinueToUse());
+            if (counter < RaccoonAnimation.opening_door_length) {
+                counter++;
+            }
+            if (counter == RaccoonAnimation.opening_door_tick) {
+                setOpen(true);
+            }
+            if(counter == RaccoonAnimation.opening_door_length){
+                super.tick();
+            }
+        }
+
+        @Override
+        public void stop() {
+            counter=0;
+            super.stop();
+            setOpen(true);
+            setFlag(FLAG_OPENDOOR,false);
+            //cancel door closing
+        }
+    }
 }

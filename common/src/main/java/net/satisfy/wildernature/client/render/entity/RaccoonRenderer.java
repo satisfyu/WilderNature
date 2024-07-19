@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.client.model.entity.RaccoonModel;
 import net.satisfy.wildernature.entity.RaccoonEntity;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
@@ -26,9 +27,10 @@ public class RaccoonRenderer extends MobRenderer<RaccoonEntity, RaccoonModel<Rac
         super.setupRotations(raccoon, poseStack, f, g, h);
     }
 
-    protected float getBob(RaccoonEntity RaccoonEntity, float f) {
-        return RaccoonEntity.getTailAngle();
-    }
+    //FUCK MOJMAP
+//    protected float getBob(RaccoonEntity RaccoonEntity, float f) {
+//        return RaccoonEntity.getTailAngle();
+//    }
 
 
     public @NotNull ResourceLocation getTextureLocation(RaccoonEntity entity) {
@@ -41,7 +43,7 @@ public class RaccoonRenderer extends MobRenderer<RaccoonEntity, RaccoonModel<Rac
         if (pEntity.isBaby()) {
             pMatrixStack.scale(0.4f, 0.4f, 0.4f);
         }
-
+        WilderNature.infoDebug("partialTicks %f", pPartialTicks);
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 }

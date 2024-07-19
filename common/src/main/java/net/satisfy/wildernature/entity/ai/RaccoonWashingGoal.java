@@ -18,7 +18,7 @@ public class RaccoonWashingGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return this.target.getRandom().nextFloat() < 0.01F;
+        return false;
     }
 
     @Override

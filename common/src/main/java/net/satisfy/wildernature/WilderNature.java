@@ -1,6 +1,9 @@
 package net.satisfy.wildernature;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import dev.architectury.event.events.common.LifecycleEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.satisfy.wildernature.registry.*;
 import dev.architectury.platform.Platform;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +30,7 @@ public class WilderNature {
         if(Platform.isDevelopmentEnvironment()){
             info("_"+info, objects);
         }
+        Minecraft.getInstance().gui.getChat().addMessage(Component.literal(("_"+info).formatted(objects)));
     }
 
     public static void init() {
