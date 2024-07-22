@@ -22,7 +22,7 @@ public class RaccoonWashingGoal extends Goal {
 
     public RaccoonWashingGoal(RaccoonEntity mob) {
         this.target = mob;
-        setFlags(EnumSet.of(Flag.LOOK));
+        setFlags(EnumSet.of(Flag.LOOK,Flag.MOVE,Flag.JUMP));
     }
     public boolean requiresUpdateEveryTick() {
         return true;
@@ -30,8 +30,9 @@ public class RaccoonWashingGoal extends Goal {
 
     @Override
     public boolean isInterruptable() {
-        return false;
+        return true;
     }
+
 
     @Override
     public boolean canUse() {
@@ -51,21 +52,21 @@ public class RaccoonWashingGoal extends Goal {
 
     }
 
-    AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move",0, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move",-1000, AttributeModifier.Operation.ADDITION);
     @Override
     public void start() {
         counter=0;
         WilderNature.infoDebug("start washing goal");
+        target.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(modifier);
         target.startWash();
-        target.getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(modifier);
         super.start();
     }
 
     @Override
     public void stop() {
         WilderNature.infoDebug("stop washing goal");
-        target.stopWash();
         target.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(modifier);
+        target.stopWash();
         super.stop();
     }
 }

@@ -437,7 +437,7 @@ public class RaccoonAnimation {
                         new Keyframe(1.8667F, KeyframeAnimations.posVec(0.0F, 2.6906F, 1.3269F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(2.1333F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
                 ))
-                .addAnimation("animanimroot", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                .addAnimation("animroot", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(0.2667F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(0.5333F, KeyframeAnimations.degreeVec(-82.5F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
@@ -445,7 +445,7 @@ public class RaccoonAnimation {
                         new Keyframe(1.8667F, KeyframeAnimations.degreeVec(-63.75F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(2.1333F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
                 ))
-                .addAnimation("animanimroot", new AnimationChannel(AnimationChannel.Targets.POSITION,
+                .addAnimation("animroot", new AnimationChannel(AnimationChannel.Targets.POSITION,
                         new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(0.2667F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
                         new Keyframe(0.5333F, KeyframeAnimations.posVec(0.0F, 10.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
