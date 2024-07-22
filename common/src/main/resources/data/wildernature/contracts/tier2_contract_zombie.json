@@ -1,16 +1,16 @@
 {
-  "type": "wildernature:tier1",
+  "type": "wildernature:tier2",
   "contractStack": {
     "Count": 1,
     "id": "wildernature:leveling_contract"
   },
-  "count": 20,
+  "count": 35,
   "damagePredicate": "wildernature:damage_any",
-  "description": "contract.wildernature.tier1_zombie.desc",
+  "description": "contract.wildernature.tier2_zombie.desc",
   "name": "contract.wildernature.tier1_zombie",
   "reward": {
-    "blockExpReward": 25,
-    "playerExpReward": 25
+    "blockExpReward": 70,
+    "playerExpReward": 70
   },
   "targetPredicate": "minecraft:zombie"
 }

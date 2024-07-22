@@ -10,6 +10,8 @@
   "block.wildernature.red_wolf_trophy": "Red Wolf Trophy",
   "block.wildernature.wolf_trapper_banner": "§6Wolf-Trapper Banner",
   "block.wildernature.wolf_trapper_wall_banner": "§6Wolf-Trapper Banner",
+  "contract.wildernature.tier1_zombie": "Monsters!",
+  "contract.wildernature.tier1_zombie.desc": "Hunt 20 Zombies",
   "contract.wildernature.tier1_boar": "Truffle Tracker",
   "contract.wildernature.tier1_boar.desc": "§6Hunt 6 Boars",
   "contract.wildernature.tier1_cod": "Cod Catcher",
@@ -107,6 +109,7 @@
   "item.wildernature.turkey_meat": "Turkey Meat",
   "item.wildernature.turkey_spawn_egg": "Turkey Spawn Egg",
   "item.wildernature.uncommon_contract": "Uncommon Contract",
+  "item.wildernature.leveling_contract": "Leveling Contract",
   "item.wildernature.venison": "Venison",
   "subtitles.wildernature.bison_ambient": "Bison Ambient",
   "subtitles.wildernature.bison_angry": "Bison Angry",
@@ -236,5 +239,10 @@
   "item.wildernature.animal_compendium": "Animal Compendium",
   "wildernature.tier1": "",
   "contract.wildernature.tier2_elder_guardian": "Horror of the Seas",
-  "contract.wildernature.tier2_elder_guardian.desc": "§6Hunt an Elder Guardian"
+  "contract.wildernature.tier2_elder_guardian.desc": "§6Hunt an Elder Guardian",
+  "contract.wildernature.tier1_skeleton.desc": "Hunt 15 Skeletons",
+  "contract.wildernature.tier1_skeleton": "Walking Bones!",
+  "contract.wildernature.tier2_skeleton.desc": "Hunt 25 Skeletons",
+  "contract.wildernature.tier1_player.desc": "Kill another Player",
+  "contract.wildernature.tier1_player": "Manhunt"
 }

@@ -80,6 +80,8 @@ public class WilderNatureFabric implements ModInitializer {
             public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
                 return dataReloader.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
             }
+            
+            
         });
     }
 
