@@ -5,7 +5,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -85,8 +84,8 @@ public class RaccoonEntity extends Animal {
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(++i, new RaccoonDoorInteractGoal(this));
-        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal(this, Player.class));
-        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal(this, Villager.class));
+        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal<>(this, Player.class));
+        this.goalSelector.addGoal(++i, new RaccoonAvoidEntityGoal<>(this, Villager.class));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
@@ -138,15 +137,11 @@ public class RaccoonEntity extends Animal {
 
         super.aiStep();
         if (this.isDefending() && this.random.nextFloat() < 0.05F) {
-            this.playSound(SoundEvents.FOX_AGGRO, 1.0F, 1.0F);
+            this.playSound(SoundRegistry.RACCOON_AMBIENT.get(), 1.0F, 1.0F);
         }
         else{
             washTicks=0;
         }
-    }
-
-    public float getTailAngle() {
-        return (0.55F - (this.getMaxHealth() - this.getHealth()) * 0.02F) * 3.1415927F;
     }
 
     @Override
@@ -155,7 +150,7 @@ public class RaccoonEntity extends Animal {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(Pose pose) {
         return new EntityDimensions(0.1f,0.1f,false);
     }
 
@@ -182,10 +177,6 @@ public class RaccoonEntity extends Animal {
     @Nullable
     public RaccoonEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         return EntityRegistry.RACCOON.get().create(serverLevel);
-    }
-
-    public boolean isFaceplanted() {
-        return this.getFlag(64);
     }
 
     boolean isDefending() {
@@ -215,9 +206,8 @@ public class RaccoonEntity extends Animal {
 
     public void startWash(){
         this.setFlag(FLAG_WASHING,true);
-
-
     }
+
     public void stopWash(){
         this.setFlag(FLAG_WASHING,false);
     }
@@ -233,6 +223,7 @@ public class RaccoonEntity extends Animal {
     public void startRunningAnim() {
         this.setFlag(FLAG_RUNNING,true);
     }
+
     public void stopRunningAnim() {
         this.setFlag(FLAG_RUNNING,false);
     }

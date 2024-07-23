@@ -9,6 +9,7 @@ import net.satisfy.wildernature.entity.RaccoonEntity;
 import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 public class RaccoonDoorInteractGoal extends DoorInteractGoal {
 
@@ -30,7 +31,7 @@ public class RaccoonDoorInteractGoal extends DoorInteractGoal {
     @Override
     public void start() {
         counter = 0;
-        raccoon.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(modifier);
+        Objects.requireNonNull(raccoon.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
         super.start();
         raccoon.startOpenDoorAnim();
     }
@@ -61,7 +62,7 @@ public class RaccoonDoorInteractGoal extends DoorInteractGoal {
 
     @Override
     public void stop() {
-        raccoon.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(modifier);
+        Objects.requireNonNull(raccoon.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
         counter = 0;
         super.stop();
         setOpen(true);
