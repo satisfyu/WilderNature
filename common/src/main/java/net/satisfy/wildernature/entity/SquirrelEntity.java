@@ -35,6 +35,7 @@ import net.satisfy.wildernature.entity.ai.BetterWallClimberNavigation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -51,7 +52,7 @@ public class SquirrelEntity extends Animal {
         this.setCanPickUpLoot(true);
     }
 
-    public static AttributeSupplier.Builder createMobAttributes() {
+    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.4F);
     }
 
