@@ -77,6 +77,10 @@ public class PelicanEntity extends Animal {
         this.walkAnimation.update(f, 0.2f);
     }
 
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(ATTACKING, attacking);
+    }
+
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }

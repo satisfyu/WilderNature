@@ -244,5 +244,6 @@
   "contract.wildernature.tier1_skeleton": "Walking Bones!",
   "contract.wildernature.tier2_skeleton.desc": "Hunt 25 Skeletons",
   "contract.wildernature.tier1_player.desc": "Kill another Player",
-  "contract.wildernature.tier1_player": "Manhunt"
+  "contract.wildernature.tier1_player": "Manhunt",
+  "tooltip.wildernature.compendium": "Apparently, some pages are missing... the Compendium seems to be incomplete..."
 }
