@@ -20,6 +20,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.satisfy.wildernature.entity.ai.BisonAttackGoal;
+import net.satisfy.wildernature.entity.ai.BisonRollingGoal;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -32,13 +33,16 @@ public class BisonEntity extends Animal implements NeutralMob {
     private static final EntityDataAccessor<Integer> ANGER_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.INT);
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(15, 34);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ROLLING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ANGRY = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Long> LAST_HURT_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.LONG);
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
+    public AnimationState rollingAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
     public int attackAnimationTimeout = 0;
     private UUID lastHurtBy;
+
     public BisonEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
@@ -72,6 +76,7 @@ public class BisonEntity extends Animal implements NeutralMob {
             --this.idleAnimationTimeout;
         }
         attackAnimationState.animateWhen(this.isAttacking(),tickCount);
+        rollingAnimationState.animateWhen(this.isRolling(),tickCount);
 
 //        if(this.isAttacking() && attackAnimationTimeout <= 0) {
 //            attackAnimationTimeout = 80;
@@ -83,6 +88,10 @@ public class BisonEntity extends Animal implements NeutralMob {
 //        if(!this.isAttacking()) {
 //            attackAnimationState.stop();
 //        }
+    }
+
+    private boolean isRolling() {
+        return this.entityData.get(ROLLING);
     }
 
     @Override
@@ -125,6 +134,7 @@ public class BisonEntity extends Animal implements NeutralMob {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ATTACKING, false);
+        this.entityData.define(ROLLING, false);
         this.entityData.define(ANGER_TIME, 0);
         this.entityData.define(ANGRY, false);
         this.entityData.define(LAST_HURT_TIME, 0L);
@@ -145,6 +155,7 @@ public class BisonEntity extends Animal implements NeutralMob {
         this.goalSelector.addGoal(9, new MeleeAttackGoal(this, 1.4D, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(2, new BisonRollingGoal(this));
     }
 
     @Nullable
@@ -197,6 +208,10 @@ public class BisonEntity extends Animal implements NeutralMob {
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(ANGER_RANGE.sample(this.random));
         System.out.println(this.getRemainingPersistentAngerTime()); // TODO fix this not hitting
+    }
+
+    public void setRolling(boolean rolling) {
+        this.entityData.set(ROLLING,rolling);
     }
 
 //    @Override
