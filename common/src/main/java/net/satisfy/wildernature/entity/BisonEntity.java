@@ -71,18 +71,7 @@ public class BisonEntity extends Animal implements NeutralMob {
         } else {
             --this.idleAnimationTimeout;
         }
-
-
-        if (this.isAttacking() && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 80;
-            attackAnimationState.start(this.tickCount);
-        } else {
-            this.attackAnimationTimeout--;
-        }
-
-        if (!this.isAttacking()) {
-            attackAnimationState.stop();
-        }
+        attackAnimationState.animateWhen(this.isAttacking(),tickCount);
 
 //        if(this.isAttacking() && attackAnimationTimeout <= 0) {
 //            attackAnimationTimeout = 80;
