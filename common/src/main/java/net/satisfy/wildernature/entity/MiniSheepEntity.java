@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.satisfy.wildernature.entity.ai.CritterAttackGoal;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,7 @@ public class MiniSheepEntity extends Animal implements Shearable {
     private static final EntityDataAccessor<Boolean> SHEARED = SynchedEntityData.defineId(MiniSheepEntity.class, EntityDataSerializers.BOOLEAN);
     private int eatAnimationTick;
     private EatBlockGoal eatBlockGoal;
+    private int eatAnimationTimeout = 0;
 
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -53,13 +55,14 @@ public class MiniSheepEntity extends Animal implements Shearable {
         this.eatBlockGoal = new EatBlockGoal(this);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.1, Ingredient.of(Items.WHEAT), false));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1));
-        this.goalSelector.addGoal(5, this.eatBlockGoal);
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new CritterAttackGoal(this, 1.0, true));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.1, Ingredient.of(Items.WHEAT), false));
+        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(6, this.eatBlockGoal);
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
     }
 
     private void setupAnimationStates() {
@@ -73,30 +76,24 @@ public class MiniSheepEntity extends Animal implements Shearable {
         if (this.isAttacking() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 80;
             attackAnimationState.start(this.tickCount);
+        } else if (!this.isAttacking()) {
+            attackAnimationState.stop();
+            attackAnimationTimeout = 0;
         } else {
             --this.attackAnimationTimeout;
         }
 
-        if (!this.isAttacking()) {
-            attackAnimationState.stop();
-        }
-
         if (this.eatAnimationTick > 0) {
-            eatAnimationState.start(this.tickCount);
+            if (this.eatAnimationTimeout <= 0) {
+                this.eatAnimationState.start(this.tickCount);
+                this.eatAnimationTimeout = 40;
+            } else {
+                this.eatAnimationTimeout--;
+            }
         } else {
-            eatAnimationState.stop();
+            this.eatAnimationState.stop();
+            this.eatAnimationTimeout = 0;
         }
-    }
-
-    protected void updateWalkAnimation(float v) {
-        float f;
-        if (this.getPose() == Pose.STANDING) {
-            f = Math.min(v * 6.0F, 1.0F);
-        } else {
-            f = 0.0F;
-        }
-
-        this.walkAnimation.update(f, 0.2F);
     }
 
     @Override
@@ -106,14 +103,52 @@ public class MiniSheepEntity extends Animal implements Shearable {
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
         }
+
+        if (this.eatAnimationTick > 0) {
+            this.eatAnimationTick--;
+            if (this.eatAnimationTick == 0) {
+                this.eatAnimationState.stop();
+            }
+        }
     }
 
     public void setAttacking(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
+        if (attacking) {
+            this.attackAnimationState.start(this.tickCount);
+            this.attackAnimationTimeout = 80;
+        }
     }
 
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        this.eatAnimationTick = this.eatBlockGoal.getEatAnimationTick();
+        if (this.eatAnimationTick > 0) {
+            this.level().broadcastEntityEvent(this, (byte) 10);
+        }
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, false);
+        this.entityData.define(SHEARED, false);
+    }
+
+
+    protected void updateWalkAnimation(float v) {
+        float f;
+        if (this.getPose() == Pose.STANDING) {
+            f = Math.min(v * 6.0F, 1.0F);
+        } else {
+            f = 0.0F;
+        }
+        this.walkAnimation.update(f, 0.2F);
     }
 
     public void setSheared(boolean sheared) {
@@ -124,28 +159,15 @@ public class MiniSheepEntity extends Animal implements Shearable {
         return this.entityData.get(SHEARED);
     }
 
-    protected void customServerAiStep() {
-        this.eatAnimationTick = this.eatBlockGoal.getEatAnimationTick();
-        super.customServerAiStep();
-    }
-
     public void aiStep() {
         if (this.level().isClientSide) {
             this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
         }
-
         super.aiStep();
     }
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACKING, false);
-        this.entityData.define(SHEARED, false);
-    }
-
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 8.0).add(Attributes.MOVEMENT_SPEED, 0.23000000417232513);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 8.0).add(Attributes.MOVEMENT_SPEED, 0.23000000417232513).add(Attributes.ATTACK_DAMAGE, 1.25).add(Attributes.ATTACK_SPEED, 0.1);
     }
 
     public void handleEntityEvent(byte event) {
