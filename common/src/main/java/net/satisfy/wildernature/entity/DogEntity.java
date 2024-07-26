@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -19,11 +20,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.satisfy.wildernature.entity.ai.DogHowlGoal;
+import net.satisfy.wildernature.entity.animation.DogAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Random;
 
 public class DogEntity extends TamableAnimal {
     public AnimationState walkAnimationState = new AnimationState();
@@ -87,6 +92,8 @@ public class DogEntity extends TamableAnimal {
             this.walkAnimationState.stop();
         }
     }
+
+
 
     private boolean isHowling() {
         return this.entityData.get(HOWLING);
@@ -185,6 +192,59 @@ public class DogEntity extends TamableAnimal {
             }
 
             return super.mobInteract(player, hand);
+        }
+    }
+
+    public static class DogHowlGoal extends Goal {
+        private final DogEntity target;
+        int counter;
+
+        public DogHowlGoal(DogEntity mob) {
+            this.target = mob;
+            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return false;
+        }
+
+
+        @Override
+        public boolean canUse() {
+            var r = new Random().nextFloat();
+            return r < 0.001f;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter > 0 && counter < DogAnimation.howl.lengthInSeconds()*20;
+        }
+
+        @Override
+        public void tick() {
+            counter++;
+        }
+
+        public static final AttributeModifier modifier = new AttributeModifier("bison_roll_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+
+        @Override
+        public void start() {
+            counter = 0;
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            target.setHowling(true);
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            target.setHowling(false);
+            super.stop();
         }
     }
 }
