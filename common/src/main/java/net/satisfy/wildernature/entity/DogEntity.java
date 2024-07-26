@@ -4,6 +4,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -16,15 +19,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.satisfy.wildernature.entity.ai.DogHowlGoal;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DogEntity extends TamableAnimal {
-    public final AnimationState walkAnimationState = new AnimationState();
-    public final AnimationState idleAnimationState = new AnimationState();
+    public AnimationState walkAnimationState = new AnimationState();
+    public AnimationState idleAnimationState = new AnimationState();
+    public AnimationState howlingAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+
+    private static final EntityDataAccessor<Boolean> HOWLING = SynchedEntityData.defineId(DogEntity.class, EntityDataSerializers.BOOLEAN);
+
 
     public DogEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
@@ -51,7 +59,8 @@ public class DogEntity extends TamableAnimal {
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(7, new PanicGoal(this, 2.0D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 2.0D));
-        this.targetSelector.addGoal(9, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(9, new DogHowlGoal(this));
+        this.targetSelector.addGoal(10, new HurtByTargetGoal(this));
     }
 
     @Override
@@ -70,6 +79,7 @@ public class DogEntity extends TamableAnimal {
         } else {
             --this.idleAnimationTimeout;
         }
+        howlingAnimationState.animateWhen(this.isHowling(),tickCount);
 
         if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D) {
             this.walkAnimationState.start(this.tickCount);
@@ -77,6 +87,21 @@ public class DogEntity extends TamableAnimal {
             this.walkAnimationState.stop();
         }
     }
+
+    private boolean isHowling() {
+        return this.entityData.get(HOWLING);
+    }
+
+    public void setHowling(boolean howling) {
+        this.entityData.set(HOWLING,howling);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HOWLING, false);
+    }
+
 
     @Override
     protected void updateWalkAnimation(float pPartialTick) {

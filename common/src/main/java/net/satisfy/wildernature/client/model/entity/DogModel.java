@@ -10,6 +10,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.satisfy.wildernature.entity.DogEntity;
+import net.satisfy.wildernature.entity.animation.BisonAnimation;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
@@ -89,7 +90,7 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
 
     @Override
     public @NotNull ModelPart root() {
-        return body;
+        return dog;
     }
 
     @Override
@@ -98,5 +99,6 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
         this.head.yRot = netHeadYaw * 0.017453292F;
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
+        this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
     }
 }
