@@ -71,7 +71,7 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     }
 
     private void setupAnimationStates() {
-        attackAnimationState.animateWhen(this.entityData.get(ATTACKING),tickCount);
+        attackAnimationState.animateWhen(this.entityData.get(ATTACKING),this.tickCount);
     }
 
     @Override

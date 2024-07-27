@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.TurkeyEntity;
 import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
 
@@ -61,8 +62,11 @@ public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
 
     @Override
     public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        var turkey = ((TurkeyEntity)entity);
+        this.root().getAllParts().forEach(ModelPart::resetPose);
         animateWalk(TurkeyAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
-        animate(((TurkeyEntity)entity).attackAnimationState,TurkeyAnimation.attack,1.0f);
+        WilderNature.info("attack {}", turkey.attackAnimationState.getAccumulatedTime());
+        animate(turkey.attackAnimationState,TurkeyAnimation.attack,ageInTicks);
     }
 
     @Override

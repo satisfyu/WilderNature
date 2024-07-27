@@ -18,12 +18,6 @@ public class TurkeyRenderer extends MobRenderer<TurkeyEntity, TurkeyModel<Turkey
         super(context, new TurkeyModel<>(context.bakeLayer(TurkeyModel.LAYER_LOCATION)), 0.7f);
     }
 
-    protected float getBob(TurkeyEntity pelican, float f) {
-        float g = Mth.lerp(f, pelican.oFlap, pelican.flap);
-        float h = Mth.lerp(f, pelican.oFlapSpeed, pelican.flapSpeed);
-        return (Mth.sin(g) + 1.0F) * h;
-    }
-
     @Override
     public @NotNull ResourceLocation getTextureLocation(TurkeyEntity entity) {
         return TEXTURE;

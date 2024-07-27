@@ -20,9 +20,9 @@ public class RedWolfRenderer extends MobRenderer<RedWolfEntity, RedWolfModel<Red
         super(context, new RedWolfModel(context.bakeLayer(RedWolfModel.LAYER_LOCATION)), 0.7f);
     }
 
-    protected float getBob(RedWolfEntity RedWolfEntity, float f) {
-        return RedWolfEntity.getTailAngle();
-    }
+//    protected float getBob(RedWolfEntity RedWolfEntity, float f) {
+//        return RedWolfEntity.getTailAngle();
+//    }
 
     @Override
     public ResourceLocation getTextureLocation(RedWolfEntity entity) {
