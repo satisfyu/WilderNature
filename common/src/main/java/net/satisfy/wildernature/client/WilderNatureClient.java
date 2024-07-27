@@ -62,9 +62,11 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
         EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
         EntityRendererRegistry.register(DOG, DogRenderer::new);
+        EntityRendererRegistry.register(CASSOWARY, CassowaryRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
+        EntityModelLayerRegistry.register(CassowaryModel.LAYER_LOCATION, CassowaryModel::getTexturedModelData);
         EntityModelLayerRegistry.register(PenguinModel.LAYER_LOCATION, PenguinModel::getTexturedModelData);
         EntityModelLayerRegistry.register(RedWolfModel.LAYER_LOCATION, RedWolfModel::getTexturedModelData);
         EntityModelLayerRegistry.register(PelicanModel.LAYER_LOCATION, PelicanModel::getTexturedModelData);
