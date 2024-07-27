@@ -22,12 +22,16 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
+import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
+import net.satisfy.wildernature.entity.animation.PelicanAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PelicanEntity extends Animal {
+public class PelicanEntity extends Animal implements EntityWithAttackAnimation {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(PelicanEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -52,17 +56,7 @@ public class PelicanEntity extends Animal {
         } else {
             --this.idleAnimationTimeout;
         }
-
-        if(this.isAttacking() && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 80;
-            attackAnimationState.start(this.tickCount);
-        } else {
-            --this.attackAnimationTimeout;
-        }
-
-        if(!this.isAttacking()) {
-            attackAnimationState.stop();
-        }
+        attackAnimationState.animateWhen(isAttacking(),this.tickCount);
     }
 
     @Override
@@ -81,6 +75,16 @@ public class PelicanEntity extends Animal {
         this.entityData.set(ATTACKING, attacking);
     }
 
+    @Override
+    public Vec3 getPosition(int i) {
+        return super.getPosition(i);
+    }
+
+    @Override
+    public void doHurtTarget(LivingEntity targetEntity) {
+        super.doHurtTarget(targetEntity);
+    }
+
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }
@@ -89,6 +93,10 @@ public class PelicanEntity extends Animal {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ATTACKING, false);
+    }
+
+    public double getMeleeAttackRangeSqr(LivingEntity entity){
+        return super.getMeleeAttackRangeSqr(entity);
     }
 
     static {
@@ -107,7 +115,7 @@ public class PelicanEntity extends Animal {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (PelicanAnimation.attack.lengthInSeconds()*20+2    ),8));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
