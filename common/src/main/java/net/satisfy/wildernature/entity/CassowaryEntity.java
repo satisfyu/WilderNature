@@ -16,31 +16,22 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
-import net.satisfy.wildernature.entity.animation.PelicanAnimation;
-import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
+import net.satisfy.wildernature.entity.animation.CassowaryAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
-    private static final Ingredient FOOD_ITEMS;
-    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(PelicanEntity.class, EntityDataSerializers.BOOLEAN);
+public class CassowaryEntity extends Animal implements EntityWithAttackAnimation {
+    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(CassowaryEntity.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState attackAnimationState = new AnimationState();
-    public int attackAnimationTimeout = 0;
-
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
@@ -59,7 +50,6 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         } else {
             --this.idleAnimationTimeout;
         }
-        attackAnimationState.animateWhen(isAttacking(),this.tickCount);
     }
 
     @Override
@@ -88,10 +78,6 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         super.doHurtTarget(targetEntity);
     }
 
-    public boolean isAttacking() {
-        return this.entityData.get(ATTACKING);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -102,32 +88,27 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         return super.getMeleeAttackRangeSqr(entity);
     }
 
-    static {
-        FOOD_ITEMS = Ingredient.of(Items.COD, Items.SALMON, Items.PUFFERFISH, Items.COOKED_COD, Items.COOKED_SALMON);
-    }
 
-    public PelicanEntity(EntityType<? extends PelicanEntity> entityType, Level level) {
+    public CassowaryEntity(EntityType<? extends CassowaryEntity> entityType, Level level) {
         super(entityType, level);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 8).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.22).add(Attributes.ATTACK_DAMAGE, 0.5f).add(Attributes.ATTACK_KNOCKBACK, 0D).add(Attributes.ATTACK_SPEED, 1F);
+        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 14).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.75f).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.ATTACK_SPEED, 1F);
     }
 
     @Override
     protected void registerGoals() {
-        int i=0;
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (TurkeyAnimation.attack.lengthInSeconds()*20+2),8));
-        this.goalSelector.addGoal(++i, new FloatGoal(this));
-        //this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
-        this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
-        this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
-        this.goalSelector.addGoal(++i, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (CassowaryAnimation.attack.lengthInSeconds()*20+2    ),8));
+        this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
+        this.goalSelector.addGoal(2, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 3f));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1D));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
@@ -135,6 +116,7 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         return entityDimensions.height * 0.4F;
     }
 
+    //TODO sounds
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundRegistry.PELICAN_AMBIENT.get();
@@ -157,12 +139,7 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
 
     @Override
     @Nullable
-    public PelicanEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-        return EntityRegistry.PELICAN.get().create(serverLevel);
-    }
-
-    @Override
-    public boolean isFood(ItemStack itemStack) {
-        return FOOD_ITEMS.test(itemStack);
+    public CassowaryEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+        return EntityRegistry.CASSOWARY.get().create(serverLevel);
     }
 }

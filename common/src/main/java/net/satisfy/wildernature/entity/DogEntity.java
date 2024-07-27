@@ -44,7 +44,7 @@ public class DogEntity extends TamableAnimal {
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.23000000417232513).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
     }
 
     @Nullable
@@ -60,11 +60,10 @@ public class DogEntity extends TamableAnimal {
         this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.25d, 18f, 7f, false));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(Items.BONE), false));
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.1D));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
-        this.goalSelector.addGoal(7, new PanicGoal(this, 2.0D));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 2.0D));
-        this.goalSelector.addGoal(9, new DogHowlGoal(this));
+        this.goalSelector.addGoal(6, new PanicGoal(this, 2.0D));
+        this.goalSelector.addGoal(7, new DogHowlGoal(this));
         this.targetSelector.addGoal(10, new HurtByTargetGoal(this));
     }
 

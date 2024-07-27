@@ -84,7 +84,6 @@ public class ObjectRegistry {
      * Ideas for Animals:
      * Ram, rideable - just like a slow Horse with LOTS of health
      * Birds & birdnest & treehouses
-     * A REAL Dog?
      * Penguin
      * Koala
      * Chameleon
@@ -95,7 +94,6 @@ public class ObjectRegistry {
      * Jaguars
      * Porcupines
      * Hedgehog
-     * A mini sheep
      * --- unsure because of Naturalist ---
      * Bears
      * Elephants
