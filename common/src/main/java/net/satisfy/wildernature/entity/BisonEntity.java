@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 //TODO: Add rolling animation / bison doesnt fight back when hit 
-public class BisonEntity extends Animal implements NeutralMob, EntityWithAttackAnimation {
+public class BisonEntity extends Animal implements EntityWithAttackAnimation {
     private static final EntityDataAccessor<Integer> ANGER_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.INT);
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(15, 34);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
@@ -197,27 +197,22 @@ public class BisonEntity extends Animal implements NeutralMob, EntityWithAttackA
         return 35;
     }
 
-    @Override
     public int getRemainingPersistentAngerTime() {
         return this.entityData.get(ANGER_TIME);
     }
 
-    @Override
     public void setRemainingPersistentAngerTime(int time) {
         this.entityData.set(ANGER_TIME, time);
     }
 
-    @Override
     public UUID getPersistentAngerTarget() {
         return this.lastHurtBy;
     }
 
-    @Override
     public void setPersistentAngerTarget(UUID target) {
         this.lastHurtBy = target;
     }
 
-    @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(ANGER_RANGE.sample(this.random));
         System.out.println(this.getRemainingPersistentAngerTime()); // TODO fix this not hitting

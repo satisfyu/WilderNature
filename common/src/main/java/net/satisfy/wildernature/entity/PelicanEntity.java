@@ -31,7 +31,9 @@ import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PelicanEntity extends Animal implements EntityWithAttackAnimation {
+import java.util.UUID;
+
+public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(PelicanEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -114,15 +116,15 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (PelicanAnimation.attack.lengthInSeconds()*20+2    ),8));
-        this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
-        this.goalSelector.addGoal(2, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        int i=0;
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (PelicanAnimation.attack.lengthInSeconds()*20+2    ),8));
+        this.goalSelector.addGoal(++i, new BreedGoal(this, 1.15D));
+        this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
+        this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 3f));
+        this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(++i, new HurtByTargetGoal(this).setAlertOthers());
+        //this.targetSelector.addGoal(++i, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
