@@ -19,8 +19,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.entity.ai.BisonAttackGoal;
+import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
+import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.ai.BisonRollingGoal;
+import net.satisfy.wildernature.entity.animation.BisonAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 //TODO: Add rolling animation / bison doesnt fight back when hit 
-public class BisonEntity extends Animal implements NeutralMob {
+public class BisonEntity extends Animal implements NeutralMob, EntityWithAttackAnimation {
     private static final EntityDataAccessor<Integer> ANGER_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.INT);
     private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(15, 34);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
@@ -114,6 +117,16 @@ public class BisonEntity extends Animal implements NeutralMob {
         this.entityData.set(ATTACKING, attacking);
     }
 
+    @Override
+    public Vec3 getPosition(int i) {
+        return super.getPosition(i);
+    }
+
+    @Override
+    public void doHurtTarget(LivingEntity targetEntity) {
+        super.doHurtTarget(targetEntity);
+    }
+
     public boolean isAngry() {
         return this.entityData.get(ANGRY);
     }
@@ -143,7 +156,7 @@ public class BisonEntity extends Animal implements NeutralMob {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new BisonAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true,(int) (BisonAnimation.attack.lengthInSeconds()*20)+5,5));
         this.goalSelector.addGoal(1, new BisonPanicGoal(this));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(Items.GRASS), false));
