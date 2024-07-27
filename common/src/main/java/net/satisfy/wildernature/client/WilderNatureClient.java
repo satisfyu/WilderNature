@@ -50,6 +50,7 @@ public class WilderNatureClient {
 
     public static void registerEntityRenderers() {
         EntityRendererRegistry.register(BULLET, ThrownItemRenderer::new);
+        EntityRendererRegistry.register(PENGUIN, PenguinRenderer::new);
         EntityRendererRegistry.register(RED_WOLF, RedWolfRenderer::new);
         EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
         EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
@@ -64,6 +65,7 @@ public class WilderNatureClient {
     }
 
     public static void registerEntityModelLayer() {
+        EntityModelLayerRegistry.register(PenguinModel.LAYER_LOCATION, PenguinModel::getTexturedModelData);
         EntityModelLayerRegistry.register(RedWolfModel.LAYER_LOCATION, RedWolfModel::getTexturedModelData);
         EntityModelLayerRegistry.register(PelicanModel.LAYER_LOCATION, PelicanModel::getTexturedModelData);
         EntityModelLayerRegistry.register(RaccoonModel.LAYER_LOCATION, RaccoonModel::getTexturedModelData);

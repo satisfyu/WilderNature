@@ -23,6 +23,7 @@ public class EntityRegistry {
     public static final RegistrySupplier<BlockEntityType<CompletionistBannerEntity>> COMPLETIONIST_BANNER_ENTITY = createBlockEntity("completionist_banner", () -> BlockEntityType.Builder.of(CompletionistBannerEntity::new, ObjectRegistry.WOLF_TRAPPER_BANNER.get(), ObjectRegistry.WOLF_TRAPPER_WALL_BANNER.get(), ObjectRegistry.BUNNY_STALKER_BANNER.get(), ObjectRegistry.BUNNY_STALKER_WALL_BANNER.get(), ObjectRegistry.COD_CATCHER_BANNER.get(), ObjectRegistry.COD_CATCHER_WALL_BANNER.get()).build(null));
     public static final RegistrySupplier<BlockEntityType<BountyBoardBlockEntity>> BOUNTY_BOARD_ENTITY = createBlockEntity("bounty_board", () -> BlockEntityType.Builder.of(BountyBoardBlockEntity::new, ObjectRegistry.BOUNTY_BOARD.get()).build(null));
 
+    public static final RegistrySupplier<EntityType<PenguinEntity>> PENGUIN = createEntity("penguin", () -> EntityType.Builder.of(PenguinEntity::new, MobCategory.CREATURE).sized(0.7f, 0.9f).clientTrackingRange(10).build(new WilderNatureIdentifier("penguin").toString()));
     public static final RegistrySupplier<EntityType<RedWolfEntity>> RED_WOLF = createEntity("red_wolf", () -> EntityType.Builder.of(RedWolfEntity::new, MobCategory.CREATURE).sized(0.4f, 1.5f).clientTrackingRange(10).build(new WilderNatureIdentifier("red_wolf").toString()));
     public static final RegistrySupplier<EntityType<PelicanEntity>> PELICAN = createEntity("pelican", () -> EntityType.Builder.of(PelicanEntity::new, MobCategory.CREATURE).sized(0.6F, 1.0F).build(new WilderNatureIdentifier("pelican").toString()));
     public static final RegistrySupplier<EntityType<RaccoonEntity>> RACCOON = createEntity("raccoon", () -> EntityType.Builder.of(RaccoonEntity::new, MobCategory.CREATURE).sized(0.6f, 0.6f).build(new WilderNatureIdentifier("raccoon").toString()));
@@ -48,6 +49,7 @@ public class EntityRegistry {
         WilderNature.LOGGER.debug("Registering Entities for " + WilderNature.MOD_ID);
         ENTITY_TYPES.register();
         BLOCK_ENTITIES.register();
+        EntityAttributeRegistry.register(PENGUIN, PenguinEntity::createMobAttributes);
         EntityAttributeRegistry.register(DEER, DeerEntity::createMobAttributes);
         EntityAttributeRegistry.register(PELICAN, PelicanEntity::createMobAttributes);
         EntityAttributeRegistry.register(RED_WOLF, RedWolfEntity::createMobAttributes);
