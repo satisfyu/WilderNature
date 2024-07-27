@@ -37,5 +37,6 @@ public class TurkeyRenderer extends MobRenderer<TurkeyEntity, TurkeyModel<Turkey
         }
 
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+
     }
 }

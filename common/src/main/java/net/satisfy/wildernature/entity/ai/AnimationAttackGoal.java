@@ -15,14 +15,12 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
         super((PathfinderMob) pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
         this.attackDelay = attackDelay;
         this.attackFrame = attackFrame;
-        if(!(pMob instanceof PathfinderMob)){
-            throw new IllegalArgumentException("mob for AttackAnimationGoal must be an instance of PathfinderMob");
-        }
         animationEntity = pMob;
     }
 
     @Override
     public void tick() {
+        super.tick();
         var target = animationEntity.getTarget();
         if(target!=null){
             checkAndPerformAttack(target, animationEntity.getMeleeAttackRangeSqr(target));
