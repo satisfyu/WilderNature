@@ -13,6 +13,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,17 +23,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
+import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
+import net.satisfy.wildernature.entity.animation.PelicanAnimation;
+import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class TurkeyEntity extends Chicken {
+public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(TurkeyEntity.class, EntityDataSerializers.BOOLEAN);
     public int attackAnimationTimeout = 0;
-
+    public AnimationState attackAnimationState = new AnimationState();
     static {
         FOOD_ITEMS = Ingredient.of(
                 Items.WHEAT_SEEDS,
@@ -57,24 +62,57 @@ public class TurkeyEntity extends Chicken {
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.level().isClientSide()) {
+            setupAnimationStates();
+        }
+    }
+
+    private void setupAnimationStates() {
+        attackAnimationState.animateWhen(this.entityData.get(ATTACKING),tickCount);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, false);
+    }
+
+
     public void setAttacking(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
     }
 
+    @Override
+    public Vec3 getPosition(int i) {
+        return super.getPosition(i);
+    }
+
+    @Override
+    public void doHurtTarget(LivingEntity targetEntity) {
+        super.doHurtTarget(targetEntity);
+    }
+
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0).add(Attributes.MOVEMENT_SPEED, 0.24);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0).add(Attributes.MOVEMENT_SPEED, 0.24)
+                .add(Attributes.ATTACK_DAMAGE,1);//TODO: REPLACE ATTACK DAMAGE
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        int i=0;
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (TurkeyAnimation.attack.lengthInSeconds()*20+2),8));
+        this.goalSelector.addGoal(++i, new FloatGoal(this));
+        //this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
+        this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
+        this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
+        this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(++i, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
     }
 
     protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {

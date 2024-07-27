@@ -123,7 +123,7 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(++i, new HurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
         //this.targetSelector.addGoal(++i, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
