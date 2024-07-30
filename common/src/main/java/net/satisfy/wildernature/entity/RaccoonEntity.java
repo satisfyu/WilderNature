@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -19,11 +20,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.satisfy.wildernature.entity.ai.RaccoonAvoidEntityGoal;
 import net.satisfy.wildernature.entity.ai.RaccoonDoorInteractGoal;
-import net.satisfy.wildernature.entity.ai.RaccoonWashingGoal;
+import net.satisfy.wildernature.entity.ai.RandomActionGoal;
+import net.satisfy.wildernature.entity.ai.RandomAction;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class RaccoonEntity extends Animal {
     public static final int FLAG_CROUCHING = 4;
@@ -91,7 +95,40 @@ public class RaccoonEntity extends Animal {
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(++i, new WaterAvoidingRandomStrollGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(++i, new RaccoonWashingGoal(this));
+        this.goalSelector.addGoal(++i, new RandomActionGoal(new RandomAction() {
+            @Override
+            public boolean isInterruptable() {
+                return true;
+            }
+
+            public static final AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+            @Override
+            public void onStop() {
+                stopWash();
+                Objects.requireNonNull(RaccoonEntity.this.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            }
+
+            @Override
+            public void onStart() {
+                startWash();
+                Objects.requireNonNull(RaccoonEntity.this.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            }
+
+            @Override
+            public boolean isPossible() {
+                return !RaccoonEntity.this.isRaccoonRunning();
+            }
+
+            @Override
+            public int duration() {
+                return 48;
+            }
+
+            @Override
+            public float chance() {
+                return 0.01f;
+            }
+        }));
 
     }
 

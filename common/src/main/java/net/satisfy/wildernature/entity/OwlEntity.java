@@ -7,7 +7,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,22 +39,26 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-import net.satisfy.wildernature.entity.ai.FlyingFollowOwnerGoal;
-import net.satisfy.wildernature.entity.ai.PredicateTemptGoal;
+import net.satisfy.wildernature.entity.ai.*;
+import net.satisfy.wildernature.entity.animation.OwlAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 
 // Owl by Lemonszz: https://github.com/Lemonszz/Biome-Makeover/blob/1.20/LICENCE
-public class OwlEntity extends ShoulderRidingEntity {
+public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackAnimation {
     private static final EntityDataAccessor<Integer> STANDING_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWL_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HOOTING = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDimensions FLYING_DIMENSION = new EntityDimensions(0.7F, 1.4F, false);
     private static final Predicate<LivingEntity> IS_OWL_TARGET = e -> e.getType().is(TagsRegistry.OWL_TARGETS);
 
@@ -80,17 +87,115 @@ public class OwlEntity extends ShoulderRidingEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(4, new FlyingFollowOwnerGoal(this, 1.2D, 10.0F, 2.0F, true));
-        this.goalSelector.addGoal(5, new PredicateTemptGoal(this, 1.2D, this::isFood, false));
-        this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(9, new ExtendedFlyOntoTree(this, 1D, 0.5F));
-        this.goalSelector.addGoal(10, new RandomStrollGoal(this, 1D));
-        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
+        int i = 0;
+        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Player.class, 32,2,2) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && isInPanicRightNow();
+            }
+        });
+        this.goalSelector.addGoal(++i, new PanicGoal(this, 1.75D){
+            protected boolean findRandomPosition() {
+                Vec3 vec3 = DefaultRandomPos.getPos(this.mob, 20, 20);
+                if (vec3 == null) {
+                    return false;
+                } else {
+                    this.posX = vec3.x;
+                    this.posY = vec3.y;
+                    this.posZ = vec3.z;
+                    return true;
+                }
+            }
+        });
+        this.goalSelector.addGoal(++i, new SleepGoal(this));
+        this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(++i, new FloatGoal(this){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !isSleeping();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !isSleeping();
+            }
+        });
+        this.goalSelector.addGoal(++i, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) OwlAnimation.attack.lengthInSeconds()*20,15){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !isSleeping();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !isSleeping();
+            }
+        });
+        this.goalSelector.addGoal(++i, new FlyingFollowOwnerGoal(this, 1.2D, 10.0F, 2.0F, true){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !isSleeping();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !isSleeping();
+            }
+        });
+        this.goalSelector.addGoal(++i, new PredicateTemptGoal(this, 1.2D, this::isFood, false){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !isSleeping();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !isSleeping();
+            }
+        });
+        this.goalSelector.addGoal(++i, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(++i, new ExtendedFlyOntoTree(this, 1D, 0.5F));
+        this.goalSelector.addGoal(++i, new RandomStrollGoal(this, 1D));
+        this.goalSelector.addGoal(++i, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(++i, new RandomActionGoal(new RandomAction() {
+
+
+            @Override
+            public boolean isInterruptable() {
+                return false;
+            }
+            @Override
+            public void onStop() {
+                setHooting(false);
+            }
+
+            @Override
+            public void onStart() {
+                if(onGround()){
+                    setHooting(true);
+                }
+                var owlSound = SoundRegistry.OWL_AMBIENT.get();
+                level().playSound(null,OwlEntity.this,owlSound, SoundSource.NEUTRAL,1f,1f);
+            }
+
+            @Override
+            public boolean isPossible() {
+                return !isAttacking() && !isSleeping();
+            }
+
+            @Override
+            public int duration() {
+                return (int) (OwlAnimation.hoot.lengthInSeconds()*20);
+            }
+
+            @Override
+            public float chance() {
+                return 0.01f;
+            }
+        }));
+        //next line is for testing, comment it if it's not
+        //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<Player>(this, Player.class, true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new NonTameRandomTargetGoal<>(this, LivingEntity.class, false, IS_OWL_TARGET));
@@ -133,7 +238,36 @@ public class OwlEntity extends ShoulderRidingEntity {
             case STANDING -> this.leaningPitch = Math.max(0.0F, this.leaningPitch - 2F);
             case FLYING -> this.leaningPitch = Math.min(7F, this.leaningPitch + 1.5F);
         }
+        if(level().isClientSide()){
+            setupAnimationStates();
+        }
+    }
 
+    public AnimationState flyingState = new AnimationState();
+    public AnimationState hootState = new AnimationState();
+    public AnimationState deathState = new AnimationState();
+    public AnimationState attackState = new AnimationState();
+    public AnimationState walkState = new AnimationState();
+    public AnimationState sleepState = new AnimationState();
+    public AnimationState idleState = new AnimationState();
+
+
+    private void setupAnimationStates() {
+        var owlState = getOwlState();
+        var standingState = getStandingState();
+        flyingState.animateWhen(standingState == StandingState.FLYING, this.tickCount);
+        attackState.animateWhen(this.isAttacking(), this.tickCount);
+        hootState.animateWhen(this.isHooting(), this.tickCount);
+        sleepState.animateWhen(isSleeping(), this.tickCount);
+        //idleState.animateWhen(true, this.tickCount);
+
+    }
+
+    private boolean isHooting() {
+        return this.entityData.get(HOOTING);
+    }
+    private void setHooting(boolean hooting) {
+        this.entityData.set(HOOTING,hooting);
     }
 
     @Override
@@ -241,6 +375,9 @@ public class OwlEntity extends ShoulderRidingEntity {
         super.defineSynchedData();
         getEntityData().define(STANDING_STATE, 0);
         getEntityData().define(OWL_STATE, 0);
+        getEntityData().define(ATTACKING, false);
+        getEntityData().define(HOOTING, false);
+        getEntityData().define(SLEEPING, false);
     }
 
     @Override
@@ -275,12 +412,30 @@ public class OwlEntity extends ShoulderRidingEntity {
 
     @Override
     protected @Nullable SoundEvent getAmbientSound() {
-        return SoundRegistry.OWL_AMBIENT.get();
+        return null;
     }
 
     @Override
     protected @Nullable SoundEvent getHurtSound(DamageSource source) {
         return SoundRegistry.OWL_HURT.get();
+    }
+
+    @Override
+    public void setAttacking(boolean b) {
+        this.entityData.set(ATTACKING, b);
+    }
+    public boolean isAttacking() {
+        return this.entityData.get(ATTACKING);
+    }
+
+    @Override
+    public Vec3 getPosition(int i) {
+        return super.getPosition(i);
+    }
+
+    @Override
+    public void doHurtTarget(LivingEntity targetEntity) {
+        super.doHurtTarget(targetEntity);
     }
 
 
@@ -294,7 +449,7 @@ public class OwlEntity extends ShoulderRidingEntity {
 
 
     private static class ExtendedFlyOntoTree extends WaterAvoidingRandomStrollGoal {
-        public ExtendedFlyOntoTree(PathfinderMob pathAwareEntity, double speed, float probability) {
+        public  ExtendedFlyOntoTree(PathfinderMob pathAwareEntity, double speed, float probability) {
             super(pathAwareEntity, speed, probability);
         }
 
@@ -339,4 +494,57 @@ public class OwlEntity extends ShoulderRidingEntity {
             return Vec3.atBottomCenterOf(blockPos2);
         }
     }
+
+    private void setSleeping(boolean b) {
+        this.entityData.set(SLEEPING,b);
+    }
+
+    public boolean isInPanicRightNow(){
+        return getLastHurtByMob() != null || isOnFire();
+    }
+
+    @Override
+    public boolean isSleeping() {
+        return this.entityData.get(SLEEPING);
+    }
+
+    private static class SleepGoal extends Goal {
+        private final OwlEntity owl;
+
+        public SleepGoal(OwlEntity owlEntity) {
+            this.owl = owlEntity;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return owl.level().isDay() && !owl.isInPanicRightNow();
+        }
+        public boolean canContinueToUse() {
+            return canUse();
+        }
+
+
+
+        @Override
+        public boolean isInterruptable() {
+            return false;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            owl.setSleeping(true);
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+        }
+        public void stop() {
+            super.stop();
+            owl.setSleeping(false);
+        }
+    }
+
 }
