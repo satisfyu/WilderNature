@@ -2,6 +2,8 @@ package net.satisfy.wildernature.entity;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,7 +11,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -20,15 +23,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.satisfy.wildernature.entity.ai.RandomAction;
+import net.satisfy.wildernature.entity.ai.RandomActionGoal;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Random;
 
 public class DogEntity extends TamableAnimal {
     public AnimationState walkAnimationState = new AnimationState();
@@ -63,7 +64,51 @@ public class DogEntity extends TamableAnimal {
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(6, new PanicGoal(this, 2.0D));
-        this.goalSelector.addGoal(7, new DogHowlGoal(this));
+        if(1==1)
+            return;
+        this.goalSelector.addGoal(7, new RandomActionGoal(new RandomAction() {
+            @Override
+            public boolean isInterruptable() {
+                return true;
+            }
+
+            @Override
+            public void onStart() {
+                //Replace SoundEvents.WOLF_HOWL to your sound
+                setHowling(true);
+            }
+
+            @Override
+            public void onStop() {
+                setHowling(false);
+            }
+            @Override
+            public boolean isPossible() {
+                return true;
+            }
+
+            @Override
+            public void onTick(int tick) {
+                if(tick == 20){
+                    level().playSound(null,DogEntity.this, SoundRegistry.RED_WOLF_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
+                }
+            }
+
+            @Override
+            public int duration() {
+                return (int) (DogAnimation.howl.lengthInSeconds()*20);
+            }
+
+            @Override
+            public float chance() {
+                return 0.005f;
+            }
+
+            @Override
+            public AttributeInstance getAttribute(Attribute movementSpeed) {
+                return DogEntity.this.getAttribute(movementSpeed);
+            }
+        }));
         this.targetSelector.addGoal(10, new HurtByTargetGoal(this));
     }
 
@@ -77,19 +122,7 @@ public class DogEntity extends TamableAnimal {
     }
 
     private void setupAnimationStates() {
-        if (this.idleAnimationTimeout <= 0) {
-            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
-            this.idleAnimationState.start(this.tickCount);
-        } else {
-            --this.idleAnimationTimeout;
-        }
         howlingAnimationState.animateWhen(this.isHowling(),tickCount);
-
-        if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D) {
-            this.walkAnimationState.start(this.tickCount);
-        } else {
-            this.walkAnimationState.stop();
-        }
     }
 
 
@@ -194,56 +227,4 @@ public class DogEntity extends TamableAnimal {
         }
     }
 
-    public static class DogHowlGoal extends Goal {
-        private final DogEntity target;
-        int counter;
-
-        public DogHowlGoal(DogEntity mob) {
-            this.target = mob;
-            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
-        }
-
-        public boolean requiresUpdateEveryTick() {
-            return true;
-        }
-
-        @Override
-        public boolean isInterruptable() {
-            return false;
-        }
-
-
-        @Override
-        public boolean canUse() {
-            var r = new Random().nextFloat();
-            return r < 0.001f;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return counter > 0 && counter < DogAnimation.howl.lengthInSeconds()*20;
-        }
-
-        @Override
-        public void tick() {
-            counter++;
-        }
-
-        public static final AttributeModifier modifier = new AttributeModifier("bison_roll_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
-
-        @Override
-        public void start() {
-            counter = 0;
-            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
-            target.setHowling(true);
-            super.start();
-        }
-
-        @Override
-        public void stop() {
-            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
-            target.setHowling(false);
-            super.stop();
-        }
-    }
 }

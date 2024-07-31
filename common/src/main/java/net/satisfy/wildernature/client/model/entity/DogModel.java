@@ -82,9 +82,9 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.head.yRot = netHeadYaw * 0.017453292F;
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 1f, 1.5f);
         this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
+
     }
 }

@@ -7,9 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.npc.Villager;
@@ -101,17 +99,14 @@ public class RaccoonEntity extends Animal {
                 return true;
             }
 
-            public static final AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
             @Override
             public void onStop() {
                 stopWash();
-                Objects.requireNonNull(RaccoonEntity.this.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
-            }
+          }
 
             @Override
             public void onStart() {
                 startWash();
-                Objects.requireNonNull(RaccoonEntity.this.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
             }
 
             @Override
@@ -128,6 +123,12 @@ public class RaccoonEntity extends Animal {
             public float chance() {
                 return 0.01f;
             }
+
+            @Override
+            public AttributeInstance getAttribute(Attribute movementSpeed) {
+                return RaccoonEntity.this.getAttribute(movementSpeed);
+            }
+
         }));
 
     }

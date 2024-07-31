@@ -24,10 +24,6 @@ public class BisonRenderer extends MobRenderer<BisonEntity, BisonModel<BisonEnti
         return TEXTURE;
     }
 
-
-
-
-
     @Override
     public void render(BisonEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {

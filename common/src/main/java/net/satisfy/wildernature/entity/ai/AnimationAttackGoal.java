@@ -3,18 +3,17 @@ package net.satisfy.wildernature.entity.ai;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.satisfy.wildernature.WilderNature;
 
 public class AnimationAttackGoal extends MeleeAttackGoal {
     private final EntityWithAttackAnimation animationEntity;
     private int counter;
     private int attackDelay;
-    private int attackFrame;
+    private int attackTick;
 
-    public AnimationAttackGoal(EntityWithAttackAnimation pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen, int attackDelay, int attackFrame) {
+    public AnimationAttackGoal(EntityWithAttackAnimation pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen, int attackDelay, int attackTick) {
         super((PathfinderMob) pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
         this.attackDelay = attackDelay;
-        this.attackFrame = attackFrame;
+        this.attackTick = attackTick;
         animationEntity = pMob;
     }
 
@@ -40,7 +39,7 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
             if(counter==0){
                 counter++;
             }
-            if (counter == attackFrame) {
+            if (counter == attackTick) {
                 this.animationEntity.doHurtTarget(targetEntity);
             }
         }

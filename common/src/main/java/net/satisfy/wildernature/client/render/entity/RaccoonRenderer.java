@@ -29,11 +29,6 @@ public class RaccoonRenderer extends MobRenderer<RaccoonEntity, RaccoonModel<Rac
         super.setupRotations(raccoon, poseStack, f, g, h);
     }
 
-    //FUCK MOJMAP
-//    protected float getBob(RaccoonEntity RaccoonEntity, float f) {
-//        return RaccoonEntity.getTailAngle();
-//    }
-
 
     public @NotNull ResourceLocation getTextureLocation(RaccoonEntity entity) {
         return entity.isSleeping() ? RACOON_SLEEP_TEXTURE : RACCOON_TEXTURE;

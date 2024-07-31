@@ -1,8 +1,11 @@
 package net.satisfy.wildernature.entity.ai;
 
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Random;
 
 public class RandomActionGoal extends Goal {
@@ -38,19 +41,23 @@ public class RandomActionGoal extends Goal {
     @Override
     public void tick() {
         counter++;
+        action.onTick(counter);
     }
 
+    public static final AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
 
     @Override
     public void start() {
         counter = 0;
         action.onStart();
+        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
         super.start();
     }
 
     @Override
     public void stop() {
         action.onStop();
+        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
         super.stop();
     }
 }

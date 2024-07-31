@@ -17,6 +17,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -165,6 +167,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
             public boolean isInterruptable() {
                 return false;
             }
+
             @Override
             public void onStop() {
                 setHooting(false);
@@ -172,11 +175,11 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
 
             @Override
             public void onStart() {
-                if(onGround()){
+                if (onGround()) {
                     setHooting(true);
                 }
                 var owlSound = SoundRegistry.OWL_AMBIENT.get();
-                level().playSound(null,OwlEntity.this,owlSound, SoundSource.NEUTRAL,1f,1f);
+                level().playSound(null, OwlEntity.this, owlSound, SoundSource.NEUTRAL, 1f, 1f);
             }
 
             @Override
@@ -186,12 +189,17 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
 
             @Override
             public int duration() {
-                return (int) (OwlAnimation.hoot.lengthInSeconds()*20);
+                return (int) (OwlAnimation.hoot.lengthInSeconds() * 20);
             }
 
             @Override
             public float chance() {
                 return 0.01f;
+            }
+
+            @Override
+            public AttributeInstance getAttribute(Attribute movementSpeed) {
+                return OwlEntity.this.getAttribute(movementSpeed);
             }
         }));
         //next line is for testing, comment it if it's not
