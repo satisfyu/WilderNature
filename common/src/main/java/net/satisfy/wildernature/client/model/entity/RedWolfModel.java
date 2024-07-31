@@ -128,7 +128,6 @@ public class RedWolfModel<T extends RedWolfEntity> extends HierarchicalModel<T> 
         else {
             animateWalk(RedWolfAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         }
-        WilderNature.info("wolf is in attack {} {}",wolf.attackState.isStarted(),wolf.attackState.getAccumulatedTime());
         animate(wolf.attackState,RedWolfAnimation.attack,ageInTicks);
     }
 }

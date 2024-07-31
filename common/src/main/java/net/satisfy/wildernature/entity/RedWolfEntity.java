@@ -18,6 +18,7 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.animation.RedWolfAnimation;
@@ -36,7 +37,9 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     public static AttributeSupplier.Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
     }
-
+    public double getMeleeAttackRangeSqr(LivingEntity target){
+        return super.getMeleeAttackRangeSqr(target);
+    }
     @Override
     protected SoundEvent getAmbientSound() {
         if (this.isAngry()) {
@@ -105,10 +108,18 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     }
 
     public AnimationState attackState = new AnimationState();
+    int lastTargetTick;
     @Override
     public void tick() {
         super.tick();
-        setSneaking(getTarget()!=null);
+        if(!level().isClientSide()) {
+            lastTargetTick++;
+            if(getTarget()!=null){
+                lastTargetTick=0;
+            }
+            WilderNature.info("hasTarget {}", lastTargetTick);
+            setSneaking(lastTargetTick<10);
+        }
         if(level().isClientSide()){
             attackState.animateWhen(isAttacking(),this.tickCount);
         }
