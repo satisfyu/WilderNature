@@ -23,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.animation.CassowaryAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -101,7 +102,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (CassowaryAnimation.attack.lengthInSeconds()*20+2    ),8));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.cassowary_attack *20+2    ),8));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
         this.goalSelector.addGoal(2, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 3f));

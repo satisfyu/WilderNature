@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.animation.PelicanAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
@@ -103,7 +104,7 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     @Override
     protected void registerGoals() {
         int i=0;
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (TurkeyAnimation.attack.lengthInSeconds()*20+2),8));
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack *20+2),8));
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         //this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));

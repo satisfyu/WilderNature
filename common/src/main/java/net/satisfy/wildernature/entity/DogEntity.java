@@ -32,6 +32,7 @@ import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.ai.RandomAction;
 import net.satisfy.wildernature.entity.ai.RandomActionGoal;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +65,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(0, new AnimationAttackGoal(this,1.2f,true, (int) (DogAnimation.bite.lengthInSeconds()*20), 7));
+        this.goalSelector.addGoal(0, new AnimationAttackGoal(this,1.2f,true, (int) (ServerAnimationDurations.dog_bite *20), 7));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.25d, 18f, 7f, false));
@@ -104,7 +105,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
             @Override
             public int duration() {
-                return (int) (DogAnimation.howl.lengthInSeconds()*20);
+                return (int) (ServerAnimationDurations.dog_howl*20);
             }
 
             @Override

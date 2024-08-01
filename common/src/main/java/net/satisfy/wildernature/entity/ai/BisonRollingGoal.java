@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.satisfy.wildernature.entity.BisonEntity;
 import net.satisfy.wildernature.entity.RaccoonEntity;
 import net.satisfy.wildernature.entity.animation.BisonAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 
 import java.util.EnumSet;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class BisonRollingGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return counter > 0 && counter < BisonAnimation.rolling.lengthInSeconds()*20;
+        return counter > 0 && counter < ServerAnimationDurations.bison_roll *20;
     }
 
     @Override

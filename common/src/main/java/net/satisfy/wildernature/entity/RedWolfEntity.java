@@ -22,6 +22,7 @@ import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.animation.RedWolfAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +91,7 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
 //        this.goalSelector.addGoal(5,
 //
 //        });
-        this.goalSelector.addGoal(5, new AnimationAttackGoal(this, 1.0, true,(int) (RedWolfAnimation.attack.lengthInSeconds()*20),4));
+        this.goalSelector.addGoal(5, new AnimationAttackGoal(this, 1.0, true,(int) (ServerAnimationDurations.red_wolf_attack *20),4));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0));

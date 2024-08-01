@@ -43,6 +43,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.*;
 import net.satisfy.wildernature.entity.animation.OwlAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
@@ -123,7 +124,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
             }
         });
         this.goalSelector.addGoal(++i, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) OwlAnimation.attack.lengthInSeconds()*20,15){
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) ServerAnimationDurations.owl_attack *20,15){
             @Override
             public boolean canUse() {
                 return super.canUse() && !isSleeping();
@@ -189,7 +190,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
 
             @Override
             public int duration() {
-                return (int) (OwlAnimation.hoot.lengthInSeconds() * 20);
+                return (int) (ServerAnimationDurations.owl_hoot * 20);
             }
 
             @Override
