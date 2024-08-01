@@ -78,12 +78,11 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
         this.goalSelector.addGoal(7, new RandomActionGoal(new RandomAction() {
             @Override
             public boolean isInterruptable() {
-                return true;
+                return false;
             }
 
             @Override
             public void onStart() {
-                //Replace SoundEvents.WOLF_HOWL to your sound
                 setHowling(true);
             }
 
@@ -99,6 +98,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
             @Override
             public void onTick(int tick) {
                 if(tick == 20){
+                    //Replace SoundEvents.WOLF_HOWL to your sound
                     level().playSound(null,DogEntity.this, SoundRegistry.RED_WOLF_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
                 }
             }
@@ -110,7 +110,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
             @Override
             public float chance() {
-                return 0.005f;
+                return 0.05f;
             }
 
             @Override
@@ -132,7 +132,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
     private void setupAnimationStates() {
         howlingAnimationState.animateWhen(this.isHowling(),tickCount);
-        howlingAnimationState.animateWhen(this.isAttacking(),tickCount);
+        attackAnimationState.animateWhen(this.isAttacking(),tickCount);
     }
 
     private boolean isAttacking() {

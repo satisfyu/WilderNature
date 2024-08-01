@@ -44,20 +44,20 @@ public class RandomActionGoal extends Goal {
         action.onTick(counter);
     }
 
-    public static final AttributeModifier modifier = new AttributeModifier("racoon_wash_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+    public static final AttributeModifier modifier = new AttributeModifier("random_action_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
 
     @Override
     public void start() {
         counter = 0;
         action.onStart();
-        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
         super.start();
     }
 
     @Override
     public void stop() {
         action.onStop();
-        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+        Objects.requireNonNull(action.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
         super.stop();
     }
 }
