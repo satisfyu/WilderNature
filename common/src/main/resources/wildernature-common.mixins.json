@@ -8,7 +8,8 @@
   "mixins": [
     "ItemMixin",
     "MobAccessor",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "CatMixin"
   ],
   "injectors": {
     "defaultRequire": 1

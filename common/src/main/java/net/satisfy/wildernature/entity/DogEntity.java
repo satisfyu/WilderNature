@@ -17,12 +17,18 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
+import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.ai.RandomAction;
 import net.satisfy.wildernature.entity.ai.RandomActionGoal;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
@@ -31,13 +37,15 @@ import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DogEntity extends TamableAnimal {
+public class DogEntity extends TamableAnimal implements EntityWithAttackAnimation {
     public AnimationState walkAnimationState = new AnimationState();
     public AnimationState idleAnimationState = new AnimationState();
     public AnimationState howlingAnimationState = new AnimationState();
+    public AnimationState attackAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
     private static final EntityDataAccessor<Boolean> HOWLING = SynchedEntityData.defineId(DogEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(DogEntity.class, EntityDataSerializers.BOOLEAN);
 
 
     public DogEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
@@ -56,6 +64,7 @@ public class DogEntity extends TamableAnimal {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new AnimationAttackGoal(this,1.2f,true, (int) (DogAnimation.bite.lengthInSeconds()*20), 7));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.25d, 18f, 7f, false));
@@ -64,8 +73,7 @@ public class DogEntity extends TamableAnimal {
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(6, new PanicGoal(this, 2.0D));
-        if(1==1)
-            return;
+        this.goalSelector.addGoal(7, new GoAfterCatGoal(this));
         this.goalSelector.addGoal(7, new RandomActionGoal(new RandomAction() {
             @Override
             public boolean isInterruptable() {
@@ -123,8 +131,12 @@ public class DogEntity extends TamableAnimal {
 
     private void setupAnimationStates() {
         howlingAnimationState.animateWhen(this.isHowling(),tickCount);
+        howlingAnimationState.animateWhen(this.isAttacking(),tickCount);
     }
 
+    private boolean isAttacking() {
+        return entityData.get(ATTACKING);
+    }
 
 
     private boolean isHowling() {
@@ -139,6 +151,7 @@ public class DogEntity extends TamableAnimal {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(HOWLING, false);
+        this.entityData.define(ATTACKING, false);
     }
 
 
@@ -225,6 +238,21 @@ public class DogEntity extends TamableAnimal {
 
             return super.mobInteract(player, hand);
         }
+    }
+
+    @Override
+    public void setAttacking(boolean b) {
+        this.entityData.set(ATTACKING,b);
+    }
+
+    @Override
+    public Vec3 getPosition(int i) {
+        return super.getPosition(i);
+    }
+
+    @Override
+    public void doHurtTarget(LivingEntity targetEntity) {
+        super.doHurtTarget(targetEntity);
     }
 
 }
