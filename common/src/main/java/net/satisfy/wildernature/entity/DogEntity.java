@@ -110,7 +110,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
             @Override
             public float chance() {
-                return 0.05f;
+                return 0.005f;
             }
 
             @Override
