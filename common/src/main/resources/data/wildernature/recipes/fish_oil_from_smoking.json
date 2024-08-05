@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smoking",
-  "cookingtime": 100,
-  "experience": 0.35,
-  "ingredient": {
-    "tag": "minecraft:fishes"
-  },
-  "result": "wildernature:fish_oil"
-}

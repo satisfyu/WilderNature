@@ -88,7 +88,7 @@ public class WilderNatureFabric implements ModInitializer {
 
     void addSpawns() {
         ConfigFabric config = AutoConfig.getConfigHolder(ConfigFabric.class).getConfig();
-        addMobSpawn(BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), config.PelicanSpawnWeight, config.PelicanMinGroupSize, config.PelicanMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_PELICAN, EntityRegistry.PELICAN.get(), config.PelicanSpawnWeight, config.PelicanMinGroupSize, config.PelicanMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), config.DeerSpawnWeight, config.DeerMinGroupSize, config.DeerMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), config.RaccoonSpawnWeight, config.RaccoonMinGroupSize, config.RaccoonMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(), config.SquirrelSpawnWeight, config.SquirrelMinGroupSize, config.SquirrelMaxGroupSize);

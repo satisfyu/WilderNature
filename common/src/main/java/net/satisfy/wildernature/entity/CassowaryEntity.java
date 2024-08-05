@@ -95,7 +95,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 14).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.75f).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.ATTACK_SPEED, 1F);
+        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 14).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 2.5f).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.ATTACK_SPEED, 1F);
     }
 
     @Override
@@ -116,7 +116,6 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
         return entityDimensions.height * 0.4F;
     }
 
-    //TODO sounds
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundRegistry.PELICAN_AMBIENT.get();
