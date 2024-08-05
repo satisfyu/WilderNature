@@ -25,7 +25,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.ai.RandomAction;
@@ -254,7 +253,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
         super.doHurtTarget(targetEntity);
     }
 
-    public class GoAfterCatGoal extends Goal {
+    public static class GoAfterCatGoal extends Goal {
         private final DogEntity dog;
         private List<Cat> list;
         private int lastCatUpdate = 0;
@@ -300,8 +299,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
                 this.targetCat = closestCat;
                 if(closestCat != null){
-                    var path = this.dog.getNavigation().moveTo(this.targetCat, 1.5);
-                    WilderNature.info("{} {}",closestCat.getUUID(),path);
+                    this.dog.getNavigation().moveTo(this.targetCat, 1.5);
                 }
             }
         }

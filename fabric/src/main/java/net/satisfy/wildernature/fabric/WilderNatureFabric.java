@@ -101,6 +101,8 @@ public class WilderNatureFabric implements ModInitializer {
         addMobSpawn(TagsRegistry.SPAWNS_MINISHEEP, EntityRegistry.MINISHEEP.get(), config.MiniSheepSpawnWeight, config.MiniSheepMinGroupSize, config.MiniSheepMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_PENGUIN, EntityRegistry.PENGUIN.get(), config.PenguinSpawnWeight, config.PenguinMinGroupSize, config.PenguinMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_CASSOWARY, EntityRegistry.CASSOWARY.get(), config.CassowarySpawnWeight, config.CassowaryMinGroupSize, config.CassowaryMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_FLAMINGO, EntityRegistry.FLAMINGO.get(), config.FlamingoSpawnWeight, config.FlamingoMinGroupSize, config.FlamingoMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_HEDGEHOG, EntityRegistry.HEDGEHOG.get(), config.HedgehogSpawnWeight, config.HedgehogMinGroupSize, config.HedgehogMaxGroupSize);
 
         if (config.removeSavannaAnimals) {
             removeSpawn(BiomeTags.IS_SAVANNA, List.of(EntityType.SHEEP, EntityType.PIG, EntityType.CHICKEN, EntityType.COW));

@@ -63,6 +63,10 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> DOG_SPAWN_EGG = registerItem("dog_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.DOG, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> MINISHEEP_SPAWN_EGG = registerItem("minisheep_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.MINISHEEP, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TURKEY_SPAWN_EGG = registerItem("turkey_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.TURKEY, -1, -1, getSettings()));
+    public static final RegistrySupplier<Item> PENGUIN_SPAWN_EGG = registerItem("penguin_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.PENGUIN, -1, -1, getSettings()));
+    public static final RegistrySupplier<Item> CASSOWARY_SPAWN_EGG = registerItem("cassowary_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.CASSOWARY, -1, -1, getSettings()));
+    public static final RegistrySupplier<Item> HEDGEHOG_SPAWN_EGG = registerItem("hedgehog_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.HEDGEHOG, -1, -1, getSettings()));
+    public static final RegistrySupplier<Item> FLAMINGO_SPAWN_EGG = registerItem("flamingo_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityRegistry.FLAMINGO, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> TRUFFLE = registerItem("truffle", () -> new Item(getSettings().rarity(Rarity.RARE)));
     public static final RegistrySupplier<Block> HAZELNUT_BUSH = registerWithoutItem("hazelnut_bush", () -> new HazelnutBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY)));
     public static final RegistrySupplier<Item> HAZELNUT = registerItem("hazelnut", () -> new ItemNameBlockItem(ObjectRegistry.HAZELNUT_BUSH.get(), getSettings().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).fast().build())));
@@ -93,7 +97,6 @@ public class ObjectRegistry {
      * Kangaroos
      * Jaguars
      * Porcupines
-     * Hedgehog
      * --- unsure because of Naturalist ---
      * Bears
      * Elephants

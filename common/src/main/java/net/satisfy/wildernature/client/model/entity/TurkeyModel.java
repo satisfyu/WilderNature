@@ -65,7 +65,6 @@ public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
         var turkey = ((TurkeyEntity)entity);
         this.root().getAllParts().forEach(ModelPart::resetPose);
         animateWalk(TurkeyAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
-        WilderNature.info("attack {}", turkey.attackAnimationState.getAccumulatedTime());
         animate(turkey.attackAnimationState,TurkeyAnimation.attack,ageInTicks);
     }
 

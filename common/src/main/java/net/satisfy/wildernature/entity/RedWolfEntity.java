@@ -20,7 +20,6 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
@@ -115,7 +114,6 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
             if(getTarget()!=null){
                 lastTargetTick=0;
             }
-            WilderNature.info("hasTarget {}", lastTargetTick);
             setSneaking(lastTargetTick<10);
         }
         if(level().isClientSide()){

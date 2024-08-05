@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "mastiff"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("wildernature", "dog"), "main");
     private final ModelPart root;
 
     public DogModel(ModelPart root) {
@@ -84,7 +84,6 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
-        WilderNature.info("{} {}",entity.howlingAnimationState.getAccumulatedTime());
         this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, DogAnimation.bite, ageInTicks, 1f);
 

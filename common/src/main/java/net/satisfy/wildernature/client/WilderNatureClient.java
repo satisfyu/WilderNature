@@ -63,9 +63,13 @@ public class WilderNatureClient {
         EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
         EntityRendererRegistry.register(DOG, DogRenderer::new);
         EntityRendererRegistry.register(CASSOWARY, CassowaryRenderer::new);
+        EntityRendererRegistry.register(HEDGEHOG, HedgehogRenderer::new);
+        EntityRendererRegistry.register(FLAMINGO, FlamingoRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
+        EntityModelLayerRegistry.register(FlamingoModel.LAYER_LOCATION, FlamingoModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(HedgehogModel.LAYER_LOCATION, HedgehogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(CassowaryModel.LAYER_LOCATION, CassowaryModel::getTexturedModelData);
         EntityModelLayerRegistry.register(PenguinModel.LAYER_LOCATION, PenguinModel::getTexturedModelData);
         EntityModelLayerRegistry.register(RedWolfModel.LAYER_LOCATION, RedWolfModel::getTexturedModelData);

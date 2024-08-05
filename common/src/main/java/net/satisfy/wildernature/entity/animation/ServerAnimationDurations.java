@@ -10,4 +10,5 @@ public class ServerAnimationDurations {
     public static float owl_hoot = 1.75f;
     public static float cassowary_attack = 1.25f;
     public static float dog_howl = 3.5f;
+    public static float pelican_stand = 3.5f;
 }

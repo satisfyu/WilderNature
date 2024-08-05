@@ -77,7 +77,6 @@ public class OwlModel extends HierarchicalModel<OwlEntity> implements HeadedMode
         animate(entity.flyingState,OwlAnimation.fly,ageInTicks);
         animate(entity.hootState,OwlAnimation.hoot,ageInTicks);
         animate(entity.sleepState,OwlAnimation.sleep,ageInTicks);
-            //animate(entity.idleState,OwlAnimation.idle,ageInTicks);
     }
 
     @Override

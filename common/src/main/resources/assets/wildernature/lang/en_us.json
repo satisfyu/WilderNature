@@ -74,6 +74,8 @@
   "entity.wildernature.deer": "Deer",
   "entity.wildernature.dog": "Dog",
   "entity.wildernature.owl": "Owl",
+  "entity.wildernature.flamingo": "Flamingo",
+  "entity.wildernature.hedgehog": "Hedgehog",
   "entity.wildernature.pelican": "Pelican",
   "entity.wildernature.raccoon": "Raccoon",
   "entity.wildernature.red_wolf": "Red Wolf",
@@ -261,5 +263,11 @@
   "contract.wildernature.tier1_cassowary.desc": "§6Hunt 5 Cassowarys",
   "contract.wildernature.tier1_cassowary": "Little critters, sharp claws!",
   "item.wildernature.cassowary_meat": "Cassowary Meat",
-  "item.wildernature.cooked_cassowary_meat": "Cooked Cassowary Meat"
+  "item.wildernature.cooked_cassowary_meat": "Cooked Cassowary Meat",
+  "text.autoconfig.wildernature.option.FlamingoMaxGroupSize": "Flamingo Max Group Size:",
+  "text.autoconfig.wildernature.option.FlamingoMinGroupSize": "Flamingo Min Group Size:",
+  "text.autoconfig.wildernature.option.FlamingoSpawnWeight": "Flamingo Spawn Weight:",
+  "text.autoconfig.wildernature.option.HedgehogMaxGroupSize": "Hedgehog Max Group Size:",
+  "text.autoconfig.wildernature.option.HedgehogMinGroupSize": "Hedgehog Min Group Size:",
+  "text.autoconfig.wildernature.option.HedgehogSpawnWeight": "Hedgehog Spawn Weight:"
 }

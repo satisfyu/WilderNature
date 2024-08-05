@@ -52,4 +52,10 @@ public class ConfigFabric implements ConfigData {
     public int CassowarySpawnWeight = 7;
     public int CassowaryMinGroupSize = 3;
     public int CassowaryMaxGroupSize = 5;
+    public int FlamingoSpawnWeight = 7;
+    public int FlamingoMinGroupSize = 3;
+    public int FlamingoMaxGroupSize = 6;
+    public int HedgehogSpawnWeight = 9;
+    public int HedgehogMinGroupSize = 1;
+    public int HedgehogMaxGroupSize = 3;
 }
