@@ -1,20 +1,45 @@
 {
   "type": "minecraft:entity",
-  "wildernature": "minecraft:entities/owl",
-  "components": {
-    "minecraft:loot": {
-      "pools": [
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
         {
-          "rolls": 1,
-          "entries": [
+          "type": "minecraft:item",
+          "functions": [
             {
-              "type": "minecraft:item",
-              "name": "minecraft:leather",
-              "weight": 1
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 0.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting",
+              "function": "minecraft:enchanted_count_increase"
+            },
+            {
+              "function": "minecraft:loot_table",
+              "name": "minecraft:empty",
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.5
+                }
+              ]
             }
-          ]
+          ],
+          "name": "wildernature:loot_bag"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
-  }
+  ]
 }

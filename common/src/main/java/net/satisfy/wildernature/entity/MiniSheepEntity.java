@@ -27,7 +27,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.satisfy.wildernature.entity.ai.CritterAttackGoal;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,9 +52,8 @@ public class MiniSheepEntity extends Animal implements Shearable {
 
     protected void registerGoals() {
         this.eatBlockGoal = new EatBlockGoal(this);
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25));
-        this.goalSelector.addGoal(2, new CritterAttackGoal(this, 1.0, true));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new PanicGoal(this, 1.25));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.1, Ingredient.of(Items.WHEAT), false));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
@@ -109,14 +107,6 @@ public class MiniSheepEntity extends Animal implements Shearable {
             if (this.eatAnimationTick == 0) {
                 this.eatAnimationState.stop();
             }
-        }
-    }
-
-    public void setAttacking(boolean attacking) {
-        this.entityData.set(ATTACKING, attacking);
-        if (attacking) {
-            this.attackAnimationState.start(this.tickCount);
-            this.attackAnimationTimeout = 80;
         }
     }
 

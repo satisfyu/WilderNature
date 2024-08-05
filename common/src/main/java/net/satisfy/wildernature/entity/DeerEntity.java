@@ -7,10 +7,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -19,13 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.entity.ai.DeerAvoidEntityGoal;
-import net.satisfy.wildernature.entity.ai.DeerEatingGoal;
-import net.satisfy.wildernature.entity.ai.DeerLookAroundGoal;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Random;
 
 public class DeerEntity extends Animal {
     private static final int FLAG_RUNNING = 0x00000100;
@@ -185,6 +186,145 @@ public class DeerEntity extends Animal {
         this.lookAroundState.animateWhen(isLookingAround(), this.tickCount);
         if (this.level().isClientSide) {
             this.setupAnimationStates();
+        }
+    }
+
+    public static class DeerAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+        private final DeerEntity deer;
+
+        public DeerAvoidEntityGoal(DeerEntity deer, Class<T> tClass) {
+            super(deer, tClass, 16.0F, 2, 2);
+            this.deer = deer;
+        }
+
+        @Override
+        public boolean canUse() {
+            if (this.toAvoid instanceof Player && this.toAvoid.isCrouching()) {
+                return false;
+            }
+            return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            deer.startRunningAnim();
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            deer.stopRunningAnim();
+            super.stop();
+        }
+    }
+
+    public static class DeerEatingGoal extends Goal {
+        private final DeerEntity target;
+        private int counter;
+        private static final int EATING_DURATION_TICKS = (int) (1.8667F * 20);
+        private static final int COOLDOWN_TICKS = 400;
+
+        public DeerEatingGoal(DeerEntity mob) {
+            this.target = mob;
+            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return true;
+        }
+
+        @Override
+        public boolean canUse() {
+            var r = new Random().nextFloat();
+            return r < 0.01f && !target.isDeerRunning() && target.globalCooldown == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter < EATING_DURATION_TICKS && !target.isDeerRunning();
+        }
+
+        @Override
+        public void tick() {
+            counter++;
+        }
+
+        public static final AttributeModifier modifier = new AttributeModifier("deer_eat_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+
+        @Override
+        public void start() {
+            counter = 0;
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            target.startEating();
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            target.stopEating();
+            target.globalCooldown = COOLDOWN_TICKS;
+            super.stop();
+        }
+    }
+
+    public static class DeerLookAroundGoal extends Goal {
+        private final DeerEntity target;
+        private int counter;
+        private static final int LOOK_AROUND_DURATION_TICKS = (int) (3.5F * 20);
+        private static final int COOLDOWN_TICKS = 400;
+
+        public DeerLookAroundGoal(DeerEntity mob) {
+            this.target = mob;
+            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return true;
+        }
+
+        @Override
+        public boolean canUse() {
+            var r = new Random().nextFloat();
+            return r < 0.01f && !target.isDeerRunning() && target.globalCooldown == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter < LOOK_AROUND_DURATION_TICKS && !target.isDeerRunning();
+        }
+
+        @Override
+        public void tick() {
+            counter++;
+        }
+
+        public static final AttributeModifier modifier = new AttributeModifier("deer_look_around_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+
+        @Override
+        public void start() {
+            counter = 0;
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            target.startLookingAround();
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            target.stopLookingAround();
+            target.globalCooldown = COOLDOWN_TICKS;
+            super.stop();
         }
     }
 }

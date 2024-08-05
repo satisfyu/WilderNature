@@ -4,7 +4,7 @@
     "Count": 1,
     "id": "wildernature:leveling_contract"
   },
-  "count": 1,
+  "count": 5,
   "damagePredicate": "wildernature:damage_any",
   "description": "contract.wildernature.tier1_player.desc",
   "name": "contract.wildernature.tier1_player",

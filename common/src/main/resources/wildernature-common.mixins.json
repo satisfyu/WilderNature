@@ -6,10 +6,9 @@
   "client": [
   ],
   "mixins": [
-    "ItemMixin",
+    "CatMixin",
     "MobAccessor",
-    "ServerPlayerMixin",
-    "CatMixin"
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

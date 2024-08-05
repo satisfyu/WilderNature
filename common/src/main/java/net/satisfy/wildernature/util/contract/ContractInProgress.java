@@ -72,10 +72,6 @@ public class ContractInProgress {
     public void onEntityDeath(LivingEntity livingEntity, DamageSource damageSource, Player sourcePlayer){
         var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         Contract contract = this.s_getContract();
-
-        if(Platform.isDevelopmentEnvironment()){
-            WilderNature.info("_Contract progress: {}",this.toString());
-        }
         try {
             if (isFinished())
                 return;

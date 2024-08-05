@@ -18,8 +18,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.block.*;
-import net.satisfy.wildernature.block.BountyBoardBlock;
-import net.satisfy.wildernature.item.ContractItem;
 import net.satisfy.wildernature.item.*;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import net.satisfy.wildernature.util.WilderNatureUtil;
@@ -41,6 +39,8 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Item> COOKED_TURKEY_MEAT = registerItem("cooked_turkey_meat", () -> new Item(getSettings().food(Foods.COOKED_CHICKEN)));
     public static final RegistrySupplier<Item> PELICAN_MEAT = registerItem("pelican_meat", () -> new Item(getSettings().food(Foods.SALMON)));
     public static final RegistrySupplier<Item> COOKED_PELICAN_MEAT = registerItem("cooked_pelican_meat", () -> new Item(getSettings().food(Foods.COOKED_SALMON)));
+    public static final RegistrySupplier<Item> CASSOWARY_MEAT = registerItem("cassowary_meat", () -> new Item(getSettings().food(Foods.RABBIT)));
+    public static final RegistrySupplier<Item> COOKED_CASSOWARY_MEAT = registerItem("cooked_cassowary_meat", () -> new Item(getSettings().food(Foods.COOKED_RABBIT)));
     public static final RegistrySupplier<Item> BLUNDERBUSS = registerItem("blunderbuss", BlunderBussItem::new);
     public static final RegistrySupplier<Item> FLINT_AMMUNITION = registerItem("flint_ammunition", () -> new AmmunitionItem(getSettings().rarity(Rarity.UNCOMMON), 5));
     public static final RegistrySupplier<Item> DIAMOND_AMMUNITION = registerItem("diamond_ammunition", () -> new AmmunitionItem(getSettings().rarity(Rarity.COMMON), 9));

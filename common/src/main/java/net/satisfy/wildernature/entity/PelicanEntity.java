@@ -13,7 +13,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,23 +24,16 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
-import net.satisfy.wildernature.entity.animation.PelicanAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
-import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(PelicanEntity.class, EntityDataSerializers.BOOLEAN);
-
     public final AnimationState attackAnimationState = new AnimationState();
-    public int attackAnimationTimeout = 0;
-
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
@@ -121,7 +113,6 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         int i=0;
         this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack +2),8));
         this.goalSelector.addGoal(++i, new FloatGoal(this));
-        //this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));

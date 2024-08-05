@@ -7,12 +7,10 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -35,27 +33,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.*;
-import net.satisfy.wildernature.entity.animation.OwlAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-
-// Owl by Lemonszz: https://github.com/Lemonszz/Biome-Makeover/blob/1.20/LICENCE
 public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackAnimation {
     private static final EntityDataAccessor<Integer> STANDING_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWL_STATE = SynchedEntityData.defineId(OwlEntity.class, EntityDataSerializers.INT);
@@ -76,14 +71,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
     }
 
-    public static boolean checkSpawnRules(EntityType<OwlEntity> owlEntityEntityType, ServerLevelAccessor level, MobSpawnType mobSpawnType, BlockPos pos, RandomSource randomSource) {
-        BlockState state = level.getBlockState(pos.below());
-
-        return ((state.is(Blocks.GRASS_BLOCK) || state.is(BlockTags.LEAVES))) && level.getRawBrightness(pos, 0) > 2;
-    }
-
-
-    public static AttributeSupplier.Builder createMobAttributes() {
+    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, 0.8D).add(Attributes.MAX_HEALTH, 8.0).add(Attributes.MOVEMENT_SPEED, 0.4D).add(Attributes.ATTACK_DAMAGE, 2D);
     }
 
@@ -203,8 +191,6 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
                 return OwlEntity.this.getAttribute(movementSpeed);
             }
         }));
-        //next line is for testing, comment it if it's not
-        //this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<Player>(this, Player.class, true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new NonTameRandomTargetGoal<>(this, LivingEntity.class, false, IS_OWL_TARGET));
@@ -216,6 +202,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         OwlEntity owl = EntityRegistry.OWL.get().create(serverLevel);
         UUID uUID = this.getOwnerUUID();
         if (uUID != null) {
+            assert owl != null;
             owl.setOwnerUUID(uUID);
             owl.setTame(true);
         }
@@ -223,7 +210,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     }
 
     @Override
-    protected PathNavigation createNavigation(Level level) {
+    protected @NotNull PathNavigation createNavigation(Level level) {
         FlyingPathNavigation birdNavigation = new FlyingPathNavigation(this, level);
         birdNavigation.setCanPassDoors(true);
         birdNavigation.setCanFloat(false);
@@ -254,21 +241,17 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
 
     public AnimationState flyingState = new AnimationState();
     public AnimationState hootState = new AnimationState();
-    public AnimationState deathState = new AnimationState();
     public AnimationState attackState = new AnimationState();
-    public AnimationState walkState = new AnimationState();
     public AnimationState sleepState = new AnimationState();
-    public AnimationState idleState = new AnimationState();
 
-
+    @SuppressWarnings("unused")
     private void setupAnimationStates() {
-        var owlState = getOwlState();
         var standingState = getStandingState();
+        var owlState = getOwlState();
         flyingState.animateWhen(standingState == StandingState.FLYING, this.tickCount);
         attackState.animateWhen(this.isAttacking(), this.tickCount);
         hootState.animateWhen(this.isHooting(), this.tickCount);
         sleepState.animateWhen(isSleeping(), this.tickCount);
-        //idleState.animateWhen(true, this.tickCount);
 
     }
 
@@ -293,18 +276,18 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         super.setTame(tamed);
 
         if (tamed) {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(20.0D);
+            Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(4.0D);
             this.setHealth(20.0F);
         } else {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(6.0D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(2.0D);
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(6.0D);
+            Objects.requireNonNull(this.getAttribute(Attributes.ATTACK_DAMAGE)).setBaseValue(2.0D);
         }
 
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
         if (this.isTame()) {
@@ -314,7 +297,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
                         stack.shrink(1);
                     }
 
-                    this.heal((float) item.getFoodProperties().getNutrition());
+                    this.heal((float) Objects.requireNonNull(item.getFoodProperties()).getNutrition());
                 }
                 return InteractionResult.SUCCESS;
             }
@@ -356,7 +339,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     @Override
     public boolean isFood(ItemStack stack) {
         Item item = stack.getItem();
-        return item.isEdible() && item.getFoodProperties().isMeat();
+        return item.isEdible() && Objects.requireNonNull(item.getFoodProperties()).isMeat();
     }
 
     @Override
@@ -375,7 +358,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(Pose pose) {
         return getStandingState() == StandingState.STANDING ? super.getDimensions(pose) : FLYING_DIMENSION;
     }
 

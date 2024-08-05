@@ -1,14 +1,13 @@
 package net.satisfy.wildernature.entity;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -17,8 +16,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,23 +25,24 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
 import net.satisfy.wildernature.entity.ai.RandomAction;
 import net.satisfy.wildernature.entity.ai.RandomActionGoal;
-import net.satisfy.wildernature.entity.animation.DogAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
+import java.util.List;
+
 public class DogEntity extends TamableAnimal implements EntityWithAttackAnimation {
-    public AnimationState walkAnimationState = new AnimationState();
     public AnimationState idleAnimationState = new AnimationState();
     public AnimationState howlingAnimationState = new AnimationState();
     public AnimationState attackAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
 
     private static final EntityDataAccessor<Boolean> HOWLING = SynchedEntityData.defineId(DogEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(DogEntity.class, EntityDataSerializers.BOOLEAN);
@@ -98,7 +97,6 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
             @Override
             public void onTick(int tick) {
                 if(tick == 20){
-                    //Replace SoundEvents.WOLF_HOWL to your sound
                     level().playSound(null,DogEntity.this, SoundRegistry.RED_WOLF_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
                 }
             }
@@ -256,4 +254,67 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
         super.doHurtTarget(targetEntity);
     }
 
+    public class GoAfterCatGoal extends Goal {
+        private final DogEntity dog;
+        private List<Cat> list;
+        private int lastCatUpdate = 0;
+        private Cat targetCat;
+
+        public GoAfterCatGoal(DogEntity dogEntity) {
+            this.setFlags(EnumSet.of(Flag.MOVE,Flag.LOOK,Flag.TARGET));
+            this.dog = dogEntity;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+        }
+
+
+        @Override
+        public void tick() {
+            super.tick();
+        }
+
+        private List<Cat> getCats() {
+            if(this.list == null || dog.tickCount - lastCatUpdate >= 20){
+                this.list = dog.level().getNearbyEntities(Cat.class, TargetingConditions.forNonCombat(),dog,dog.getBoundingBox().inflate(16));
+                lastCatUpdate = dog.tickCount;
+            }
+            updateTargetCat();
+            return this.list;
+        }
+
+        void updateTargetCat(){
+            if (this.targetCat == null || this.targetCat.distanceToSqr(this.dog) > 16 * 16) {
+                double closestDistance = Double.MAX_VALUE;
+                Cat closestCat = null;
+
+                for (Cat cat : this.list) {
+                    double distance = cat.distanceToSqr(this.dog);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestCat = cat;
+                    }
+                }
+
+                this.targetCat = closestCat;
+                if(closestCat != null){
+                    var path = this.dog.getNavigation().moveTo(this.targetCat, 1.5);
+                    WilderNature.info("{} {}",closestCat.getUUID(),path);
+                }
+            }
+        }
+        public boolean canContinueToUse() {
+            return this.targetCat != null && this.targetCat.isAlive() && this.targetCat.distanceToSqr(this.dog) <= 16 * 16;
+        }
+        public void stop() {
+            this.targetCat = null;
+        }
+
+        @Override
+        public boolean canUse() {
+            return !getCats().isEmpty();
+        }
+    }
 }

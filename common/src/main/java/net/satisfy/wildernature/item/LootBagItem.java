@@ -1,5 +1,6 @@
 package net.satisfy.wildernature.item;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,9 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.satisfy.wildernature.registry.TagsRegistry;
 import net.satisfy.wildernature.registry.ObjectRegistry;
+import net.satisfy.wildernature.registry.TagsRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

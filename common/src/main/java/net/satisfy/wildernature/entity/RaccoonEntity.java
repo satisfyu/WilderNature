@@ -16,15 +16,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.satisfy.wildernature.entity.ai.RaccoonAvoidEntityGoal;
-import net.satisfy.wildernature.entity.ai.RaccoonDoorInteractGoal;
-import net.satisfy.wildernature.entity.ai.RandomActionGoal;
 import net.satisfy.wildernature.entity.ai.RandomAction;
+import net.satisfy.wildernature.entity.ai.RandomActionGoal;
+import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.Objects;
 
 public class RaccoonEntity extends Animal {
@@ -34,14 +34,14 @@ public class RaccoonEntity extends Animal {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Integer> DATA_TYPE_ID;
     private static final EntityDataAccessor<Integer> DATA_FLAGS_ID;
-    private static final int FLAG_SITTING     = 0x00000001;
-    private static final int FLAG_WASHING     = 0b00000010;
-    private static final int FLAG_RUNNING     = 0x00000100;
-    private static final int FLAG_OPENDOOR     = 0x00001000;
-    private static final int FLAG_UNUSED2     = 0x00010000;
-    private static final int FLAG_SLEEPING    = 0b00100000;
+    private static final int FLAG_SITTING = 0x00000001;
+    private static final int FLAG_WASHING = 0b00000010;
+    private static final int FLAG_RUNNING = 0x00000100;
+    private static final int FLAG_OPENDOOR = 0x00001000;
+    private static final int FLAG_UNUSED2 = 0x00010000;
+    private static final int FLAG_SLEEPING = 0b00100000;
     private static final int FLAG_FACEPLANTED = 0b01000000;
-    private static final int FLAG_DEFENDING   = 0b10000000;
+    private static final int FLAG_DEFENDING = 0b10000000;
 
     public final AnimationState walkState = new AnimationState();
     public final AnimationState runState = new AnimationState();
@@ -69,7 +69,6 @@ public class RaccoonEntity extends Animal {
     }
 
 
-
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.20000001192092896).add(Attributes.MAX_HEALTH, 6.0).add(Attributes.ATTACK_DAMAGE, 1.5);
     }
@@ -77,12 +76,12 @@ public class RaccoonEntity extends Animal {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_TYPE_ID, 0);
-        this.entityData.define(DATA_FLAGS_ID,  0);
+        this.entityData.define(DATA_FLAGS_ID, 0);
     }
 
     @Override
     protected void registerGoals() {
-        int i=0;
+        int i = 0;
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(++i, new RaccoonDoorInteractGoal(this));
@@ -102,7 +101,7 @@ public class RaccoonEntity extends Animal {
             @Override
             public void onStop() {
                 stopWash();
-          }
+            }
 
             @Override
             public void onStart() {
@@ -136,9 +135,9 @@ public class RaccoonEntity extends Animal {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()){
-            this.openDoorState.animateWhen(isOpeningDoor(),this.tickCount);
-            this.washingState.animateWhen(isWashing(),this.tickCount);
+        if (this.level().isClientSide()) {
+            this.openDoorState.animateWhen(isOpeningDoor(), this.tickCount);
+            this.washingState.animateWhen(isWashing(), this.tickCount);
         }
     }
 
@@ -176,20 +175,19 @@ public class RaccoonEntity extends Animal {
         super.aiStep();
         if (this.isDefending() && this.random.nextFloat() < 0.05F) {
             this.playSound(SoundRegistry.RACCOON_AMBIENT.get(), 1.0F, 1.0F);
-        }
-        else{
-            washTicks=0;
+        } else {
+            washTicks = 0;
         }
     }
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-         return this.isBaby() ? entityDimensions.height * 0.4F : entityDimensions.height * 0.5F;
+        return this.isBaby() ? entityDimensions.height * 0.4F : entityDimensions.height * 0.5F;
     }
 
     @Override
     public @NotNull EntityDimensions getDimensions(Pose pose) {
-        return new EntityDimensions(0.1f,0.1f,false);
+        return new EntityDimensions(0.1f, 0.1f, false);
     }
 
     @Override
@@ -242,12 +240,12 @@ public class RaccoonEntity extends Animal {
         return FOOD_ITEMS.test(itemStack);
     }
 
-    public void startWash(){
-        this.setFlag(FLAG_WASHING,true);
+    public void startWash() {
+        this.setFlag(FLAG_WASHING, true);
     }
 
-    public void stopWash(){
-        this.setFlag(FLAG_WASHING,false);
+    public void stopWash() {
+        this.setFlag(FLAG_WASHING, false);
     }
 
     public boolean isWashing() {
@@ -259,19 +257,98 @@ public class RaccoonEntity extends Animal {
     }
 
     public void startRunningAnim() {
-        this.setFlag(FLAG_RUNNING,true);
+        this.setFlag(FLAG_RUNNING, true);
     }
 
     public void stopRunningAnim() {
-        this.setFlag(FLAG_RUNNING,false);
+        this.setFlag(FLAG_RUNNING, false);
     }
-
 
     public void startOpenDoorAnim() {
-        setFlag(FLAG_OPENDOOR,true);
-    }
-    public void stopOpenDoorAnim() {
-        setFlag(FLAG_OPENDOOR,false);
+        setFlag(FLAG_OPENDOOR, true);
     }
 
+    public void stopOpenDoorAnim() {
+        setFlag(FLAG_OPENDOOR, false);
+    }
+
+    public static class RaccoonAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+        private final RaccoonEntity raccoon;
+
+        public RaccoonAvoidEntityGoal(RaccoonEntity raccoon, Class<T> tClass) {
+            super(raccoon, tClass, 16.0F, 2, 2);
+            this.raccoon = raccoon;
+        }
+
+        @Override
+        public void start() {
+            raccoon.startRunningAnim();
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            raccoon.stopRunningAnim();
+            super.stop();
+        }
+    }
+
+    public class RaccoonDoorInteractGoal extends DoorInteractGoal {
+
+        private final RaccoonEntity raccoon;
+        public static final AttributeModifier modifier = new AttributeModifier("racoon_door_do_not_move",-1000, AttributeModifier.Operation.ADDITION);
+        int counter = 0;
+
+        public RaccoonDoorInteractGoal(RaccoonEntity raccoon) {
+            super(raccoon);
+            this.raccoon = raccoon;
+            setFlags(EnumSet.of(Flag.LOOK,Flag.MOVE,Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            counter = 0;
+            Objects.requireNonNull(raccoon.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            super.start();
+            raccoon.startOpenDoorAnim();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter > 0 && counter < RaccoonAnimation.opening_door_length && (!isOpen() || counter >= RaccoonAnimation.opening_door_tick);
+        }
+
+        @Override
+        public void tick() {
+            raccoon.level().getBlockState(doorPos).getShape(raccoon.level().getChunk(doorPos),doorPos).bounds().getCenter();
+            if (canContinueToUse()) {
+                raccoon.startOpenDoorAnim();
+            } else {
+                raccoon.stopOpenDoorAnim();
+            }
+            if (counter < RaccoonAnimation.opening_door_length) {
+                counter++;
+            }
+            if (counter == RaccoonAnimation.opening_door_tick) {
+                setOpen(true);
+            }
+            if (counter == RaccoonAnimation.opening_door_length) {
+                super.tick();
+            }
+        }
+
+        @Override
+        public void stop() {
+            Objects.requireNonNull(raccoon.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            counter = 0;
+            super.stop();
+            setOpen(true);
+            raccoon.stopOpenDoorAnim();
+        }
+    }
 }

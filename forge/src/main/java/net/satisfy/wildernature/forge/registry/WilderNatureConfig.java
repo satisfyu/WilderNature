@@ -48,6 +48,15 @@ public class WilderNatureConfig {
     public static final ForgeConfigSpec.IntValue DOG_SPAWN_WEIGHT;
     public static final ForgeConfigSpec.IntValue DOG_MIN_GROUP_SIZE;
     public static final ForgeConfigSpec.IntValue DOG_MAX_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue MINISHEEP_SPAWN_WEIGHT;
+    public static final ForgeConfigSpec.IntValue MINISHEEP_MIN_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue MINISHEEP_MAX_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue PENGUIN_SPAWN_WEIGHT;
+    public static final ForgeConfigSpec.IntValue PENGUIN_MIN_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue PENGUIN_MAX_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue CASSOWARY_SPAWN_WEIGHT;
+    public static final ForgeConfigSpec.IntValue CASSOWARY_MIN_GROUP_SIZE;
+    public static final ForgeConfigSpec.IntValue CASSOWARY_MAX_GROUP_SIZE;
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -89,7 +98,7 @@ public class WilderNatureConfig {
 
         BISON_SPAWN_WEIGHT = COMMON_BUILDER.comment("Bison Spawn Weight").defineInRange("bisonSpawnWeight", 10, 0, 1000);
         BISON_MIN_GROUP_SIZE = COMMON_BUILDER.comment("Bison Min Group Size").defineInRange("bisonMinGroupSize", 3, 1, 10);
-        BISON_MAX_GROUP_SIZE = COMMON_BUILDER.comment("Bison Max Group Size").defineInRange("bisonMaxGroupSize", 6, 1, 10);
+        BISON_MAX_GROUP_SIZE = COMMON_BUILDER.comment("Bison Max Group Size").defineInRange("bisonMaxGroupSize", 5, 1, 10);
 
         TURKEY_SPAWN_WEIGHT = COMMON_BUILDER.comment("Turkey Spawn Weight").defineInRange("turkeySpawnWeight", 12, 0, 1000);
         TURKEY_MIN_GROUP_SIZE = COMMON_BUILDER.comment("Turkey Min Group Size").defineInRange("turkeyMinGroupSize", 3, 1, 10);
@@ -98,6 +107,15 @@ public class WilderNatureConfig {
         DOG_SPAWN_WEIGHT = COMMON_BUILDER.comment("Dog Spawn Weight").defineInRange("dogSpawnWeight", 2, 0, 1000);
         DOG_MIN_GROUP_SIZE = COMMON_BUILDER.comment("Dog Min Group Size").defineInRange("dogMinGroupSize", 1, 1, 10);
         DOG_MAX_GROUP_SIZE = COMMON_BUILDER.comment("Dog Max Group Size").defineInRange("dogMaxGroupSize", 1, 1, 10);
+        MINISHEEP_SPAWN_WEIGHT = COMMON_BUILDER.comment("MiniSheep Spawn Weight").defineInRange("minisheepSpawnWeight", 8, 0, 1000);
+        MINISHEEP_MIN_GROUP_SIZE = COMMON_BUILDER.comment("MiniSheep Min Group Size").defineInRange("minisheepMinGroupSize", 2, 1, 10);
+        MINISHEEP_MAX_GROUP_SIZE = COMMON_BUILDER.comment("MiniSheep Max Group Size").defineInRange("minisheepMaxGroupSize", 4, 1, 10);
+        PENGUIN_SPAWN_WEIGHT = COMMON_BUILDER.comment("Penguin Spawn Weight").defineInRange("penguinSpawnWeight", 10, 0, 1000);
+        PENGUIN_MIN_GROUP_SIZE = COMMON_BUILDER.comment("Penguin Min Group Size").defineInRange("penguinMinGroupSize", 2, 1, 10);
+        PENGUIN_MAX_GROUP_SIZE = COMMON_BUILDER.comment("Penguin Max Group Size").defineInRange("penguinMaxGroupSize", 5, 1, 10);
+        CASSOWARY_SPAWN_WEIGHT = COMMON_BUILDER.comment("Cassowary Spawn Weight").defineInRange("cassowarySpawnWeight", 12, 0, 1000);
+        CASSOWARY_MIN_GROUP_SIZE = COMMON_BUILDER.comment("Cassowary Min Group Size").defineInRange("cassowaryMinGroupSize", 3, 1, 10);
+        CASSOWARY_MAX_GROUP_SIZE = COMMON_BUILDER.comment("Cassowary Max Group Size").defineInRange("cassowaryMaxGroupSize", 4, 1, 10);
 
         COMMON_CONFIG = COMMON_BUILDER.build();
     }

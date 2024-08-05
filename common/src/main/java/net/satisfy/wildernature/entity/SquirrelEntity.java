@@ -26,13 +26,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.satisfy.wildernature.entity.ai.BetterWallClimberNavigation;
 import net.satisfy.wildernature.registry.EntityRegistry;
+import net.satisfy.wildernature.registry.ObjectRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +104,7 @@ public class SquirrelEntity extends Animal {
 
     @Override
     public boolean isFood(ItemStack pStack) {
-        return pStack.is(Items.HONEYCOMB);
+        return pStack.is(ObjectRegistry.HAZELNUT.get());
     }
 
     boolean isTrusting() {
@@ -116,7 +116,7 @@ public class SquirrelEntity extends Animal {
     }
 
     @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+    public @NotNull InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (!this.isTrusting() && TEMPT_INGREDIENT.test(itemstack)) {
             this.usePlayerItem(pPlayer, pHand, itemstack);
@@ -200,7 +200,7 @@ public class SquirrelEntity extends Animal {
     }
 
     @Override
-    protected PathNavigation createNavigation(Level pLevel) {
+    protected @NotNull PathNavigation createNavigation(Level pLevel) {
         return new BetterWallClimberNavigation(this, pLevel);
     }
 
@@ -249,7 +249,7 @@ public class SquirrelEntity extends Animal {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(Pose pose) {
         return super.getDimensions(pose).scale(1.0f, this.isBaby() ? 1.4f : 1.0f);
     }
 

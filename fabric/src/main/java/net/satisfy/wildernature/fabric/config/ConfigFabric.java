@@ -29,7 +29,7 @@ public class ConfigFabric implements ConfigData {
     public int RedWolfMinGroupSize = 2;
     public int RedWolfMaxGroupSize = 4;
     public int OwlSpawnWeight = 12;
-    public int OwlMinGroupSize = 3;
+    public int OwlMinGroupSize = 2;
     public int OwlMaxGroupSize = 3;
     public int BoarSpawnWeight = 14;
     public int BoarMinGroupSize = 4;
@@ -43,4 +43,13 @@ public class ConfigFabric implements ConfigData {
     public int DogSpawnWeight = 2;
     public int DogMinGroupSize = 1;
     public int DogMaxGroupSize = 1;
+    public int MiniSheepSpawnWeight = 9;
+    public int MiniSheepMinGroupSize = 3;
+    public int MiniSheepMaxGroupSize = 6;
+    public int PenguinSpawnWeight = 11;
+    public int PenguinMinGroupSize = 4;
+    public int PenguinMaxGroupSize = 6;
+    public int CassowarySpawnWeight = 7;
+    public int CassowaryMinGroupSize = 3;
+    public int CassowaryMaxGroupSize = 5;
 }

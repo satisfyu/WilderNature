@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.DogEntity;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
-import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")

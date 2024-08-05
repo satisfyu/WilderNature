@@ -12,7 +12,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.*;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
@@ -21,10 +23,10 @@ import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
-import net.satisfy.wildernature.entity.animation.RedWolfAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
@@ -35,7 +37,7 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     private static final EntityDataAccessor<Boolean> LEAPING = SynchedEntityData.defineId(RedWolfEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(RedWolfEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static AttributeSupplier.Builder createMobAttributes() {
+    public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
     }
     public double getMeleeAttackRangeSqr(LivingEntity target){
@@ -53,6 +55,7 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     }
 
     @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.5) {
@@ -85,12 +88,6 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
                 super.tick();
             }
         });
-//        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F){
-//
-//        });
-//        this.goalSelector.addGoal(5,
-//
-//        });
         this.goalSelector.addGoal(5, new AnimationAttackGoal(this, 1.0, true,(int) (ServerAnimationDurations.red_wolf_attack *20),4));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0));

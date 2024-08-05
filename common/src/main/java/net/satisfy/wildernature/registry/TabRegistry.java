@@ -20,6 +20,8 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.COOKED_BISON_MEAT.get());
                 out.accept(ObjectRegistry.VENISON.get());
                 out.accept(ObjectRegistry.COOKED_VENISON.get());
+                out.accept(ObjectRegistry.CASSOWARY_MEAT.get());
+                out.accept(ObjectRegistry.COOKED_CASSOWARY_MEAT.get());
                 out.accept(ObjectRegistry.TURKEY_MEAT.get());
                 out.accept(ObjectRegistry.COOKED_TURKEY_MEAT.get());
                 out.accept(ObjectRegistry.PELICAN_MEAT.get());
@@ -31,6 +33,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.LOOT_BAG.get());
                 out.accept(ObjectRegistry.FUR_CLOAK.get());
                 out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.LEVELING_CONTRACT.get());
                 out.accept(ObjectRegistry.COMMON_CONTRACT.get());
                 out.accept(ObjectRegistry.RARE_CONTRACT.get());
                 out.accept(ObjectRegistry.BOUNTY_BOARD.get());

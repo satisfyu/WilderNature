@@ -22,13 +22,13 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.satisfy.wildernature.WilderNature;
-import net.satisfy.wildernature.network.BountyBlockNetworking;
 import net.satisfy.wildernature.block.entity.BountyBoardBlockEntity;
-import net.satisfy.wildernature.util.BountyBoardTier;
 import net.satisfy.wildernature.event.EventManager;
+import net.satisfy.wildernature.item.ContractItem;
+import net.satisfy.wildernature.network.BountyBlockNetworking;
+import net.satisfy.wildernature.util.BountyBoardTier;
 import net.satisfy.wildernature.util.contract.Contract;
 import net.satisfy.wildernature.util.contract.ContractInProgress;
-import net.satisfy.wildernature.item.ContractItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

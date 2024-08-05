@@ -30,6 +30,7 @@ import net.satisfy.wildernature.fabric.world.PlacedFeatures;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.TagsRegistry;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -75,9 +76,9 @@ public class WilderNatureFabric implements ModInitializer {
             public ResourceLocation getFabricId() {
                 return new WilderNatureIdentifier("contractloader");
             }
-            ContractReloader dataReloader = new ContractReloader();
+            final ContractReloader dataReloader = new ContractReloader();
             @Override
-            public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
+            public @NotNull CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
                 return dataReloader.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
             }
             
@@ -96,7 +97,10 @@ public class WilderNatureFabric implements ModInitializer {
         addMobSpawn(TagsRegistry.SPAWNS_BOAR, EntityRegistry.BOAR.get(), config.BoarSpawnWeight, config.BoarMinGroupSize, config.BoarMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_BISON, EntityRegistry.BISON.get(), config.BisonSpawnWeight, config.BisonMinGroupSize, config.BisonMaxGroupSize);
         addMobSpawn(TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), config.TurkeySpawnWeight, config.TurkeyMinGroupSize, config.TurkeyMaxGroupSize);
-        addMobSpawn(BiomeTags.HAS_VILLAGE_PLAINS, EntityRegistry.DOG.get(), config.DogSpawnWeight, config.DogMinGroupSize, config.DogMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_DOG, EntityRegistry.DOG.get(), config.DogSpawnWeight, config.DogMinGroupSize, config.DogMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_MINISHEEP, EntityRegistry.MINISHEEP.get(), config.MiniSheepSpawnWeight, config.MiniSheepMinGroupSize, config.MiniSheepMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_PENGUIN, EntityRegistry.PENGUIN.get(), config.PenguinSpawnWeight, config.PenguinMinGroupSize, config.PenguinMaxGroupSize);
+        addMobSpawn(TagsRegistry.SPAWNS_CASSOWARY, EntityRegistry.CASSOWARY.get(), config.CassowarySpawnWeight, config.CassowaryMinGroupSize, config.CassowaryMaxGroupSize);
 
         if (config.removeSavannaAnimals) {
             removeSpawn(BiomeTags.IS_SAVANNA, List.of(EntityType.SHEEP, EntityType.PIG, EntityType.CHICKEN, EntityType.COW));
@@ -133,6 +137,12 @@ public class WilderNatureFabric implements ModInitializer {
         SpawnPlacements.register(EntityRegistry.BISON.get(), SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         SpawnPlacements.register(EntityRegistry.DOG.get(), SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        SpawnPlacements.register(EntityRegistry.MINISHEEP.get(), SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        SpawnPlacements.register(EntityRegistry.PENGUIN.get(), SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        SpawnPlacements.register(EntityRegistry.CASSOWARY.get(), SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
     }
 

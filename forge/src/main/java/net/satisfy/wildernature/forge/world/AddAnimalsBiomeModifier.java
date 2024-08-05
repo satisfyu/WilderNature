@@ -42,6 +42,10 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
         registerEntity(EntityRegistry.RED_WOLF.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.BOAR.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
         registerEntity(EntityRegistry.BISON.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        registerEntity(EntityRegistry.DOG.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        registerEntity(EntityRegistry.MINISHEEP.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        registerEntity(EntityRegistry.PENGUIN.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
+        registerEntity(EntityRegistry.CASSOWARY.get(), Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AmbientCreature::checkMobSpawnRules);
     }
 
     @Override
@@ -50,11 +54,6 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
             registerEntities();
 
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), 12, 2, 4);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DEER, EntityRegistry.DEER.get(), 12, 2, 4);
-            addMobSpawn(builder, biome, BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), 5, 3, 4);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.EVOKER, 4, 1, 2);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.VINDICATOR, 4, 1, 2);
-            addMobSpawn(builder, biome, BiomeTags.HAS_WOODLAND_MANSION, EntityType.PILLAGER, 4, 1, 3);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RACCOON, EntityRegistry.RACCOON.get(), 8, 2, 3);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_SQUIRREL, EntityRegistry.SQUIRREL.get(), 8, 2, 2);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_RED_WOLF, EntityRegistry.RED_WOLF.get(), 10, 3, 4);
@@ -62,10 +61,15 @@ public class AddAnimalsBiomeModifier implements BiomeModifier {
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BOAR, EntityRegistry.BOAR.get(), 14, 5, 5);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_BISON, EntityRegistry.BISON.get(), 10, 3, 5);
             addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), 12, 3, 5);
-            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_TURKEY, EntityRegistry.TURKEY.get(), 12, 3, 5);
+            addMobSpawn(builder, biome, BiomeTags.IS_BEACH, EntityRegistry.PELICAN.get(), 5, 3, 4);
             addMobSpawn(builder, biome, BiomeTags.IS_JUNGLE, EntityType.FROG, 8, 3, 4);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_DOG, EntityRegistry.DOG.get(), 4, 1, 1);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_MINISHEEP, EntityRegistry.MINISHEEP.get(), 8, 2, 4);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_PENGUIN, EntityRegistry.PENGUIN.get(), 10, 2, 5);
+            addMobSpawn(builder, biome, TagsRegistry.SPAWNS_CASSOWARY, EntityRegistry.CASSOWARY.get(), 12, 3, 4);
         }
     }
+
 
     void addMobSpawn(ModifiableBiomeInfo.BiomeInfo.Builder builder, Holder<Biome> biome, TagKey<Biome> tag, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
         if (biome.is(tag)) {

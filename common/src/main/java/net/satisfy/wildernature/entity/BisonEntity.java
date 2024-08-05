@@ -5,10 +5,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.TimeUtil;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -22,20 +21,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
-import net.satisfy.wildernature.entity.ai.BisonRollingGoal;
-import net.satisfy.wildernature.entity.animation.BisonAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Random;
 
-//TODO: Add rolling animation / bison doesnt fight back when hit 
 public class BisonEntity extends Animal implements EntityWithAttackAnimation {
     private static final EntityDataAccessor<Integer> ANGER_TIME = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.INT);
-    private static final UniformInt ANGER_RANGE = TimeUtil.rangeOfSeconds(15, 34);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ROLLING = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ANGRY = SynchedEntityData.defineId(BisonEntity.class, EntityDataSerializers.BOOLEAN);
@@ -44,8 +41,6 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
     public final AnimationState attackAnimationState = new AnimationState();
     public AnimationState rollingAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
-    public int attackAnimationTimeout = 0;
-    private UUID lastHurtBy;
 
     public BisonEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
@@ -79,19 +74,8 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
         } else {
             --this.idleAnimationTimeout;
         }
-        attackAnimationState.animateWhen(this.isAttacking(),tickCount);
-        rollingAnimationState.animateWhen(this.isRolling(),tickCount);
-
-//        if(this.isAttacking() && attackAnimationTimeout <= 0) {
-//            attackAnimationTimeout = 80;
-//            attackAnimationState.start(this.tickCount);
-//        } else {
-//            --this.attackAnimationTimeout;
-//        }
-//
-//        if(!this.isAttacking()) {
-//            attackAnimationState.stop();
-//        }
+        attackAnimationState.animateWhen(this.isAttacking(), tickCount);
+        rollingAnimationState.animateWhen(this.isRolling(), tickCount);
     }
 
     private boolean isRolling() {
@@ -140,10 +124,6 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
         return this.entityData.get(LAST_HURT_TIME);
     }
 
-    public void setLastHurtTime(long time) {
-        this.entityData.set(LAST_HURT_TIME, time);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -157,7 +137,7 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true,(int) (ServerAnimationDurations.bison_attack *20)+5,5));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.bison_attack * 20) + 5, 5));
         this.goalSelector.addGoal(1, new BisonPanicGoal(this));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(Items.GRASS), false));
@@ -198,63 +178,9 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
         return 35;
     }
 
-    public int getRemainingPersistentAngerTime() {
-        return this.entityData.get(ANGER_TIME);
-    }
-
-    public void setRemainingPersistentAngerTime(int time) {
-        this.entityData.set(ANGER_TIME, time);
-    }
-
-    public UUID getPersistentAngerTarget() {
-        return this.lastHurtBy;
-    }
-
-    public void setPersistentAngerTarget(UUID target) {
-        this.lastHurtBy = target;
-    }
-
-    public void startPersistentAngerTimer() {
-        this.setRemainingPersistentAngerTime(ANGER_RANGE.sample(this.random));
-        System.out.println(this.getRemainingPersistentAngerTime()); // TODO fix this not hitting
-    }
-
     public void setRolling(boolean rolling) {
-        this.entityData.set(ROLLING,rolling);
+        this.entityData.set(ROLLING, rolling);
     }
-
-//    @Override
-//    public boolean isAngryAt(LivingEntity entity) {
-//
-//        try (Level level = entity.level()) {
-//            System.out.println(level.isClientSide);
-//        }
-//        catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        } // TODO remove this try-catch
-//
-//        return entity instanceof Player && this.isAngry() && this.shouldBeAngry();
-//    }
-//
-//    private boolean shouldBeAngry() {
-//        if (this.getHealth() < this.getMaxHealth() * 0.25) {
-//            return false;
-//        }
-//        return this.getCommandSenderWorld().getGameTime() - this.getLastHurtTime() < 300;
-//    }
-
-//    @Override
-//    public boolean hurt(DamageSource source, float amount) {
-//        if (super.hurt(source, amount)) {
-//            if (source.getEntity() instanceof Player) {
-//                this.setLastHurtTime(this.level().getGameTime());
-//                this.setAngry(true);
-//                this.setPersistentAngerTarget(source.getEntity().getUUID());
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
 
     static class BisonPanicGoal extends PanicGoal {
         public BisonPanicGoal(BisonEntity bison) {
@@ -267,5 +193,56 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
         }
     }
 
+    public static class BisonRollingGoal extends Goal {
+        private final BisonEntity target;
+        int counter;
 
+        public BisonRollingGoal(BisonEntity mob) {
+            this.target = mob;
+            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return false;
+        }
+
+
+        @Override
+        public boolean canUse() {
+            var r = new Random().nextFloat();
+            return r < 0.001f && !target.isAngry();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return counter > 0 && counter < ServerAnimationDurations.bison_roll * 20;
+        }
+
+        @Override
+        public void tick() {
+            counter++;
+        }
+
+        public static final AttributeModifier modifier = new AttributeModifier("bison_roll_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
+
+        @Override
+        public void start() {
+            counter = 0;
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(modifier);
+            target.setRolling(true);
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            Objects.requireNonNull(target.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(modifier);
+            target.setRolling(false);
+            super.stop();
+        }
+    }
 }

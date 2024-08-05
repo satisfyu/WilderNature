@@ -25,9 +25,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
 import net.satisfy.wildernature.entity.ai.EntityWithAttackAnimation;
-import net.satisfy.wildernature.entity.animation.PelicanAnimation;
 import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
-import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +35,8 @@ import org.jetbrains.annotations.Nullable;
 public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(TurkeyEntity.class, EntityDataSerializers.BOOLEAN);
-    public int attackAnimationTimeout = 0;
     public AnimationState attackAnimationState = new AnimationState();
+
     static {
         FOOD_ITEMS = Ingredient.of(
                 Items.WHEAT_SEEDS,
@@ -66,13 +64,13 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
     }
 
     private void setupAnimationStates() {
-        attackAnimationState.animateWhen(this.entityData.get(ATTACKING),this.tickCount);
+        attackAnimationState.animateWhen(this.entityData.get(ATTACKING), this.tickCount);
     }
 
     @Override
@@ -98,15 +96,14 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0).add(Attributes.MOVEMENT_SPEED, 0.24)
-                .add(Attributes.ATTACK_DAMAGE,1);//TODO: REPLACE ATTACK DAMAGE
+                .add(Attributes.ATTACK_DAMAGE, 1.25);
     }
 
     @Override
     protected void registerGoals() {
-        int i=0;
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack *20+2),8));
+        int i = 0;
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack * 20 + 2), 8));
         this.goalSelector.addGoal(++i, new FloatGoal(this));
-        //this.goalSelector.addGoal(++i, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));
         this.goalSelector.addGoal(++i, new FollowParentGoal(this, 1.1));
@@ -171,7 +168,7 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     @Override
     @Nullable
     public TurkeyEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-        return (TurkeyEntity) EntityRegistry.TURKEY.get().create(serverLevel);
+        return EntityRegistry.TURKEY.get().create(serverLevel);
     }
 
     @Override
@@ -190,8 +187,6 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
         super.positionRider(entity, moveFunction);
         float f = Mth.sin(this.yBodyRot * 0.017453292F);
         float g = Mth.cos(this.yBodyRot * 0.017453292F);
-        float h = 0.1F;
-        float i = 0.0F;
         double yOffset = -0.18;
 
         moveFunction.accept(entity, this.getX() + (double) (0.1F * f), this.getY(0.5) + entity.getMyRidingOffset() + yOffset, this.getZ() - (double) (0.1F * g));
@@ -204,11 +199,6 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
 
     public boolean isPelicanJockey() {
         return this.isPelicanJockey;
-    }
-
-
-    public void setPelicanJockey(boolean bl) {
-        this.isPelicanJockey = bl;
     }
 }
 
