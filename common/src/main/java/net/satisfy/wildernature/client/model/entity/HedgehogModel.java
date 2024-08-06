@@ -80,7 +80,7 @@ public class HedgehogModel<T extends HedgehogEntity> extends HierarchicalModel<T
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.animateWalk(RaccoonAnimation.walk, limbSwing, limbSwingAmount, 1f, 2.5f);
+        this.animateWalk(HedgehogAnimation.walk, limbSwing, limbSwingAmount, 1f, 2.5f);
         if(entity.getDeltaMovement().multiply(1,0,1).length() != 0){
             this.animate(entity.idleAnimationState, HedgehogAnimation.walk, ageInTicks, 1f);
         }
