@@ -9,12 +9,24 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
     private int counter;
     private int attackDelay;
     private int attackTick;
+    private int timeout=0;
 
     public AnimationAttackGoal(EntityWithAttackAnimation pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen, int attackDelay, int attackTick) {
         super((PathfinderMob) pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
         this.attackDelay = attackDelay;
         this.attackTick = attackTick;
         animationEntity = pMob;
+    }
+
+    @Override
+    public void start() {
+        timeout=0;
+        super.start();
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && timeout<20*3;
     }
 
     @Override
@@ -42,6 +54,10 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
             if (counter == attackTick) {
                 this.animationEntity.doHurtTarget(targetEntity);
             }
+            timeout=0;
+        }
+        else{
+            timeout++;
         }
     }
 
