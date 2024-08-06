@@ -32,7 +32,7 @@ import java.util.List;
 public class HedgehogEntity extends Animal {
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
-    public AnimationState standAnimationState = new AnimationState();
+    public AnimationState sniffAnimationState = new AnimationState();
 
     private static final EntityDataAccessor<Boolean> SNIFFING = SynchedEntityData.defineId(HedgehogEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -41,7 +41,7 @@ public class HedgehogEntity extends Animal {
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 2.0);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 20000.0);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class HedgehogEntity extends Animal {
     }
 
     private void setupAnimationStates() {
-        standAnimationState.animateWhen(this.isSniffing(), tickCount);
+        sniffAnimationState.animateWhen(this.isSniffing(), tickCount);
 
         if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
@@ -143,14 +143,7 @@ public class HedgehogEntity extends Animal {
 
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
-        float f;
-        if (this.getPose() == Pose.SNIFFING) {
-            f = Math.min(pPartialTick * 6F, 1f);
-        } else {
-            f = 0f;
-        }
-
-        this.walkAnimation.update(f, 0.2f);
+        super.updateWalkAnimation(pPartialTick);
     }
 
     @Override

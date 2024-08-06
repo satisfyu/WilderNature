@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.satisfy.wildernature.entity.HedgehogEntity;
 import net.satisfy.wildernature.entity.animation.HedgehogAnimation;
+import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,11 +79,16 @@ public class HedgehogModel<T extends HedgehogEntity> extends HierarchicalModel<T
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.animateWalk(HedgehogAnimation.walk, limbSwing, limbSwingAmount, 1f, 1f);
-            this.animate(entity.idleAnimationState, HedgehogAnimation.idle, ageInTicks, 1.25f);
+        this.animateWalk(RaccoonAnimation.walk, limbSwing, limbSwingAmount, 1f, 2.5f);
+        if(entity.getDeltaMovement().multiply(1,0,1).length() != 0){
+            this.animate(entity.idleAnimationState, HedgehogAnimation.walk, ageInTicks, 1f);
+        }
+        else {
+            this.animate(entity.idleAnimationState, HedgehogAnimation.idle, ageInTicks, (float) entity.getDeltaMovement().multiply(1,0,1).length());
+        }
+        this.animate(entity.sniffAnimationState, HedgehogAnimation.sniff, ageInTicks, 1f);
 
 //        if (new Random().nextBoolean()) {
-//            this.animate(entity.standAnimationState, HedgehogAnimation.sniff, ageInTicks, 1f);
 //        } else {
 //            this.animate(entity.standAnimationState, HedgehogAnimation.boink, ageInTicks, 1f);
 //        }
