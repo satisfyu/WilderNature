@@ -118,17 +118,17 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundRegistry.PELICAN_AMBIENT.get();
+        return SoundRegistry.CASSOWARY_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundRegistry.PELICAN_HURT.get();
+        return SoundRegistry.CASSOWARY_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.PELICAN_DEATH.get();
+        return SoundRegistry.CASSOWARY_DEATH.get();
     }
 
     @Override

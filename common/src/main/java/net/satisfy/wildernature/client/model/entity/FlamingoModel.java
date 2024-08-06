@@ -12,7 +12,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.satisfy.wildernature.entity.FlamingoEntity;
 import net.satisfy.wildernature.entity.animation.FlamingoAnimation;
-import net.satisfy.wildernature.entity.animation.MiniSheepAnimation;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")

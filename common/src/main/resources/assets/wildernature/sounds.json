@@ -236,5 +236,104 @@
     "sounds": [
       "wildernature:blunderbuss_load"
     ]
+  },
+  "flamingo_hurt": {
+    "subtitle": "subtitles.wildernature.flamingo_hurt",
+    "sounds": [
+      "wildernature:flamingo_hurt1",
+      "wildernature:flamingo_hurt2",
+      "wildernature:flamingo_hurt3"    ]
+  },
+  "flamingo_death": {
+    "subtitle": "subtitles.wildernature.flamingo_death",
+    "sounds": [
+      "wildernature:flamingo_death"
+    ]
+  },
+  "flamingo_ambient": {
+    "subtitle": "subtitles.wildernature.flamingo_ambient",
+    "sounds": [
+      "wildernature:flamingo_ambient1",
+      "wildernature:flamingo_ambient2",
+      "wildernature:flamingo_ambient3",
+      "wildernature:flamingo_ambient4"
+    ]
+  },
+  "hedgehog_hurt": {
+    "subtitle": "subtitles.wildernature.hedgehog_hurt",
+    "sounds": [
+      "wildernature:hedgehog_hurt"
+    ]
+  },
+  "hedgehog_death": {
+    "subtitle": "subtitles.wildernature.hedgehog_death",
+    "sounds": [
+      "wildernature:hedgehog_death"
+    ]
+  },
+  "hedgehog_ambient": {
+    "subtitle": "subtitles.wildernature.hedgehog_ambient",
+    "sounds": [
+      "wildernature:hedgehog_ambient"
+    ]
+  },
+  "cassowary_hurt": {
+    "subtitle": "subtitles.wildernature.cassowary_hurt",
+    "sounds": [
+      "wildernature:cassowary_hurt"
+    ]
+  },
+  "cassowary_death": {
+    "subtitle": "subtitles.wildernature.cassowary_death",
+    "sounds": [
+      "wildernature:cassowary_death"
+    ]
+  },
+  "cassowary_ambient": {
+    "subtitle": "subtitles.wildernature.cassowary_ambient",
+    "sounds": [
+      "wildernature:cassowary_ambient"
+    ]
+  },
+  "penguin_hurt": {
+    "subtitle": "subtitles.wildernature.penguin_hurt",
+    "sounds": [
+      "wildernature:penguin_hurt"
+    ]
+  },
+  "penguin_death": {
+    "subtitle": "subtitles.wildernature.penguin_death",
+    "sounds": [
+      "wildernature:penguin_death"
+    ]
+  },
+  "penguin_ambient": {
+    "subtitle": "subtitles.wildernature.penguin_ambient",
+    "sounds": [
+      "wildernature:penguin_ambient1",
+      "wildernature:penguin_ambient2",
+      "wildernature:penguin_ambient3"
+    ]
+  },
+  "dog_hurt": {
+    "subtitle": "subtitles.wildernature.dog_hurt",
+    "sounds": [
+      "wildernature:dog_hurt1",
+      "wildernature:dog_hurt2",
+      "wildernature:dog_hurt3"
+
+    ]
+  },
+  "dog_death": {
+    "subtitle": "subtitles.wildernature.dog_death",
+    "sounds": [
+      "wildernature:dog_death"
+    ]
+  },
+  "dog_ambient": {
+    "subtitle": "subtitles.wildernature.dog_ambient",
+    "sounds": [
+      "wildernature:dog_ambient"
+    ]
   }
 }

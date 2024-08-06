@@ -78,17 +78,17 @@ public class PenguinEntity extends Animal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundRegistry.PELICAN_AMBIENT.get();
+        return SoundRegistry.PENGUIN_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundRegistry.PELICAN_HURT.get();
+        return SoundRegistry.PENGUIN_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.PELICAN_DEATH.get();
+        return SoundRegistry.PENGUIN_DEATH.get();
     }
 
     @Override

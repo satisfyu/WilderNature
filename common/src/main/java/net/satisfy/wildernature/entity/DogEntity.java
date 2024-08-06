@@ -39,7 +39,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class DogEntity extends TamableAnimal implements EntityWithAttackAnimation {
-    public AnimationState idleAnimationState = new AnimationState();
+    public final AnimationState idleAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
     public AnimationState howlingAnimationState = new AnimationState();
     public AnimationState attackAnimationState = new AnimationState();
 
@@ -96,7 +97,7 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
             @Override
             public void onTick(int tick) {
                 if(tick == 20){
-                    level().playSound(null,DogEntity.this, SoundRegistry.RED_WOLF_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
+                    level().playSound(null,DogEntity.this, SoundRegistry.DOG_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
                 }
             }
 
@@ -118,18 +119,22 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
         this.targetSelector.addGoal(10, new HurtByTargetGoal(this));
     }
 
-    @Override
     public void tick() {
         super.tick();
-
-        if (this.level().isClientSide()) {
+        if(this.level().isClientSide()) {
             setupAnimationStates();
         }
     }
 
     private void setupAnimationStates() {
-        howlingAnimationState.animateWhen(this.isHowling(),tickCount);
-        attackAnimationState.animateWhen(this.isAttacking(),tickCount);
+        if(this.idleAnimationTimeout <= 0) {
+            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
+            this.idleAnimationState.start(this.tickCount);
+        } else {
+            --this.idleAnimationTimeout;
+        }
+        this.howlingAnimationState.animateWhen(this.isHowling(), this.tickCount);
+        this.attackAnimationState.animateWhen(this.isAttacking(), this.tickCount);
     }
 
     private boolean isAttacking() {
@@ -168,12 +173,12 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundRegistry.RED_WOLF_HURT.get();
+        return SoundRegistry.DOG_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.RED_WOLF_DEATH.get();
+        return SoundRegistry.DOG_DEATH.get();
     }
 
     protected float getSoundVolume() {

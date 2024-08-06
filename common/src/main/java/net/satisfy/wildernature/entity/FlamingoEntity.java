@@ -5,7 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.satisfy.wildernature.entity.ai.RandomAction;
@@ -50,7 +49,7 @@ public class FlamingoEntity extends Animal {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(Items.WATER_BUCKET), false));
+        this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(ItemTags.FISHES), false));
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
@@ -74,13 +73,6 @@ public class FlamingoEntity extends Animal {
             @Override
             public boolean isPossible() {
                 return true;
-            }
-
-            @Override
-            public void onTick(int tick) {
-                if(tick == 20){
-                    level().playSound(null, FlamingoEntity.this, SoundRegistry.RED_WOLF_AMBIENT.get(), SoundSource.NEUTRAL,1,1);
-                }
             }
 
             @Override
@@ -147,13 +139,19 @@ public class FlamingoEntity extends Animal {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundRegistry.RED_WOLF_HURT.get();
+        return SoundRegistry.FLAMINGO_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.RED_WOLF_DEATH.get();
+        return SoundRegistry.FLAMINGO_DEATH.get();
     }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundRegistry.FLAMINGO_AMBIENT.get();
+    }
+
 
     protected float getSoundVolume() {
         return 0.3F;
@@ -161,6 +159,6 @@ public class FlamingoEntity extends Animal {
 
     @Override
     public boolean isFood(ItemStack stack) {
-        return stack.is(Items.BONE);
+        return stack.is(ItemTags.FISHES);
     }
 }

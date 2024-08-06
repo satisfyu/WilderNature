@@ -10,7 +10,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.DogEntity;
 import net.satisfy.wildernature.entity.animation.DogAnimation;
 import org.jetbrains.annotations.NotNull;
@@ -84,8 +83,8 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
+        this.animate(entity.idleAnimationState, DogAnimation.idle, ageInTicks, 3.5f);
         this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, DogAnimation.bite, ageInTicks, 1f);
-
     }
 }

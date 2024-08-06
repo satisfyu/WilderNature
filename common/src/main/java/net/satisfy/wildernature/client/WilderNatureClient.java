@@ -49,41 +49,41 @@ public class WilderNatureClient {
     }
 
     public static void registerEntityRenderers() {
-        EntityRendererRegistry.register(BULLET, ThrownItemRenderer::new);
-        EntityRendererRegistry.register(PENGUIN, PenguinRenderer::new);
-        EntityRendererRegistry.register(RED_WOLF, RedWolfRenderer::new);
-        EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
-        EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
-        EntityRendererRegistry.register(SQUIRREL, SquirrelRenderer::new);
-        EntityRendererRegistry.register(DEER, DeerRenderer::new);
-        EntityRendererRegistry.register(OWL, OwlRenderer::new);
-        EntityRendererRegistry.register(BOAR, BoarRenderer::new);
         EntityRendererRegistry.register(BISON, BisonRenderer::new);
-        EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
-        EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
-        EntityRendererRegistry.register(DOG, DogRenderer::new);
+        EntityRendererRegistry.register(BOAR, BoarRenderer::new);
         EntityRendererRegistry.register(CASSOWARY, CassowaryRenderer::new);
-        EntityRendererRegistry.register(HEDGEHOG, HedgehogRenderer::new);
+        EntityRendererRegistry.register(DEER, DeerRenderer::new);
+        EntityRendererRegistry.register(DOG, DogRenderer::new);
         EntityRendererRegistry.register(FLAMINGO, FlamingoRenderer::new);
+        EntityRendererRegistry.register(HEDGEHOG, HedgehogRenderer::new);
+        EntityRendererRegistry.register(MINISHEEP, MiniSheepRenderer::new);
+        EntityRendererRegistry.register(OWL, OwlRenderer::new);
+        EntityRendererRegistry.register(PELICAN, PelicanRenderer::new);
+        EntityRendererRegistry.register(PENGUIN, PenguinRenderer::new);
+        EntityRendererRegistry.register(RACCOON, RaccoonRenderer::new);
+        EntityRendererRegistry.register(RED_WOLF, RedWolfRenderer::new);
+        EntityRendererRegistry.register(SQUIRREL, SquirrelRenderer::new);
+        EntityRendererRegistry.register(TURKEY, TurkeyRenderer::new);
+        EntityRendererRegistry.register(BULLET, ThrownItemRenderer::new);
     }
 
     public static void registerEntityModelLayer() {
+        EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(BountyBoardModel.LAYER_LOCATION, BountyBoardModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(CassowaryModel.LAYER_LOCATION, CassowaryModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
+        EntityModelLayerRegistry.register(DeerModel.LAYER_LOCATION, DeerModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(DogModel.LAYER_LOCATION, DogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(FlamingoModel.LAYER_LOCATION, FlamingoModel::getTexturedModelData);
         EntityModelLayerRegistry.register(HedgehogModel.LAYER_LOCATION, HedgehogModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(CassowaryModel.LAYER_LOCATION, CassowaryModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(PenguinModel.LAYER_LOCATION, PenguinModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(RedWolfModel.LAYER_LOCATION, RedWolfModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(PelicanModel.LAYER_LOCATION, PelicanModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(RaccoonModel.LAYER_LOCATION, RaccoonModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(SquirrelModel.LAYER_LOCATION, SquirrelModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(DeerModel.LAYER_LOCATION, DeerModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(OwlModel.LAYER_LOCATION, OwlModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(DogModel.LAYER_LOCATION, DogModel::getTexturedModelData);
         EntityModelLayerRegistry.register(MiniSheepModel.LAYER_LOCATION, MiniSheepModel::getTexturedModelData);
-        EntityModelLayerRegistry.register(CompletionistBannerRenderer.LAYER_LOCATION, CompletionistBannerRenderer::createBodyLayer);
-        EntityModelLayerRegistry.register(BountyBoardModel.LAYER_LOCATION, BountyBoardModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(OwlModel.LAYER_LOCATION, OwlModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(PelicanModel.LAYER_LOCATION, PelicanModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(PenguinModel.LAYER_LOCATION, PenguinModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(RaccoonModel.LAYER_LOCATION, RaccoonModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(RedWolfModel.LAYER_LOCATION, RedWolfModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(SquirrelModel.LAYER_LOCATION, SquirrelModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(TurkeyModel.LAYER_LOCATION, TurkeyModel::getTexturedModelData);
     }
 }

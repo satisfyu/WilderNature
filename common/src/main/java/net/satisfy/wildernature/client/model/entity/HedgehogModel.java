@@ -7,15 +7,14 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.Entity;
-import net.satisfy.wildernature.entity.CassowaryEntity;
 import net.satisfy.wildernature.entity.HedgehogEntity;
-import net.satisfy.wildernature.entity.animation.CassowaryAnimation;
 import net.satisfy.wildernature.entity.animation.HedgehogAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
 
-public class HedgehogModel<T extends Entity> extends HierarchicalModel<T> {
+import java.util.Random;
+
+public class HedgehogModel<T extends HedgehogEntity> extends HierarchicalModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new WilderNatureIdentifier("hedgehog"), "main");
     private final ModelPart root;
 
@@ -76,10 +75,17 @@ public class HedgehogModel<T extends Entity> extends HierarchicalModel<T> {
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.root.getAllParts().forEach(ModelPart::resetPose);
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+        this.animate(entity.idleAnimationState, HedgehogAnimation.idle, ageInTicks, 1f);
 
-        this.animate(((HedgehogEntity) entity).idleAnimationState, HedgehogAnimation.idle, ageInTicks, 1f);
-        this.animateWalk(HedgehogAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);    }
+        this.animateWalk(HedgehogAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
+
+        if (new Random().nextBoolean()) {
+            this.animate(entity.standAnimationState, HedgehogAnimation.sniff, ageInTicks, 1f);
+        } else {
+            this.animate(entity.standAnimationState, HedgehogAnimation.boink, ageInTicks, 1f);
+        }
+    }
 
     @Override
     public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
