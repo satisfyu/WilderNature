@@ -66,58 +66,6 @@ public class RedWolfModel<T extends RedWolfEntity> extends HierarchicalModel<T> 
     public @NotNull ModelPart root() {
         return root;
     }
-//
-//    protected Iterable<ModelPart> headParts() {
-//        return ImmutableList.of(this.head);
-//    }
-//
-//    protected Iterable<ModelPart> bodyParts() {
-//        return ImmutableList.of(this.body, this.rightHindLeg, this.leftHindLeg, this.rightFrontLeg, this.leftFrontLeg, this.tail, this.upperBody);
-//    }
-
-//    public void prepareMobModel(T wolf, float f, float g, float h) {
-//        if (wolf.isAngry()) {
-//            this.tail.yRot = 0.0F;
-//        } else {
-//            this.tail.yRot = Mth.cos(f * 0.6662F) * 1.4F * g;
-//        }
-//
-//        if (wolf.isInSittingPose()) {
-//            this.upperBody.setPos(-1.0F, 16.0F, -3.0F);
-//            this.upperBody.xRot = 1.2566371F;
-//            this.upperBody.yRot = 0.0F;
-//            this.body.setPos(0.0F, 18.0F, 0.0F);
-//            this.body.xRot = 0.7853982F;
-//            this.tail.setPos(-1.0F, 21.0F, 6.0F);
-//            this.rightHindLeg.setPos(-2.5F, 22.7F, 2.0F);
-//            this.rightHindLeg.xRot = 4.712389F;
-//            this.leftHindLeg.setPos(0.5F, 22.7F, 2.0F);
-//            this.leftHindLeg.xRot = 4.712389F;
-//            this.rightFrontLeg.xRot = 5.811947F;
-//            this.rightFrontLeg.setPos(-2.49F, 17.0F, -4.0F);
-//            this.leftFrontLeg.xRot = 5.811947F;
-//            this.leftFrontLeg.setPos(0.51F, 17.0F, -4.0F);
-//        } else {
-//            this.body.setPos(0.0F, 14.0F, 2.0F);
-//            this.body.xRot = 1.5707964F;
-//            this.upperBody.setPos(-1.0F, 14.0F, -3.0F);
-//            this.upperBody.xRot = this.body.xRot;
-//            this.tail.setPos(-1.0F, 12.0F, 8.0F);
-//            this.rightHindLeg.setPos(-2.5F, 16.0F, 7.0F);
-//            this.leftHindLeg.setPos(0.5F, 16.0F, 7.0F);
-//            this.rightFrontLeg.setPos(-2.5F, 16.0F, -4.0F);
-//            this.leftFrontLeg.setPos(0.5F, 16.0F, -4.0F);
-//            this.rightHindLeg.xRot = Mth.cos(f * 0.6662F) * 1.4F * g;
-//            this.leftHindLeg.xRot = Mth.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
-//            this.rightFrontLeg.xRot = Mth.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
-//            this.leftFrontLeg.xRot = Mth.cos(f * 0.6662F) * 1.4F * g;
-//        }
-//
-//        this.head.zRot = wolf.getHeadRollAngle(h) + wolf.getBodyRollAngle(h, 0.0F);
-//        this.upperBody.zRot = wolf.getBodyRollAngle(h, -0.08F);
-//        this.body.zRot = wolf.getBodyRollAngle(h, -0.16F);
-//        this.realTail.zRot = wolf.getBodyRollAngle(h, -0.2F);
-//    }
 
     public void setupAnim(T wolf, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);

@@ -80,7 +80,7 @@ public class MiniSheepModel<T extends MiniSheepEntity> extends HierarchicalModel
         this.animateWalk(MiniSheepAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         this.animate(entity.idleAnimationState, MiniSheepAnimation.idle, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, MiniSheepAnimation.attack, ageInTicks, 1f);
-        this.animate(entity.eatAnimationState, MiniSheepAnimation.eat, ageInTicks, 2.0f);
+        this.animate(entity.eatAnimationState, MiniSheepAnimation.eat, ageInTicks, 1f);
     }
 
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {

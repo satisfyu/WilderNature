@@ -60,7 +60,7 @@ public class CassowaryModel<T extends Entity> extends HierarchicalModel<T> {
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root.getAllParts().forEach(ModelPart::resetPose);
 
-        this.animate(((CassowaryEntity) entity).idleAnimationState, CassowaryAnimation.idle, ageInTicks, 3.5f);
+        this.animate(((CassowaryEntity) entity).idleAnimationState, CassowaryAnimation.idle, ageInTicks, 1f);
         this.animateWalk(CassowaryAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         this.animate(((CassowaryEntity) entity).attackAnimationState, CassowaryAnimation.attack, ageInTicks, 1f);
     }

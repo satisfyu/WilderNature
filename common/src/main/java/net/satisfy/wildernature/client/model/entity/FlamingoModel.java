@@ -83,7 +83,6 @@ public class FlamingoModel<T extends FlamingoEntity> extends HierarchicalModel<T
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.animate(entity.idleAnimationState, FlamingoAnimation.idle, ageInTicks, 1f);
-
         this.animateWalk(FlamingoAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
         this.animate(entity.standAnimationState, FlamingoAnimation.pose, ageInTicks, 1f);
     }
