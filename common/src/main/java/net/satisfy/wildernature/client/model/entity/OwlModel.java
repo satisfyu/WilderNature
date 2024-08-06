@@ -9,12 +9,13 @@ import net.minecraft.client.model.geom.builders.*;
 import net.satisfy.wildernature.entity.OwlEntity;
 import net.satisfy.wildernature.entity.animation.OwlAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
+import org.jetbrains.annotations.NotNull;
 
 public class OwlModel extends HierarchicalModel<OwlEntity> implements HeadedModel {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new WilderNatureIdentifier("owl"), "main");
     private final ModelPart root;
-    private ModelPart head;
+    private final ModelPart head;
 
     public OwlModel(ModelPart root) {
         this.root = root;
@@ -85,12 +86,12 @@ public class OwlModel extends HierarchicalModel<OwlEntity> implements HeadedMode
     }
 
     @Override
-    public ModelPart root() {
+    public @NotNull ModelPart root() {
         return root;
     }
 
     @Override
-    public ModelPart getHead() {
+    public @NotNull ModelPart getHead() {
         return head;
     }
 }

@@ -9,9 +9,9 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.entity.TurkeyEntity;
 import net.satisfy.wildernature.entity.animation.TurkeyAnimation;
+import org.jetbrains.annotations.NotNull;
 
 public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "turkeymodel"), "main");
@@ -22,6 +22,7 @@ public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
         this.root = root;
     }
 
+    @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -74,7 +75,7 @@ public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
     }
 
     @Override
-    public ModelPart root() {
+    public @NotNull ModelPart root() {
         return root;
     }
 }

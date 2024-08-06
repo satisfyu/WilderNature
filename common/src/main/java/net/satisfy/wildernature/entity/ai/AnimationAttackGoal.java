@@ -7,8 +7,8 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 public class AnimationAttackGoal extends MeleeAttackGoal {
     private final EntityWithAttackAnimation animationEntity;
     private int counter;
-    private int attackDelay;
-    private int attackTick;
+    private final int attackDelay;
+    private final int attackTick;
 
     public AnimationAttackGoal(EntityWithAttackAnimation pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen, int attackDelay, int attackTick) {
         super((PathfinderMob) pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);

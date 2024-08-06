@@ -28,6 +28,7 @@ public class BoarModel<T extends BoarEntity> extends HierarchicalModel<T> {
         this.head = this.boar.getChild("body").getChild("head");
     }
 
+    @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();

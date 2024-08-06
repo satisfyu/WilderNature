@@ -83,7 +83,7 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
-        this.animate(entity.idleAnimationState, DogAnimation.idle, ageInTicks, 3.5f);
+        this.animate(entity.idleAnimationState, DogAnimation.idle, ageInTicks, 1f);
         this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, DogAnimation.bite, ageInTicks, 1f);
     }

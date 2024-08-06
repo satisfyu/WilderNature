@@ -79,6 +79,7 @@ public class PredicateTemptGoal extends Goal {
 
     @Override
     public void start() {
+        assert this.player != null;
         this.px = this.player.getX();
         this.py = this.player.getY();
         this.pz = this.player.getZ();

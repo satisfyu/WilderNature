@@ -11,13 +11,16 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public class PenguinEntity extends Animal {
     public final AnimationState idleAnimationState = new AnimationState();
@@ -26,10 +29,14 @@ public class PenguinEntity extends Animal {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
+        if (this.isPassenger() && this.getVehicle() instanceof Boat boat) {
+            boat.setDeltaMovement(boat.getDeltaMovement().multiply(1.25, 1.0, 1.25));
+        }
     }
+
 
     private void setupAnimationStates() {
         if(this.idleAnimationTimeout <= 0) {
@@ -69,6 +76,7 @@ public class PenguinEntity extends Animal {
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6, new BoatDrivingGoal(this, 0.5));
     }
 
     @Override
@@ -100,5 +108,78 @@ public class PenguinEntity extends Animal {
     @Nullable
     public PenguinEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         return EntityRegistry.PENGUIN.get().create(serverLevel);
+    }
+
+    public static class BoatDrivingGoal extends Goal {
+        private final Mob entity;
+        private Boat boat;
+        private final double speed;
+
+        public BoatDrivingGoal(Mob entity, double speed) {
+            this.entity = entity;
+            this.speed = speed;
+        }
+
+        @Override
+        public boolean canUse() {
+            if (entity.isPassenger() && entity.getVehicle() instanceof Boat) {
+                boat = (Boat) entity.getVehicle();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return canUse() && !boat.isRemoved();
+        }
+
+        @Override
+        public void start() {
+            boat.setYRot(entity.getYRot());
+        }
+
+        @Override
+        public void stop() {
+            boat = null;
+        }
+
+        @Override
+        public void tick() {
+            if (boat == null) return;
+
+            if (isOnWater()) {
+                float yaw = entity.getYRot();
+                Vector3f moveDirection = new Vector3f((float) -Math.sin(Math.toRadians(yaw)), 0, (float) Math.cos(Math.toRadians(yaw)));
+                boat.setDeltaMovement(moveDirection.x() * speed * 1.25, boat.getDeltaMovement().y(), moveDirection.z() * speed * 1.25);
+                boat.setPaddleState(moveDirection.x() != 0 || moveDirection.z() != 0, moveDirection.x() != 0 || moveDirection.z() != 0);
+
+            } else {
+                navigateToWater();
+            }
+        }
+
+        private boolean isOnWater() {
+            BlockPos pos = boat.blockPosition();
+            BlockState blockState = entity.level().getBlockState(pos.below());
+            return blockState.is(Blocks.WATER);
+        }
+
+        private void navigateToWater() {
+            BlockPos boatPos = boat.blockPosition();
+            for (int dx = -5; dx <= 5; dx++) {
+                for (int dz = -5; dz <= 5; dz++) {
+                    BlockPos pos = boatPos.offset(dx, 0, dz);
+                    BlockState blockState = entity.level().getBlockState(pos);
+                    if (blockState.is(Blocks.WATER)) {
+                        double directionX = pos.getX() + 0.5 - boat.getX();
+                        double directionZ = pos.getZ() + 0.5 - boat.getZ();
+                        Vector3f direction = new Vector3f((float) directionX, 0, (float) directionZ).normalize();
+                        boat.setDeltaMovement(direction.x() * speed, boat.getDeltaMovement().y, direction.z() * speed);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

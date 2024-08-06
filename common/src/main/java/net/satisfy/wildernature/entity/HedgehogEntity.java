@@ -6,7 +6,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -41,13 +45,13 @@ public class HedgehogEntity extends Animal {
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 20000.0);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 4.0);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(Items.ROTTEN_FLESH), false));
+        this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(Items.ROTTEN_FLESH), true));
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
@@ -162,11 +166,26 @@ public class HedgehogEntity extends Animal {
     }
 
     protected float getSoundVolume() {
-        return 0.3F;
+        return 0.1F;
     }
 
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.ROTTEN_FLESH);
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (itemstack.is(Items.MILK_BUCKET)) {
+            if (!player.getAbilities().instabuild) {
+                itemstack.shrink(1);
+                player.addItem(new ItemStack(Items.BUCKET));
+            }
+            this.addEffect(new MobEffectInstance(MobEffects.POISON, 240, 1));
+            return InteractionResult.SUCCESS;
+        } else {
+            return super.mobInteract(player, hand);
+        }
     }
 }
