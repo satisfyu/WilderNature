@@ -41,7 +41,7 @@ public class HedgehogEntity extends Animal {
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 20000.0);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.13000000417232513).add(Attributes.MAX_HEALTH, 2.0);
     }
 
     @Override
