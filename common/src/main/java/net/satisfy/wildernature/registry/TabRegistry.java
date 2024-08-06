@@ -16,6 +16,7 @@ public class TabRegistry {
             .icon(() -> new ItemStack(ObjectRegistry.BOUNTY_BOARD.get()))
             .title(Component.translatable("creative_tab.wildernature"))
             .displayItems((parameters, out) -> {
+                out.accept(ObjectRegistry.HAZELNUT.get());
                 out.accept(ObjectRegistry.BISON_MEAT.get());
                 out.accept(ObjectRegistry.COOKED_BISON_MEAT.get());
                 out.accept(ObjectRegistry.VENISON.get());
@@ -26,16 +27,15 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.COOKED_TURKEY_MEAT.get());
                 out.accept(ObjectRegistry.PELICAN_MEAT.get());
                 out.accept(ObjectRegistry.COOKED_PELICAN_MEAT.get());
-                out.accept(ObjectRegistry.HAZELNUT.get());
+                out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.LEVELING_CONTRACT.get());
+                out.accept(ObjectRegistry.COMMON_CONTRACT.get());
+                out.accept(ObjectRegistry.RARE_CONTRACT.get());
                 out.accept(ObjectRegistry.BISON_HORN.get());
                 out.accept(ObjectRegistry.FISH_OIL.get());
                 out.accept(ObjectRegistry.TRUFFLE.get());
                 out.accept(ObjectRegistry.LOOT_BAG.get());
                 out.accept(ObjectRegistry.FUR_CLOAK.get());
-                out.accept(ObjectRegistry.UNCOMMON_CONTRACT.get());
-                out.accept(ObjectRegistry.LEVELING_CONTRACT.get());
-                out.accept(ObjectRegistry.COMMON_CONTRACT.get());
-                out.accept(ObjectRegistry.RARE_CONTRACT.get());
                 out.accept(ObjectRegistry.BOUNTY_BOARD.get());
                 out.accept(ObjectRegistry.RED_WOLF_TROPHY.get());
                 out.accept(ObjectRegistry.DEER_TROPHY.get());

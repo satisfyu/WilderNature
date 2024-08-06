@@ -86,6 +86,5 @@ public class FlamingoModel<T extends FlamingoEntity> extends HierarchicalModel<T
 
         this.animateWalk(FlamingoAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
         this.animate(entity.standAnimationState, FlamingoAnimation.pose, ageInTicks, 1f);
-
     }
 }

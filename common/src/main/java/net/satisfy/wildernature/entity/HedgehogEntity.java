@@ -1,5 +1,6 @@
 package net.satisfy.wildernature.entity;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -25,6 +26,8 @@ import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class HedgehogEntity extends Animal {
     public final AnimationState idleAnimationState = new AnimationState();
@@ -89,7 +92,20 @@ public class HedgehogEntity extends Animal {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (!this.level().isClientSide()) {
+            List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().inflate(0.5D, 0.5D, 0.5D));
+            for (Entity entity : entities) {
+                if (entity instanceof Player player) {
+                    if (player.fallDistance > 1.0F && player.getY() > this.getY() + 1.0) {
+                        this.level().addParticle(ParticleTypes.POOF, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                        this.kill();
+                        player.hurt(this.level().damageSources().generic(), 3.0F);
+                        break;
+                    }
+                }
+            }
+        }
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
     }
@@ -151,7 +167,6 @@ public class HedgehogEntity extends Animal {
     protected SoundEvent getAmbientSound() {
         return SoundRegistry.HEDGEHOG_AMBIENT.get();
     }
-
 
     protected float getSoundVolume() {
         return 0.3F;
