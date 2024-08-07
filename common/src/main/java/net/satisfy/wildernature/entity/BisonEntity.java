@@ -137,7 +137,7 @@ public class BisonEntity extends Animal implements EntityWithAttackAnimation {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.bison_attack * 20) + 5, 5));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.bison_attack * 20), 5));
         this.goalSelector.addGoal(1, new BisonPanicGoal(this));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(Items.GRASS), false));
