@@ -95,7 +95,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     }
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 14).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 2.5f).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.ATTACK_SPEED, 1F);
+        return Animal.createLivingAttributes().add(Attributes.MAX_HEALTH, 14).add(Attributes.FOLLOW_RANGE, 24D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 4.5f).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.ATTACK_SPEED, 1F);
     }
 
     @Override

@@ -27,21 +27,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class RaccoonEntity extends Animal {
-    public static final int FLAG_CROUCHING = 4;
-    public static final int FLAG_INTERESTED = 8;
-    public static final int FLAG_POUNCING = 16;
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Integer> DATA_TYPE_ID;
     private static final EntityDataAccessor<Integer> DATA_FLAGS_ID;
-    private static final int FLAG_SITTING = 0x00000001;
     private static final int FLAG_WASHING = 0b00000010;
     private static final int FLAG_RUNNING = 0x00000100;
     private static final int FLAG_OPENDOOR = 0x00001000;
-    private static final int FLAG_UNUSED2 = 0x00010000;
-    private static final int FLAG_SLEEPING = 0b00100000;
-    private static final int FLAG_FACEPLANTED = 0b01000000;
-    private static final int FLAG_DEFENDING = 0b10000000;
 
     public final AnimationState walkState = new AnimationState();
     public final AnimationState runState = new AnimationState();
@@ -293,7 +286,7 @@ public class RaccoonEntity extends Animal {
         }
     }
 
-    public class RaccoonDoorInteractGoal extends DoorInteractGoal {
+    public static class RaccoonDoorInteractGoal extends DoorInteractGoal {
 
         private final RaccoonEntity raccoon;
         public static final AttributeModifier modifier = new AttributeModifier("racoon_door_do_not_move",-1000, AttributeModifier.Operation.ADDITION);
