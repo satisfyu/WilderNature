@@ -39,7 +39,13 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
     }
-    public double getMeleeAttackRangeSqr(LivingEntity target){
+
+    @Override
+    public LivingEntity getTarget_() {
+        return getTarget();
+    }
+
+    public double getMeleeAttackRangeSqr_(LivingEntity target){
         return super.getMeleeAttackRangeSqr(target);
     }
     @Override
@@ -173,17 +179,17 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
         return this.entityData.get(ATTACKING);
     }
     @Override
-    public void setAttacking(boolean b) {
+    public void setAttacking_(boolean b) {
         this.entityData.set(ATTACKING,b);
     }
 
     @Override
-    public Vec3 getPosition(int i) {
+    public Vec3 getPosition_(int i) {
         return super.getPosition(i);
     }
 
     @Override
-    public void doHurtTarget(LivingEntity targetEntity) {
+    public void doHurtTarget_(LivingEntity targetEntity) {
         super.doHurtTarget(targetEntity);
     }
 }

@@ -244,17 +244,27 @@ public class DogEntity extends TamableAnimal implements EntityWithAttackAnimatio
     }
 
     @Override
-    public void setAttacking(boolean b) {
+    public LivingEntity getTarget_() {
+        return getTarget();
+    }
+
+    @Override
+    public double getMeleeAttackRangeSqr_(LivingEntity target) {
+        return getMeleeAttackRangeSqr(target);
+    }
+
+    @Override
+    public void setAttacking_(boolean b) {
         this.entityData.set(ATTACKING,b);
     }
 
     @Override
-    public Vec3 getPosition(int i) {
+    public Vec3 getPosition_(int i) {
         return super.getPosition(i);
     }
 
     @Override
-    public void doHurtTarget(LivingEntity targetEntity) {
+    public void doHurtTarget_(LivingEntity targetEntity) {
         super.doHurtTarget(targetEntity);
     }
 

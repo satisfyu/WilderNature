@@ -64,17 +64,17 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
         this.walkAnimation.update(f, 0.2f);
     }
 
-    public void setAttacking(boolean attacking) {
+    public void setAttacking_(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
     }
 
     @Override
-    public Vec3 getPosition(int i) {
+    public Vec3 getPosition_(int i) {
         return super.getPosition(i);
     }
 
     @Override
-    public void doHurtTarget(LivingEntity targetEntity) {
+    public void doHurtTarget_(LivingEntity targetEntity) {
         super.doHurtTarget(targetEntity);
     }
 
@@ -84,7 +84,12 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
         this.entityData.define(ATTACKING, false);
     }
 
-    public double getMeleeAttackRangeSqr(LivingEntity entity){
+    @Override
+    public LivingEntity getTarget_() {
+        return getTarget();
+    }
+
+    public double getMeleeAttackRangeSqr_(LivingEntity entity){
         return super.getMeleeAttackRangeSqr(entity);
     }
 

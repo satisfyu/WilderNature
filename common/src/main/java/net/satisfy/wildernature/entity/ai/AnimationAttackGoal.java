@@ -32,11 +32,11 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
     @Override
     public void tick() {
         super.tick();
-        var target = animationEntity.getTarget();
+        var target = animationEntity.getTarget_();
         if(target!=null){
-            checkAndPerformAttack(target, animationEntity.getMeleeAttackRangeSqr(target));
+            checkAndPerformAttack(target, animationEntity.getMeleeAttackRangeSqr_(target));
         }
-        animationEntity.setAttacking(counter!=0);
+        animationEntity.setAttacking_(counter!=0);
 
         if(counter!=0)
             counter++;
@@ -47,12 +47,12 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
 
     @Override
     protected void checkAndPerformAttack(LivingEntity targetEntity, double discanceSqr) {
-        if (targetEntity.getPosition(0).distanceToSqr(animationEntity.getPosition(0)) < discanceSqr) {
+        if (targetEntity.getPosition(0).distanceToSqr(animationEntity.getPosition_(0)) < discanceSqr) {
             if(counter==0){
                 counter++;
             }
             if (counter == attackTick) {
-                this.animationEntity.doHurtTarget(targetEntity);
+                this.animationEntity.doHurtTarget_(targetEntity);
             }
             timeout=0;
         }
@@ -63,7 +63,7 @@ public class AnimationAttackGoal extends MeleeAttackGoal {
 
     @Override
     public void stop() {
-        animationEntity.setAttacking(false);
+        animationEntity.setAttacking_(false);
         super.stop();
     }
 }

@@ -80,17 +80,27 @@ public class TurkeyEntity extends Chicken implements EntityWithAttackAnimation {
     }
 
 
-    public void setAttacking(boolean attacking) {
+    @Override
+    public LivingEntity getTarget_() {
+        return getTarget();
+    }
+
+    @Override
+    public double getMeleeAttackRangeSqr_(LivingEntity target) {
+        return getMeleeAttackRangeSqr(target);
+    }
+
+    public void setAttacking_(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
     }
 
     @Override
-    public Vec3 getPosition(int i) {
+    public Vec3 getPosition_(int i) {
         return super.getPosition(i);
     }
 
     @Override
-    public void doHurtTarget(LivingEntity targetEntity) {
+    public void doHurtTarget_(LivingEntity targetEntity) {
         super.doHurtTarget(targetEntity);
     }
 
