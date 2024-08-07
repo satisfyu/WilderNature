@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "B": {
-      "tag": "minecraft:wooden_planks"
+      "tag": "minecraft:planks"
     },
     "C": {
       "item": "minecraft:stick"
