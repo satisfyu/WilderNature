@@ -1,7 +1,6 @@
 package net.satisfy.wildernature.registry;
 
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
-import dev.architectury.registry.fuel.FuelRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -109,10 +108,6 @@ public class ObjectRegistry {
         WilderNature.LOGGER.debug("Registering Mod Block and Items for " + WilderNature.MOD_ID);
         ITEMS.register();
         BLOCKS.register();
-    }
-
-    public static void FuelRegistry() {
-        FuelRegistry.register(1400, FISH_OIL.get());
     }
 
     public static BlockBehaviour.Properties properties(float strength) {

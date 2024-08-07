@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.*;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.satisfy.wildernature.WilderNature;
+import net.satisfy.wildernature.registry.ObjectRegistry;
 import net.satisfy.wildernature.util.contract.ContractReloader;
 import net.satisfy.wildernature.fabric.config.ConfigFabric;
 import net.satisfy.wildernature.fabric.world.PlacedFeatures;
@@ -37,8 +39,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
-@SuppressWarnings("unused")
 public class WilderNatureFabric implements ModInitializer {
+
+    @SuppressWarnings("unused")
     private static Predicate<BiomeSelectionContext> getWilderNatureSelector(String path) {
         return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new WilderNatureIdentifier(path)));
     }
@@ -52,6 +55,7 @@ public class WilderNatureFabric implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(ConfigFabric.class, GsonConfigSerializer::new);
         WilderNature.init();
+        registerFuel();
         WilderNature.commonInit();
         addSpawns();
         addBiomeModification();
@@ -81,9 +85,11 @@ public class WilderNatureFabric implements ModInitializer {
             public @NotNull CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
                 return dataReloader.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
             }
-            
-            
         });
+    }
+
+    private void registerFuel() {
+        FuelRegistry.INSTANCE.add(ObjectRegistry.FISH_OIL.get(), 1600);
     }
 
     void addSpawns() {

@@ -25,7 +25,6 @@ public class WilderNature {
     }
 
     public static void commonInit() {
-        ObjectRegistry.FuelRegistry();
         LifecycleEvent.SERVER_BEFORE_START.register(instance -> ContractInProgress.progressPerPlayer.clear());
         LifecycleEvent.SERVER_BEFORE_START.register(instance -> {
             ContractInProgress.progressPerPlayer.clear();
