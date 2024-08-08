@@ -12,6 +12,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class  BountyBoardBlock extends BaseEntityBlock {
+public class BountyBoardBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE_BOTTOM_LEFT = makeBottomLeftShape();
@@ -107,7 +108,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
         var entity = level.getBlockEntity(blockPos);
-        if(entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity){
+        if (entity instanceof BountyBoardBlockEntity bountyBoardBlockEntity) {
             return bountyBoardBlockEntity;
         }
         return null;
@@ -118,7 +119,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         builder.add(PART, FACING);
     }
 
-    private static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<BountyBoardBlockEntity> blockEntityType2){
+    private static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<BountyBoardBlockEntity> blockEntityType2) {
         return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, BountyBoardBlockEntity::serverTick);
     }
 
@@ -132,12 +133,18 @@ public class  BountyBoardBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
-        Player player = context.getPlayer();
         Direction direction = context.getHorizontalDirection().getOpposite();
 
-        if (!canPlaceAt(world, pos,direction)) {
+        if (!canPlaceAt(world, pos, direction)) {
             return null;
         }
+
+        return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT).setValue(FACING, direction);
+    }
+
+    @Override
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        Direction direction = state.getValue(FACING);
 
         world.setBlock(pos.above(), this.defaultBlockState().setValue(PART, Part.TOP_LEFT).setValue(FACING, direction), 3);
         world.setBlock(pos.relative(direction.getClockWise()), this.defaultBlockState().setValue(PART, Part.BOTTOM_RIGHT).setValue(FACING, direction), 3);
@@ -146,11 +153,9 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
         world.playSound(null, pos, SoundEvents.CHERRY_WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-        if (player != null && !player.isCreative()) {
-            context.getItemInHand().shrink(1);
+        if (placer instanceof Player player && !player.isCreative()) {
+            stack.shrink(1);
         }
-
-        return this.defaultBlockState().setValue(PART, Part.BOTTOM_LEFT).setValue(FACING, direction);
     }
 
     private boolean canPlaceAt(Level world, BlockPos pos, Direction direction) {
@@ -160,7 +165,6 @@ public class  BountyBoardBlock extends BaseEntityBlock {
                 world.getBlockState(pos.relative(direction.getClockWise()).above()).canBeReplaced();
     }
 
-
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
@@ -169,14 +173,14 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         super.onRemove(state, world, pos, newState, isMoving);
     }
 
-    private BlockPos getBasePos(BlockState state,BlockPos pos) {
+    private BlockPos getBasePos(BlockState state, BlockPos pos) {
         Part part = state.getValue(PART);
         Direction direction = state.getValue(FACING);
         return switch (part) {
             case BOTTOM_LEFT -> pos;
             case TOP_LEFT -> pos.below();
-            case BOTTOM_RIGHT -> pos.relative(direction.getCounterClockWise(),1);
-            case TOP_RIGHT -> pos.relative(direction.getCounterClockWise(   ),1).below();
+            case BOTTOM_RIGHT -> pos.relative(direction.getCounterClockWise(), 1);
+            case TOP_RIGHT -> pos.relative(direction.getCounterClockWise(), 1).below();
         };
     }
 
@@ -184,10 +188,10 @@ public class  BountyBoardBlock extends BaseEntityBlock {
         var blockstate = world.getBlockState(basePos);
         var facing = blockstate.getValue(FACING);
 
-            world.removeBlock(basePos, false);
-            world.removeBlock(basePos.above(), false);
-            world.removeBlock(basePos.relative(facing.getClockWise(),1), false);
-            world.removeBlock(basePos.relative(facing.getClockWise(),1).above(), false);
+        world.removeBlock(basePos, false);
+        world.removeBlock(basePos.above(), false);
+        world.removeBlock(basePos.relative(facing.getClockWise(), 1), false);
+        world.removeBlock(basePos.relative(facing.getClockWise(), 1).above(), false);
     }
 
     @Override
@@ -208,7 +212,7 @@ public class  BountyBoardBlock extends BaseEntityBlock {
             return;
         }
         var blockEntityTag = new CompoundTag();
-        if(bountyBoardBlockEntity!=null) {
+        if (bountyBoardBlockEntity != null) {
             bountyBoardBlockEntity.saveAdditional(blockEntityTag);
             var tag = new CompoundTag();
             tag.put("BlockEntityTag", blockEntityTag);
@@ -223,26 +227,26 @@ public class  BountyBoardBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        if(blockPos!=getBasePos(blockState,blockPos)){
+        if (blockPos != getBasePos(blockState, blockPos)) {
             return null;
         }
-        return new BountyBoardBlockEntity(blockPos,blockState);
+        return new BountyBoardBlockEntity(blockPos, blockState);
     }
 
     @Override
     public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos originalBlockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if(level.isClientSide())
+        if (level.isClientSide())
             return InteractionResult.SUCCESS;
-        final var blockPos = getBasePos(blockState,originalBlockPos);
+        final var blockPos = getBasePos(blockState, originalBlockPos);
         var pr = getMenuProvider(blockState, level, blockPos);
         MenuRegistry.openExtendedMenu((ServerPlayer) player, pr, friendlyByteBuf -> {
-            var entity = (BountyBoardBlockEntity)level.getBlockEntity(blockPos);
+            var entity = (BountyBoardBlockEntity) level.getBlockEntity(blockPos);
             friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             friendlyByteBuf.writeShort(3);
             assert entity != null;
-            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf,entity);
-            BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf,entity.rerollsLeft,entity.rerollCooldownLeft,entity.boardId,entity.tier,entity.xp);
-            BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf,(ServerPlayer) player);
+            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf, entity);
+            BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf, entity.rerollsLeft, entity.rerollCooldownLeft, entity.boardId, entity.tier, entity.xp);
+            BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf, (ServerPlayer) player);
         });
         return InteractionResult.SUCCESS;
     }
