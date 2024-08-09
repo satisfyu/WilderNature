@@ -10,7 +10,7 @@
   "name": "contract.wildernature.tier2_elder_guardian",
   "reward": {
     "blockExpReward": 40,
-    "loot": "minecraft:feather",
+    "loot": "wildernature:bountyboard/tier2_contract_elder_guardian",
     "playerExpReward": 150
   },
   "targetPredicate": "minecraft:elder_guardian"

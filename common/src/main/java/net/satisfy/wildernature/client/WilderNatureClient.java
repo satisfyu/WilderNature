@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 import net.satisfy.wildernature.client.gui.screens.BountyBlockScreen;
+import net.satisfy.wildernature.client.model.armor.StylinPurpleHatModel;
 import net.satisfy.wildernature.client.model.block.BountyBoardModel;
 import net.satisfy.wildernature.client.model.entity.*;
 import net.satisfy.wildernature.client.render.block.BountyBoardRenderer;
@@ -68,6 +69,7 @@ public class WilderNatureClient {
     }
 
     public static void registerEntityModelLayer() {
+        EntityModelLayerRegistry.register(StylinPurpleHatModel.LAYER_LOCATION, StylinPurpleHatModel::createBodyLayer);
         EntityModelLayerRegistry.register(BisonModel.LAYER_LOCATION, BisonModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BoarModel.LAYER_LOCATION, BoarModel::getTexturedModelData);
         EntityModelLayerRegistry.register(BountyBoardModel.LAYER_LOCATION, BountyBoardModel::getTexturedModelData);

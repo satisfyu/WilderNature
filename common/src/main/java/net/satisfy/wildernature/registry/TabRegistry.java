@@ -62,6 +62,7 @@ public class TabRegistry {
                 out.accept(ObjectRegistry.HEDGEHOG_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.CASSOWARY_SPAWN_EGG.get());
                 out.accept(ObjectRegistry.ANIMAL_COMPENDIUM.get());
+                out.accept(ObjectRegistry.STYLIN_PURPLE_HAT.get());
             })
             .build());
 

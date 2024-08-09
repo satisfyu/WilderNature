@@ -167,9 +167,8 @@ public class BountyBoardBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-
-        }
+        state.getBlock();
+        newState.getBlock();
         super.onRemove(state, world, pos, newState, isMoving);
     }
 
@@ -203,7 +202,7 @@ public class BountyBoardBlock extends BaseEntityBlock {
 
     @Override
     public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        Part part = state.getValue(PART);
+        state.getValue(PART);
         BlockPos basePos = getBasePos(world.getBlockState(pos), pos);
         var entity = world.getBlockEntity(basePos);
         assert entity instanceof BountyBoardBlockEntity;
@@ -212,15 +211,13 @@ public class BountyBoardBlock extends BaseEntityBlock {
             return;
         }
         var blockEntityTag = new CompoundTag();
-        if (bountyBoardBlockEntity != null) {
-            bountyBoardBlockEntity.saveAdditional(blockEntityTag);
-            var tag = new CompoundTag();
-            tag.put("BlockEntityTag", blockEntityTag);
-            var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
-            stack.setTag(tag);
-            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
-            destroyAdjacentBlocks(world, basePos);
-        }
+        bountyBoardBlockEntity.saveAdditional(blockEntityTag);
+        var tag = new CompoundTag();
+        tag.put("BlockEntityTag", blockEntityTag);
+        var stack = new ItemStack(ObjectRegistry.BOUNTY_BOARD.get());
+        stack.setTag(tag);
+        world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+        destroyAdjacentBlocks(world, basePos);
         super.playerWillDestroy(world, pos, state, player);
     }
 

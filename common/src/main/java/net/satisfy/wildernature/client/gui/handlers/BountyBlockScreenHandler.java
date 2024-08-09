@@ -150,7 +150,11 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             assert stack.getTag() != null;
             stack.getTag().putString(ContractItem.TAG_CONTRACT_ID, contract.toString());
             stack.getTag().putUUID(ContractItem.TAG_PLAYER, player.getUUID());
-            player.spawnAtLocation(stack);
+
+            player.level().getServer().execute(() -> {
+                player.spawnAtLocation(stack);
+            });
+
             ContractInProgress.progressPerPlayer.put(player.getUUID(), new ContractInProgress(contract, Contract.fromId(contract).count(), s_targetEntity.boardId));
             newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             newBuf.writeShort(2);
@@ -158,6 +162,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             BountyBlockScreenHandler.s_writeUpdateContracts(newBuf, s_targetEntity);
             NetworkManager.sendToPlayer(player, BountyBlockNetworking.ID_SCREEN_UPDATE, newBuf);
         }
+
         if (action == BountyBlockNetworking.BountyClientActionType.FINISH_CONTRACT) {
             var contract = ContractInProgress.progressPerPlayer.get(player.getUUID());
             if (contract == null) {

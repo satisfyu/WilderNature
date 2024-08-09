@@ -1,0 +1,13 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wildernature:stylin_purple_hat"
+        }
+      ]
+    }
+  ]
+}

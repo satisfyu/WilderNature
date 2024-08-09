@@ -32,8 +32,6 @@ public class RaccoonRenderer extends MobRenderer<RaccoonEntity, RaccoonModel<Rac
     @Override
     public void render(RaccoonEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {
-        pMatrixStack.translate(0.0, 6.0 / 16.0, 0.0);
-
         if (pEntity.isBaby()) {
             pMatrixStack.scale(0.4f, 0.4f, 0.4f);
         }

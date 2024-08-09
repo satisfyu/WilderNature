@@ -10,7 +10,7 @@
   "name": "contract.wildernature.tier2_cod_blunderbuss",
   "reward": {
     "blockExpReward": 12,
-    "loot": "wildernature:bountyboard/tier2_contrac_cod_with_blunderbuss",
+    "loot": "wildernature:bountyboard/tier2_contract_cod_with_blunderbuss",
     "playerExpReward": 20
   },
   "targetPredicate": "minecraft:cod"

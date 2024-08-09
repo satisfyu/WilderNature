@@ -4,7 +4,7 @@
     "Count": 1,
     "id": "wildernature:rare_contract"
   },
-  "count": 50,
+  "count": 100,
   "damagePredicate": "wildernature:damage_any",
   "description": "contract.wildernature.tier3_bison.desc",
   "name": "contract.wildernature.tier3_bison",
@@ -13,5 +13,5 @@
     "loot": "wildernature:bountyboard/tier3_contract_bison",
     "playerExpReward": 250
   },
-  "targetPredicate": "minecraft:bison"
+  "targetPredicate": "wildernature:bison"
 }

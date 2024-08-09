@@ -13,5 +13,5 @@
     "loot": "wildernature:bountyboard/tier2_contract_squirrel",
     "playerExpReward": 15
   },
-  "targetPredicate": "wildernature:red_wolf"
+  "targetPredicate": "wildernature:squirrel"
 }

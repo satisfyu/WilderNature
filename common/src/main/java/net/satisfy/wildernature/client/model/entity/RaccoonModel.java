@@ -29,7 +29,7 @@ public class RaccoonModel<T extends RaccoonEntity> extends HierarchicalModel<T> 
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 18.0F, 0.5F));
 
         PartDefinition animroot = root.addOrReplaceChild("animroot", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
@@ -52,6 +52,7 @@ public class RaccoonModel<T extends RaccoonEntity> extends HierarchicalModel<T> 
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
+
 
     public void setupAnim(T raccoon, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
