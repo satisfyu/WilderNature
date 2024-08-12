@@ -11,13 +11,22 @@ import net.satisfy.wildernature.util.BountyBoardTier;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ContractReloader implements ResourceManagerReloadListener {
-    public static HashMap<ResourceLocation,Contract> contracts = new HashMap<>();
+    private static HashMap<ResourceLocation,Contract> contracts = new HashMap<>();
+    public static Contract getContract(ResourceLocation location) {
+        var path = location.getPath();
+
+        int index = path.indexOf("/", 0);
+
+        var newLocation = path.substring(index+1);
+        var rl = new ResourceLocation(location.getNamespace(),newLocation);
+        var contract = contracts.get(rl);
+        WilderNature.info("searching contract {}: {}", rl,contract);
+
+        return contract;
+    }
     public static HashMap<ResourceLocation, BountyBoardTier> tiers = new HashMap<>();
     public static List<ResourceLocation> getContractsOfTier(ResourceLocation tierId){
         return contracts.keySet().stream().filter(key -> {
@@ -43,35 +52,48 @@ public class ContractReloader implements ResourceManagerReloadListener {
         return tier1.get(new Random().nextInt(tier1.size()));
     }
 
+    public static Map<ResourceLocation,Contract> getAllContracts() {
+        return new HashMap<>(contracts);
+    }
+
     public void onResourceManagerReload(ResourceManager manager) {
         contracts.clear();
-        var contracts = manager.listResources("contracts", path -> path.getPath().endsWith(".json"));
+        var contracts = manager.listResources("wildernature_contracts", path -> path.getPath().endsWith(".json"));
         WilderNature.info("Reloading contracts");
         contracts.forEach((resourceLocation, resource) -> {
-            WilderNature.info("Found contract {}",resourceLocation);
+            WilderNature.info("Found contract {}", resourceLocation);
             try {
                 var open = resource.open();
+                int index = resourceLocation.getPath().indexOf("/", 0);
+                var pathEdits = resourceLocation.getPath().substring(index + 1);
+
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
-                var contract = Contract.CODEC.parse(JsonOps.INSTANCE,new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false,(err)->{throw new RuntimeException(err);});
-                this.contracts.put(resourceLocation,contract);
+                var contract = Contract.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false, (err) -> {
+                    throw new RuntimeException(err);
+                });
+
+                var rl = new ResourceLocation(resourceLocation.getNamespace(), pathEdits);
+                WilderNature.info("registering contract {}", rl);
+                this.contracts.put(rl, contract);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         contracts.clear();
-        var tiers = manager.listResources("tiers", path -> path.getPath().endsWith(".json"));
+        var tiers = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
         WilderNature.info("Reloading tiers");
         tiers.forEach((resourceLocation, resource) -> {
             WilderNature.info("Found tier {}",resourceLocation);
             try {
                 var namespace = resourceLocation.getNamespace();
                 var pathEdits = resourceLocation.getPath();
-                pathEdits = pathEdits.substring("tiers/".length());
+                pathEdits = pathEdits.substring("wildernature_tiers/".length());
                 pathEdits = pathEdits.substring(0,pathEdits.length()-".json".length());
                 var open = resource.open();
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
                 var tier = BountyBoardTier.CODEC.parse(JsonOps.INSTANCE,new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false,(err)->{throw new RuntimeException(err);});
-                this.tiers.put(new ResourceLocation(namespace,pathEdits),tier);
+                var rl = new ResourceLocation(namespace,pathEdits);
+                this.tiers.put(rl,tier);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

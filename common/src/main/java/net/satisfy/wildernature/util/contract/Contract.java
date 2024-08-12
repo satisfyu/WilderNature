@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public record Contract(ResourceLocation tier, ItemStack contractStack, ResourceLocation targetPredicate, ResourceLocation damagePredicate, int count, String name, String description, ContractReward reward) {
@@ -20,7 +21,7 @@ public record Contract(ResourceLocation tier, ItemStack contractStack, ResourceL
             ContractReward.CODEC.fieldOf("reward").forGetter(Contract::reward)
     ).apply(contractInstance,Contract::new));
     public static Contract fromId(ResourceLocation contract) {
-        return ContractReloader.contracts.getOrDefault(contract,ERROR_CONTRACT);
+        return Objects.requireNonNullElse(ContractReloader.getContract(contract),ERROR_CONTRACT);
     }
     public static final Contract ERROR_CONTRACT = new Contract(new WilderNatureIdentifier("tier1"),ItemStack.EMPTY,new WilderNatureIdentifier("damage_any"),new WilderNatureIdentifier("_error"),0,"Deleted contract","Error: This contract was deleted from datapack",new ContractReward(0,0, Optional.empty()));
 }

@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class ContractInProgress {
     public static final HashMap<UUID,ContractInProgress> progressPerPlayer = new HashMap<>();
-    private static ResourceLocation contract(Object o) {
+    private static ResourceLocation contract(ContractInProgress o) {
         return ((ContractInProgress) o).s_contract;
     }
     public final ResourceLocation s_contract;
@@ -127,7 +127,7 @@ public class ContractInProgress {
                 WilderNature.info("UUID: {}, data: {}",uuid,data.toString());
             });
             WilderNature.info("\n\nRegistered contracts:");
-            ContractReloader.contracts.forEach((id,data)->{
+            ContractReloader.getAllContracts().forEach((id, data)->{
                 WilderNature.info("contract id: {}, data: {}",id,data.toString());
             });
 
