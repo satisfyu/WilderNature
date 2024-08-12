@@ -454,7 +454,4 @@ public class RaccoonAnimation {
                         new Keyframe(2.1333F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
                 ))
                 .build();
-        public static int opening_door_length = (int) (2.13*20);
-        public static int opening_door_tick = (int) (1.9*20);
-        public static int washing_length = (int) (2.4*20);
 }

@@ -13,4 +13,7 @@ public class ServerAnimationDurations {
     public static float pelican_stand = 3.5f;
     public static float hedgehog_sniffing = 3.75f;
     public static float minisheep_ram = 1.0f;
+    public static int raccoon_opening_door_length = (int) (2.13*20);
+    public static int raccoon_opening_door_tick = (int) (1.9*20);
+    public static int raccoon_washing_length = (int) (2.4*20);
 }

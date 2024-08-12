@@ -18,7 +18,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.satisfy.wildernature.entity.ai.RandomAction;
 import net.satisfy.wildernature.entity.ai.RandomActionGoal;
-import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
+import net.satisfy.wildernature.entity.animation.ServerAnimationDurations;
 import net.satisfy.wildernature.registry.EntityRegistry;
 import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -313,7 +313,7 @@ public class RaccoonEntity extends Animal {
 
         @Override
         public boolean canContinueToUse() {
-            return counter > 0 && counter < RaccoonAnimation.opening_door_length && (!isOpen() || counter >= RaccoonAnimation.opening_door_tick);
+            return counter > 0 && counter < ServerAnimationDurations.raccoon_opening_door_length && (!isOpen() || counter >= ServerAnimationDurations.raccoon_opening_door_tick);
         }
 
         @Override
@@ -324,13 +324,13 @@ public class RaccoonEntity extends Animal {
             } else {
                 raccoon.stopOpenDoorAnim();
             }
-            if (counter < RaccoonAnimation.opening_door_length) {
+            if (counter < ServerAnimationDurations.raccoon_opening_door_length) {
                 counter++;
             }
-            if (counter == RaccoonAnimation.opening_door_tick) {
+            if (counter == ServerAnimationDurations.raccoon_opening_door_tick) {
                 setOpen(true);
             }
-            if (counter == RaccoonAnimation.opening_door_length) {
+            if (counter == ServerAnimationDurations.raccoon_opening_door_length) {
                 super.tick();
             }
         }
