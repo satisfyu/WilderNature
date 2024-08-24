@@ -23,7 +23,6 @@ public class ContractReloader implements ResourceManagerReloadListener {
         var newLocation = path.substring(index+1);
         var rl = new ResourceLocation(location.getNamespace(),newLocation);
         var contract = contracts.get(rl);
-        WilderNature.info("searching contract {}: {}", rl,contract);
 
         return contract;
     }
@@ -59,9 +58,7 @@ public class ContractReloader implements ResourceManagerReloadListener {
     public void onResourceManagerReload(ResourceManager manager) {
         contracts.clear();
         var contracts = manager.listResources("wildernature_contracts", path -> path.getPath().endsWith(".json"));
-        WilderNature.info("Reloading contracts");
         contracts.forEach((resourceLocation, resource) -> {
-            WilderNature.info("Found contract {}", resourceLocation);
             try {
                 var open = resource.open();
                 int index = resourceLocation.getPath().indexOf("/", 0);
@@ -81,7 +78,6 @@ public class ContractReloader implements ResourceManagerReloadListener {
         });
         contracts.clear();
         var tiers = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
-        WilderNature.info("Reloading tiers");
         tiers.forEach((resourceLocation, resource) -> {
             WilderNature.info("Found tier {}",resourceLocation);
             try {

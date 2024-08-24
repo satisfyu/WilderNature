@@ -1,6 +1,5 @@
 package net.satisfy.wildernature.util.contract;
 
-import com.google.gson.GsonBuilder;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.event.EventResult;
@@ -19,7 +18,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.client.gui.handlers.BountyBlockScreenHandler;
 
 import java.util.HashMap;
@@ -50,7 +48,7 @@ public class ContractInProgress {
             ResourceLocation.CODEC.fieldOf("contract").forGetter(ContractInProgress::contract),
             Codec.INT.fieldOf("count").forGetter(ContractInProgress::count),
             Codec.LONG.fieldOf("id").forGetter(ContractInProgress::id)
-            ).apply(instance, ContractInProgress::new));
+    ).apply(instance, ContractInProgress::new));
 
     public ContractInProgress(ResourceLocation contract, int count, long id) {
         this.s_contract = contract;
@@ -70,7 +68,6 @@ public class ContractInProgress {
     }
 
     public void onEntityDeath(LivingEntity livingEntity, DamageSource damageSource, Player sourcePlayer){
-        var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         Contract contract = this.s_getContract();
         try {
             if (isFinished())
@@ -80,7 +77,7 @@ public class ContractInProgress {
                     .withOptionalParameter(LootContextParams.THIS_ENTITY, livingEntity)
                     .create(LootContextParamSets.COMMAND);
             var entityLootContext = new LootContext.Builder(entityLootParams).create(null);
-            var entityCondition = (LootItemCondition) livingEntity.getServer().getLootData().getElement(LootDataType.PREDICATE, contract.targetPredicate());
+            var entityCondition = (LootItemCondition) Objects.requireNonNull(livingEntity.getServer()).getLootData().getElement(LootDataType.PREDICATE, contract.targetPredicate());
             var entityResult = entityCondition != null && entityCondition.test(entityLootContext);
 
             var damageLootParams = new LootParams.Builder((ServerLevel) livingEntity.level())
@@ -100,7 +97,6 @@ public class ContractInProgress {
                 return;
             }
 
-
             var predicateOrId = (entityResult || BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType()).equals(contract.targetPredicate()));
             if (Platform.isDevelopmentEnvironment()) {
                 sourcePlayer.sendSystemMessage(Component.literal("_entity: %b; damage: %b".formatted(predicateOrId, damageResult)));
@@ -118,24 +114,6 @@ public class ContractInProgress {
             }
         }
         catch (Exception e){
-            WilderNature.info("error while handling entity death. Some debug data:");
-            WilderNature.info("Contract progress: {}",this.toString());
-            WilderNature.info("Contract data: {}",s_getContract());
-            WilderNature.info("Player {} with uuid {}",sourcePlayer.getName().toString(),sourcePlayer.getUUID());
-            WilderNature.info("Progress per player id's:");
-            progressPerPlayer.forEach((uuid,data)->{
-                WilderNature.info("UUID: {}, data: {}",uuid,data.toString());
-            });
-            WilderNature.info("\n\nRegistered contracts:");
-            ContractReloader.getAllContracts().forEach((id, data)->{
-                WilderNature.info("contract id: {}, data: {}",id,data.toString());
-            });
-
-            WilderNature.info("\n\nRegistered tiers:");
-            ContractReloader.tiers.forEach((id,data)->{
-                WilderNature.info("tier id: {}, data: {}",id,data);
-            });
-
             e.printStackTrace();
             Objects.requireNonNull(sourcePlayer.getServer()).halt(false);
         }
