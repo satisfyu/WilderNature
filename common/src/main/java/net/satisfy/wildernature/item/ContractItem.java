@@ -11,6 +11,7 @@ import net.satisfy.wildernature.util.contract.ContractInProgress;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ContractItem extends Item {
     public static final String TAG_PLAYER = "player_uuid";
@@ -19,6 +20,8 @@ public class ContractItem extends Item {
     public static final String TAG_DESCRIPTION = "contract_description";
     public static final String TAG_COUNT_LEFT = "count_left";
     public static final String TAG_COUNT_TOTAL = "count_total";
+    public static final String TAG_EXPIRY_TICK = "expiry_tick";
+
     public ContractItem(Properties properties) {
         super(properties);
     }
@@ -31,10 +34,28 @@ public class ContractItem extends Item {
         }
         var nameSplit = Component.translatable(itemStack.getTag().getString(TAG_NAME));
         var descriptionSplit = Component.translatable(itemStack.getTag().getString(TAG_DESCRIPTION));
-        var progressSplit = Component.translatable("text.gui.wildernature.bounty.progress", itemStack.getTag().getInt(TAG_COUNT_TOTAL)-itemStack.getTag().getInt(TAG_COUNT_LEFT), itemStack.getTag().getInt(TAG_COUNT_TOTAL));
+        var progressSplit = Component.translatable("text.gui.wildernature.bounty.progress",
+                itemStack.getTag().getInt(TAG_COUNT_TOTAL) - itemStack.getTag().getInt(TAG_COUNT_LEFT),
+                itemStack.getTag().getInt(TAG_COUNT_TOTAL));
         list.add(nameSplit);
         list.add(descriptionSplit);
         list.add(progressSplit);
+
+        if(itemStack.getTag().contains(TAG_EXPIRY_TICK)){
+            long expiryTick = itemStack.getTag().getLong(TAG_EXPIRY_TICK);
+            assert level != null;
+            long currentTick = level.getGameTime();
+            long remainingTicks = expiryTick - currentTick;
+            if (remainingTicks > 0){
+                long remainingSeconds = remainingTicks / 20;
+                long minutes = remainingSeconds / 60;
+                long seconds = remainingSeconds % 60;
+                list.add(Component.empty());
+                list.add(Component.translatable("text.gui.wildernature.bounty.time_remaining", minutes, seconds));
+            } else {
+                list.add(Component.translatable("text.gui.wildernature.bounty.time_remaining", 0, 0));
+            }
+        }
     }
 
     @Override
@@ -48,16 +69,16 @@ public class ContractItem extends Item {
         if(entity instanceof Player player){
             if(!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER)))
                 return;
-            var progress = ContractInProgress.progressPerPlayer.get(itemStack.getTag().getUUID(TAG_PLAYER));
-            if(progress==null){
+            var progress = ContractInProgress.progressPerPlayer.get(player.getUUID());
+            if(progress == null){
                 itemStack.setCount(0);
                 return;
             }
-            itemStack.getTag().putString(TAG_CONTRACT_ID,progress.s_contract.toString());
-            itemStack.getTag().putString(TAG_NAME,progress.s_getContract().name());
-            itemStack.getTag().putString(TAG_DESCRIPTION,progress.s_getContract().description());
-            itemStack.getTag().putInt(TAG_COUNT_TOTAL,progress.s_getContract().count());
-            itemStack.getTag().putInt(TAG_COUNT_LEFT,progress.count);
+            itemStack.getTag().putString(TAG_CONTRACT_ID, progress.s_contract.toString());
+            itemStack.getTag().putString(TAG_NAME, progress.s_getContract().name());
+            itemStack.getTag().putString(TAG_DESCRIPTION, progress.s_getContract().description());
+            itemStack.getTag().putInt(TAG_COUNT_TOTAL, progress.s_getContract().count());
+            itemStack.getTag().putInt(TAG_COUNT_LEFT, progress.count);
         }
     }
 }

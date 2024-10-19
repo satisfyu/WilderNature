@@ -9,6 +9,7 @@ import net.satisfy.wildernature.util.contract.Contract;
 import net.satisfy.wildernature.util.contract.ContractInProgress;
 
 public class ContractButton extends Button {
+
     private Contract contract;
     public ContractInProgress progress;
 

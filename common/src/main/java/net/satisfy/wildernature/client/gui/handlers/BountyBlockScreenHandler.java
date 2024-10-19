@@ -81,7 +81,6 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
                     s_writeUpdateContracts(buf, s_targetEntity);
                     s_writeActiveContractInfo(buf, (ServerPlayer) inventory.player);
                     NetworkManager.sendToPlayer((ServerPlayer) inventory.player, BountyBlockNetworking.ID_SCREEN_UPDATE, buf);
-
                 }
             });
         }
@@ -138,28 +137,34 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
             var playerContract = ContractInProgress.progressPerPlayer.get(player.getUUID());
             var hasContract = playerContract == null;
             if (!hasContract) {
-                player.sendSystemMessage(Component.literal("Error: you already have contract"));
+                player.sendSystemMessage(Component.literal("Error: you already have a contract"));
                 return;
             }
             var id = buf.readByte();
             var contract = s_targetEntity.getContracts()[id];
             s_targetEntity.setRandomContactInSlot(id);
-            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT, 0, BountyBlockNetworking.MAX_SIZE));
             var stack = Contract.fromId(contract).contractStack();
-            stack.setTag(new CompoundTag());
-            assert stack.getTag() != null;
-            stack.getTag().putString(ContractItem.TAG_CONTRACT_ID, contract.toString());
-            stack.getTag().putUUID(ContractItem.TAG_PLAYER, player.getUUID());
+            CompoundTag tag = stack.getOrCreateTag(); // Korrigierte Zeile
+            tag.putString(ContractItem.TAG_CONTRACT_ID, contract.toString());
+            tag.putUUID(ContractItem.TAG_PLAYER, player.getUUID());
 
-            player.level().getServer().execute(() -> {
-                player.spawnAtLocation(stack);
-            });
+            // Berechne den Ablaufzeitpunkt
+            long startTick = player.getServer().overworld().getGameTime();
+            long expiryTick = startTick + ContractInProgress.EXPIRY_TICKS;
+            tag.putLong(ContractItem.TAG_EXPIRY_TICK, expiryTick); // Setze den Ablaufzeitpunkt im NBT
 
-            ContractInProgress.progressPerPlayer.put(player.getUUID(), new ContractInProgress(contract, Contract.fromId(contract).count(), s_targetEntity.boardId));
+            // Füge den ContractItem dem Inventar des Spielers hinzu
+            player.getInventory().add(stack);
+
+            // Setze den ContractInProgress wie bisher
+            ContractInProgress.progressPerPlayer.put(player.getUUID(), ContractInProgress.newInstance(contract, Contract.fromId(contract).count(), s_targetEntity.boardId, startTick));
+
+            var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT, 0, BountyBlockNetworking.MAX_SIZE));
             newBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
-            newBuf.writeShort(2);
-            BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf, player);
-            BountyBlockScreenHandler.s_writeUpdateContracts(newBuf, s_targetEntity);
+            newBuf.writeShort(3);
+            s_writeBlockDataChange(newBuf, this.s_targetEntity.rerollsLeft, this.s_targetEntity.rerollCooldownLeft, this.s_targetEntity.boardId, s_targetEntity.tier, s_targetEntity.xp);
+            s_writeUpdateContracts(newBuf, s_targetEntity);
+            s_writeActiveContractInfo(newBuf, player);
             NetworkManager.sendToPlayer(player, BountyBlockNetworking.ID_SCREEN_UPDATE, newBuf);
         }
 
@@ -180,6 +185,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
 
             var newBuf = new FriendlyByteBuf(new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT, 0, BountyBlockNetworking.MAX_SIZE));
             BountyBlockScreenHandler.s_writeActiveContractInfo(newBuf, player);
+            BountyBlockScreenHandler.s_writeUpdateContracts(newBuf, s_targetEntity);
             NetworkManager.sendToPlayer(player, BountyBlockNetworking.ID_SCREEN_UPDATE, newBuf);
         }
         s_targetEntity.setChanged();
@@ -236,7 +242,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
                     throw new RuntimeException(er);
                 }).getFirst();
                 if (Platform.isDevelopmentEnvironment()) {
-                    Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_active contract: %b".formatted(contractProgress)));
+                    Minecraft.getInstance().gui.getChat().addMessage(Component.literal("_active contract: " + contractProgress));
                 }
                 this.c_activeContractProgress = contractProgress;
                 this.c_activeContract = contract;
@@ -246,7 +252,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
                 this.c_activeContract = null;
             }
         } catch (Exception e) {
-            Minecraft.getInstance().gui.getChat().addMessage(Component.literal("Error handling %s screen update packet: %s".formatted(updateType.toString(), e.getMessage())));
+            Minecraft.getInstance().gui.getChat().addMessage(Component.literal("Error handling " + updateType.toString() + " screen update packet: " + e.getMessage()));
             throw new RuntimeException(e);
         }
     }
