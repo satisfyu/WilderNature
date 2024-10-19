@@ -33,3 +33,9 @@ versionRange = "[9.1.12,)"
 ordering = "AFTER"
 side = "BOTH"
 
+[[dependencies.wildernature]]
+modId = "curios"
+mandatory = true
+versionRange = "[5.10.0,)"
+ordering = "AFTER"
+side = "BOTH"

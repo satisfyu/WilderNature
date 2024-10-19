@@ -7,6 +7,7 @@ import dev.architectury.platform.Platform;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -125,40 +126,41 @@ public class ContractInProgress {
     }
 
     public void onFinish(ServerPlayer sourcePlayer) {
-        var bountyHandler = ((BountyBlockScreenHandler)sourcePlayer.containerMenu);
-        if(bountyHandler.s_targetEntity.boardId == boardId){
-            bountyHandler.s_targetEntity.addXp(this.s_getContract().reward().blockExpReward());
-        }
-        else{
-            if(Platform.isDevelopmentEnvironment()){
-                sourcePlayer.sendSystemMessage(Component.literal("_not given xp to block because contract taken in other board"));
-            }
-        }
-        if(s_getContract().reward().playerRewardLoot().isEmpty()){
-            return;
-        }
+        MinecraftServer server = sourcePlayer.server;
 
-        Objects.requireNonNull(sourcePlayer.level()
-                        .getServer())
-                .getLootData()
-                .getLootTable(
-                        s_getContract()
-                                .reward()
-                                .playerRewardLoot().get()
-                )
-                .getRandomItems(
-                        new LootParams.Builder((ServerLevel) sourcePlayer.level())
-                                .withParameter(
-                                        LootContextParams.THIS_ENTITY,
-                                        sourcePlayer)
-                                .withParameter(
-                                        LootContextParams.ORIGIN,
-                                        sourcePlayer.getPosition(0))
-                                .create(LootContextParamSets.ADVANCEMENT_REWARD),
-                        sourcePlayer.getLootTableSeed(),
-                        sourcePlayer::spawnAtLocation
-                );
+        server.execute(() -> {
+            var bountyHandler = ((BountyBlockScreenHandler) sourcePlayer.containerMenu);
+            if (bountyHandler.s_targetEntity.boardId == boardId) {
+                bountyHandler.s_targetEntity.addXp(this.s_getContract().reward().blockExpReward());
+            } else {
+                if (Platform.isDevelopmentEnvironment()) {
+                    sourcePlayer.sendSystemMessage(Component.literal("_not given xp to block because contract taken in other board"));
+                }
+            }
+            if (s_getContract().reward().playerRewardLoot().isEmpty()) {
+                return;
+            }
+
+            Objects.requireNonNull(sourcePlayer.level().getServer())
+                    .getLootData()
+                    .getLootTable(
+                            s_getContract().reward().playerRewardLoot().get()
+                    )
+                    .getRandomItems(
+                            new LootParams.Builder((ServerLevel) sourcePlayer.level())
+                                    .withParameter(
+                                            LootContextParams.THIS_ENTITY,
+                                            sourcePlayer)
+                                    .withParameter(
+                                            LootContextParams.ORIGIN,
+                                            sourcePlayer.getPosition(0))
+                                    .create(LootContextParamSets.ADVANCEMENT_REWARD),
+                            sourcePlayer.getLootTableSeed(),
+                            sourcePlayer::spawnAtLocation
+                    );
+        });
     }
+
 
     public Contract s_getContract() {
         return Contract.fromId(this.s_contract);

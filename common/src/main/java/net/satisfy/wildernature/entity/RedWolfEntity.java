@@ -60,7 +60,6 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.5) {
@@ -103,11 +102,11 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, (entity -> isAngryAt((LivingEntity) entity))));
-        this.targetSelector.addGoal(5, new NonTameRandomTargetGoal(this, Animal.class, false, PREY_SELECTOR));
-        this.targetSelector.addGoal(6, new NonTameRandomTargetGoal(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal(this, AbstractSkeleton.class, false));
-        this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal(this, true));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (this::isAngryAt)));
+        this.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>(this, Animal.class, false, PREY_SELECTOR));
+        this.targetSelector.addGoal(6, new NonTameRandomTargetGoal<>(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+        this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
     }
 
     public AnimationState attackState = new AnimationState();
@@ -145,7 +144,6 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     public RedWolfEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         return EntityRegistry.RED_WOLF.get().create(serverLevel);
     }
-
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {

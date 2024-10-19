@@ -53,6 +53,7 @@ public class HedgehogEntity extends Animal {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, Ingredient.of(Items.ROTTEN_FLESH), true));
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(6, new PanicGoal(this, 2.0D));
@@ -177,15 +178,22 @@ public class HedgehogEntity extends Animal {
     @Override
     public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (itemstack.is(Items.MILK_BUCKET)) {
+
+        if (itemstack.is(Items.ROTTEN_FLESH)) {
+            if (this.isFood(itemstack) && this.getAge() == 0 && !this.level().isClientSide) {
+                this.usePlayerItem(player, hand, itemstack);
+                this.setInLove(player);
+                return InteractionResult.SUCCESS;
+            }
+        } else if (itemstack.is(Items.MILK_BUCKET)) {
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
                 player.addItem(new ItemStack(Items.BUCKET));
             }
             this.addEffect(new MobEffectInstance(MobEffects.POISON, 240, 1));
             return InteractionResult.SUCCESS;
-        } else {
-            return super.mobInteract(player, hand);
         }
+
+        return super.mobInteract(player, hand);
     }
 }
