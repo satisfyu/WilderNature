@@ -47,7 +47,7 @@ public class BisonTrophyBlock extends WallDecorationBlock {
             map.put(direction, WilderNatureUtil.rotateShape(Direction.NORTH, direction, voxelShapeSupplier.get()));
         }
     });
-    
+
     private final Map<Player, Long> lastUseTime = new HashMap<>();
 
     public BisonTrophyBlock(Properties properties) {

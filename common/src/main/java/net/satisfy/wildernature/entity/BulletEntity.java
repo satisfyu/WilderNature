@@ -70,7 +70,6 @@ public class BulletEntity extends Fireball {
             Entity shooter = getOwner();
             AmmunitionItem bullet = (AmmunitionItem) getItemRaw().getItem();
 
-            if (isOnFire()) target.setSecondsOnFire(5);
             int lastHurtResistant = target.invulnerableTime;
             if (ignoreInvulnerability) target.invulnerableTime = 0;
             boolean damaged = target.hurt(level().damageSources().indirectMagic(this, shooter), (float) bullet.modifyDamage(damage, this, target, shooter, level()));

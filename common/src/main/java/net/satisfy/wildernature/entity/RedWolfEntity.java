@@ -1,11 +1,14 @@
 package net.satisfy.wildernature.entity;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -18,6 +21,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.satisfy.wildernature.entity.ai.AnimationAttackGoal;
@@ -29,15 +33,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
-    public RedWolfEntity(EntityType<? extends Wolf> entityType, Level world) {
-        super(entityType, world);
-    }
+    public AnimationState attackState = new AnimationState();
+    public AnimationState sitAnimationState = new AnimationState();
+    int lastTargetTick;
 
     private static final EntityDataAccessor<Boolean> LEAPING = SynchedEntityData.defineId(RedWolfEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(RedWolfEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(RedWolfEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static AttributeSupplier.@NotNull Builder createMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.30000001192092896).add(Attributes.MAX_HEALTH, 12.0).add(Attributes.ATTACK_DAMAGE, 3.0);
+        return Mob.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.30000001192092896)
+                .add(Attributes.MAX_HEALTH, 12.0)
+                .add(Attributes.ATTACK_DAMAGE, 3.0);
+    }
+
+    public RedWolfEntity(EntityType<? extends Wolf> entityType, Level world) {
+        super(entityType, world);
     }
 
     @Override
@@ -45,9 +57,10 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
         return getTarget();
     }
 
-    public double getMeleeAttackRangeSqr_(LivingEntity target){
+    public double getMeleeAttackRangeSqr_(LivingEntity target) {
         return super.getMeleeAttackRangeSqr(target);
     }
+
     @Override
     protected SoundEvent getAmbientSound() {
         if (this.isAngry()) {
@@ -63,16 +76,17 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.5) {
+            @Override
             protected boolean shouldPanic() {
                 return this.mob.isFreezing() || this.mob.isOnFire();
             }
         });
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal(this, Llama.class, 24.0F, 1.5, 1.5) {
-
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Llama.class, 24.0F, 1.5, 1.5) {
+            @Override
             public boolean canUse() {
                 if (super.canUse() && this.toAvoid instanceof Llama) {
-                    return !RedWolfEntity.this.isTame() && this.avoidLlama((Llama) this.toAvoid);
+                    return !RedWolfEntity.this.isTame() && this.avoidLlama(this.toAvoid);
                 } else {
                     return false;
                 }
@@ -82,48 +96,57 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
                 return llama.getStrength() >= RedWolfEntity.this.random.nextInt(5);
             }
 
+            @Override
             public void start() {
                 RedWolfEntity.this.setTarget(null);
                 super.start();
             }
 
+            @Override
             public void tick() {
                 RedWolfEntity.this.setTarget(null);
                 super.tick();
             }
         });
-        this.goalSelector.addGoal(5, new AnimationAttackGoal(this, 1.0, true,(int) (ServerAnimationDurations.red_wolf_attack *20),4));
+        this.goalSelector.addGoal(5, new AnimationAttackGoal(this, 1.0, true, (int) (ServerAnimationDurations.red_wolf_attack * 20), 4));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0));
         this.goalSelector.addGoal(9, new BegGoal(this, 8.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (this::isAngryAt)));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
         this.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>(this, Animal.class, false, PREY_SELECTOR));
         this.targetSelector.addGoal(6, new NonTameRandomTargetGoal<>(this, Turtle.class, false, Turtle.BABY_ON_LAND_SELECTOR));
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
         this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
     }
 
-    public AnimationState attackState = new AnimationState();
-    int lastTargetTick;
     @Override
     public void tick() {
         super.tick();
-        if(!level().isClientSide()) {
+
+        if (!level().isClientSide()) {
             lastTargetTick++;
-            if(getTarget()!=null){
-                lastTargetTick=0;
+            if (getTarget() != null) {
+                lastTargetTick = 0;
             }
-            setSneaking(lastTargetTick<10);
+            setSneaking(lastTargetTick < 10);
         }
-        if(level().isClientSide()){
-            attackState.animateWhen(isAttacking(),this.tickCount);
+
+        if (level().isClientSide()) {
+            attackState.animateWhen(isAttacking(), this.tickCount);
+            sitAnimationState.animateWhen(isSitting(), this.tickCount);
+            setupAnimationStates();
         }
+    }
+
+    private void setupAnimationStates() {
+        sitAnimationState.animateWhen(this.isSitting(), this.tickCount);
     }
 
     @Override
@@ -131,12 +154,14 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
         super.defineSynchedData();
         this.entityData.define(LEAPING, false);
         this.entityData.define(ATTACKING, false);
+        this.entityData.define(SITTING, false);
     }
 
     private void setSneaking(boolean b) {
-        this.entityData.set(LEAPING,b);
+        this.entityData.set(LEAPING, b);
     }
-    public boolean isSneaking(){
+
+    public boolean isSneaking() {
         return this.entityData.get(LEAPING);
     }
 
@@ -155,30 +180,30 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
         return SoundRegistry.RED_WOLF_DEATH.get();
     }
 
+    @Override
     protected float getSoundVolume() {
         return 0.3F;
     }
-
 
     public int getMaxHeadXRot() {
         return this.isInSittingPose() ? 16 : super.getMaxHeadXRot();
     }
 
-
     public float getTailAngle() {
         if (this.isAngry()) {
             return 1.5393804F;
         } else {
-            return this.isTame() ? (0.55F - (this.getMaxHealth() - this.getHealth()) * 0.02F) * 3.1415927F : 0.62831855F;
+            return this.isTame() ? (0.55F - (this.getMaxHealth() - this.getHealth()) * 0.02F) * (float) Math.PI : 0.62831855F;
         }
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }
+
     @Override
     public void setAttacking_(boolean b) {
-        this.entityData.set(ATTACKING,b);
+        this.entityData.set(ATTACKING, b);
     }
 
     @Override
@@ -189,5 +214,54 @@ public class RedWolfEntity extends Wolf implements EntityWithAttackAnimation {
     @Override
     public void doHurtTarget_(LivingEntity targetEntity) {
         super.doHurtTarget(targetEntity);
+    }
+
+
+    public boolean isSitting() {
+        return this.entityData.get(SITTING);
+    }
+
+    public void setSitting(boolean sitting) {
+        this.entityData.set(SITTING, sitting);
+    }
+
+    @Override
+    public boolean isOrderedToSit() {
+        return this.isSitting();
+    }
+
+    @Override
+    public void setOrderedToSit(boolean sitting) {
+        this.setSitting(sitting);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("Sitting", this.isSitting());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        boolean sitting = compound.getBoolean("Sitting");
+        this.setSitting(sitting);
+    }
+
+    @Override
+    @SuppressWarnings("unused")
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+
+        if (this.level().isClientSide()) {
+            boolean flag = this.isOwnedBy(player) || this.isTame();
+            return flag ? InteractionResult.CONSUME : InteractionResult.PASS;
+        } else {
+            if (this.isOwnedBy(player)) {
+                this.setSitting(!this.isSitting());
+                return InteractionResult.SUCCESS;
+            }
+            return super.mobInteract(player, hand);
+        }
     }
 }

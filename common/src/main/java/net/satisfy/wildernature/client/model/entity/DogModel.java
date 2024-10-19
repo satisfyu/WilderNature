@@ -84,7 +84,9 @@ public class DogModel<T extends DogEntity> extends HierarchicalModel<T> {
 
         this.animateWalk(DogAnimation.walk, limbSwing, limbSwingAmount, 3f, 3f);
         this.animate(entity.idleAnimationState, DogAnimation.idle, ageInTicks, 1f);
+        this.animate(entity.sitAnimationState, DogAnimation.sit, ageInTicks, 1f);
         this.animate(entity.howlingAnimationState, DogAnimation.howl, ageInTicks, 1f);
         this.animate(entity.attackAnimationState, DogAnimation.bite, ageInTicks, 1f);
     }
+
 }

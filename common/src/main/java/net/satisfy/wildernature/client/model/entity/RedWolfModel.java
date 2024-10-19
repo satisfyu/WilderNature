@@ -76,5 +76,6 @@ public class RedWolfModel<T extends RedWolfEntity> extends HierarchicalModel<T> 
             animateWalk(RedWolfAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         }
         animate(wolf.attackState,RedWolfAnimation.attack,ageInTicks);
+        this.animate(wolf.sitAnimationState, RedWolfAnimation.sit, ageInTicks, 1f);
     }
 }
