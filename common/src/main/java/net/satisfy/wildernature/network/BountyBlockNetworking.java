@@ -28,17 +28,17 @@ public class BountyBlockNetworking {
         DELETE_CONTRACT
     }
 
-    static void c_onServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+    static void handleServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         Player player = context.getPlayer();
         if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-            screenHandler.c_onServerUpdate(buf);
+            screenHandler.onServerUpdate(buf);
         }
     }
 
-    static void s_handleClientAction(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+    static void handleClientAction(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         Player player = context.getPlayer();
         if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-            screenHandler.s_handleClientAction((ServerPlayer) player, buf);
+            screenHandler.handleClientAction((ServerPlayer) player, buf);
         }
     }
 
@@ -46,14 +46,14 @@ public class BountyBlockNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ID_SCREEN_UPDATE, (buf, context) -> {
             Player player = context.getPlayer();
             if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-                screenHandler.c_onServerUpdate(buf);
+                screenHandler.onServerUpdate(buf);
             }
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, ID_SCREEN_ACTION, (buf, context) -> {
             ServerPlayer player = (ServerPlayer) context.getPlayer();
             if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-                screenHandler.s_handleClientAction(player, buf);
+                screenHandler.handleClientAction(player, buf);
             }
         });
     }

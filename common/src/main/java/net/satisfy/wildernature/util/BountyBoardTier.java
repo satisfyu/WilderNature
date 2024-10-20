@@ -9,17 +9,14 @@ import java.util.Optional;
 
 public record BountyBoardTier(int experience, Optional<ResourceLocation> nextTier,
                               Optional<ResourceLocation> previousTier) {
-    public static Codec<BountyBoardTier> CODEC = RecordCodecBuilder.create(bountyBoardTierInstance -> bountyBoardTierInstance.group(
+    public static final Codec<BountyBoardTier> CODEC = RecordCodecBuilder.create(bountyBoardTierInstance -> bountyBoardTierInstance.group(
             Codec.INT.fieldOf("experience").forGetter(BountyBoardTier::experience),
             ResourceLocation.CODEC.optionalFieldOf("nextTier").forGetter(BountyBoardTier::nextTier),
             ResourceLocation.CODEC.optionalFieldOf("previousTier").forGetter(BountyBoardTier::previousTier)
     ).apply(bountyBoardTierInstance, BountyBoardTier::new));
 
     public float progress(int xp) {
-        if (this.experience == -1)
-            return 1;
-        else
-            return (float) xp / ((float) experience - 1);
+        return this.experience == -1 ? 1.0f : (float) xp / (experience - 1);
     }
 
     public static Optional<BountyBoardTier> byId(ResourceLocation id) {

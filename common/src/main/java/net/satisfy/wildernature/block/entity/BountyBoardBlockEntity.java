@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
@@ -31,17 +30,16 @@ import java.util.Random;
 
 public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider {
     private static final String KEY_CONTRACTS = "contracts";
-    private static final int rerollCooldown = 15 * 60 * 20;
+    private static final int REROLL_COOLDOWN = 15 * 60 * 20;
     public int rerollCooldownLeft = 0;
     private static final String KEY_REROLL_COOLDOWN_LEFT = "reroll_cooldown_left";
 
-    public static final int rerolls = 3;
+    public static final int MAX_REROLLS = 3;
     public int rerollsLeft;
     private static final String KEY_REROLLS_LEFT = "rerolls_left";
     private static final String KEY_TIER = "tier";
     private static final String KEY_EXP = "experience";
     private static final String KEY_LONGID = "longid";
-
 
     public EventManager onTick = new EventManager();
     public EventManager onBlockDataChange = new EventManager();
@@ -51,18 +49,14 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     public int xp = 0;
 
     public ResourceLocation[] getContracts() {
-        if (contracts == null) {
+        if (contracts == null || contracts.length != 3) {
             contracts = new ResourceLocation[3];
             fillWithRandomContracts();
         }
-        if (contracts.length != 3) {
-            contracts = null;
-            contracts = getContracts();
-            return contracts;
-        }
         for (int i = 0; i < 3; i++) {
-            if (contracts[i] == null)
+            if (contracts[i] == null) {
                 contracts[i] = getRandomContract();
+            }
         }
         return contracts.clone();
     }
@@ -71,20 +65,22 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         this.contracts = contracts.clone();
     }
 
-
-    public BountyBoardBlockEntity(BlockPos a, BlockState b) {
-        super(EntityRegistry.BOUNTY_BOARD_ENTITY.get(), a, b);
+    public BountyBoardBlockEntity(BlockPos pos, BlockState state) {
+        super(EntityRegistry.BOUNTY_BOARD_ENTITY.get(), pos, state);
     }
 
     @Override
     public void load(CompoundTag compoundTag) {
         this.rerollCooldownLeft = compoundTag.contains(KEY_REROLL_COOLDOWN_LEFT) ? compoundTag.getInt(KEY_REROLL_COOLDOWN_LEFT) : 0;
-        this.rerollsLeft = compoundTag.contains(KEY_REROLLS_LEFT) ? compoundTag.getInt(KEY_REROLLS_LEFT) : 3;
+        this.rerollsLeft = compoundTag.contains(KEY_REROLLS_LEFT) ? compoundTag.getInt(KEY_REROLLS_LEFT) : MAX_REROLLS;
         this.boardId = compoundTag.contains(KEY_LONGID) ? compoundTag.getLong(KEY_LONGID) : new Random().nextInt();
         this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)) : new WilderNatureIdentifier("");
         this.xp = compoundTag.contains(KEY_EXP) ? compoundTag.getInt(KEY_EXP) : 0;
         if (compoundTag.contains(KEY_CONTRACTS)) {
-            setContracts(ResourceLocation.CODEC.listOf().parse(NbtOps.INSTANCE, (compoundTag.get(KEY_CONTRACTS))).getOrThrow(false, (error) -> new RuntimeException(error)).toArray(new ResourceLocation[3]));
+            setContracts(ResourceLocation.CODEC.listOf()
+                    .parse(NbtOps.INSTANCE, compoundTag.get(KEY_CONTRACTS))
+                    .getOrThrow(false, error -> { throw new RuntimeException(error); })
+                    .toArray(new ResourceLocation[3]));
         } else {
             fillWithRandomContracts();
         }
@@ -94,8 +90,8 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         if (rerollsLeft <= 0) {
             return;
         }
-        if (rerollsLeft == rerolls) {
-            rerollCooldownLeft = rerollCooldown;
+        if (rerollsLeft == MAX_REROLLS) {
+            rerollCooldownLeft = REROLL_COOLDOWN;
         }
         rerollsLeft--;
         fillWithRandomContracts();
@@ -104,11 +100,11 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
     private void fillWithRandomContracts() {
         for (int i = 0; i < 3; i++) {
-            setRandomContactInSlot(i);
+            setRandomContractInSlot(i);
         }
     }
 
-    public void setRandomContactInSlot(int i) {
+    public void setRandomContractInSlot(int i) {
         var contracts = getContracts();
         contracts[i] = getRandomContract();
         setContracts(contracts);
@@ -128,24 +124,19 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         compoundTag.putInt(KEY_EXP, xp);
         compoundTag.put(
                 KEY_CONTRACTS,
-                ResourceLocation.CODEC.listOf().encode(Arrays.stream(getContracts()).toList(), NbtOps.INSTANCE, new ListTag()).getOrThrow(false, (err) -> {
-                    throw new RuntimeException(err);
-                })
+                ResourceLocation.CODEC.listOf()
+                        .encode(Arrays.stream(getContracts()).toList(), NbtOps.INSTANCE, new ListTag())
+                        .getOrThrow(false, error -> { throw new RuntimeException(error); })
         );
     }
 
     public CompoundTag getContractsNbt() {
-        var encode = Contract.CODEC.listOf().encode(Arrays.stream(getContracts()).map(Contract::fromId).toList(), NbtOps.INSTANCE, new ListTag());
-        Tag orThrow = encode.getOrThrow(
-                false,
-                (error) -> {
-                    throw new RuntimeException(error);
-                }
-        );
-
+        var encodedContracts = Contract.CODEC.listOf()
+                .encode(Arrays.stream(getContracts()).map(Contract::fromId).toList(), NbtOps.INSTANCE, new ListTag())
+                .getOrThrow(false, error -> { throw new RuntimeException(error); });
 
         var tag = new CompoundTag();
-        tag.put("list", orThrow);
+        tag.put("list", encodedContracts);
         return tag;
     }
 
@@ -154,44 +145,48 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         return Component.literal("");
     }
 
-
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return BountyBlockScreenHandler.s_createServer(i, inventory, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return BountyBlockScreenHandler.createServer(id, inventory, this);
     }
 
-    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, BountyBoardBlockEntity abstractFurnaceBlockEntity) {
-        abstractFurnaceBlockEntity.serverTick(level, blockPos, blockState);
+    public static void serverTick(Level level, BlockPos pos, BlockState state, BountyBoardBlockEntity entity) {
+        entity.serverTick(level, pos, state);
     }
 
-    private void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
+    @SuppressWarnings("unused")
+    private void serverTick(Level level, BlockPos pos, BlockState state) {
         rerollCooldownLeft--;
-        if (rerollCooldownLeft < 0)
-            rerollsLeft = rerolls;
+        if (rerollCooldownLeft < 0) {
+            rerollsLeft = MAX_REROLLS;
+        }
         onTick.invoke();
     }
 
     public BountyBoardTier getTier() {
-        return BountyBoardTier.byId(this.tier).get();
+        return BountyBoardTier.byId(this.tier)
+                .orElseThrow(() -> new RuntimeException("BountyBoardTier not found for tier: " + this.tier));
     }
 
-    public void addXp(int addXp) {
+    public void addXp(int additionalXp) {
         var nextTierXp = getTier().experience();
-        this.xp += addXp;
+        this.xp += additionalXp;
         if (this.xp >= nextTierXp) {
-            addXp = xp - nextTierXp;
+            additionalXp = xp - nextTierXp;
             this.xp = 0;
 
             if (getTier().nextTier().isEmpty()) {
                 if (Platform.isDevelopmentEnvironment()) {
-                    Objects.requireNonNull(Objects.requireNonNull(this.getLevel()).getServer()).getPlayerList().broadcastSystemMessage(Component.literal("_info: next tier is empty, impossible to upgrade"), true);
+                    Objects.requireNonNull(Objects.requireNonNull(this.getLevel()).getServer()).getPlayerList().broadcastSystemMessage(
+                            Component.literal("_info: next tier is empty, impossible to upgrade"), true);
                 }
                 return;
             }
+
             this.tier = getTier().nextTier().get();
             onBlockDataChange.invoke();
-            addXp(addXp);
+            addXp(additionalXp);
         }
     }
 }

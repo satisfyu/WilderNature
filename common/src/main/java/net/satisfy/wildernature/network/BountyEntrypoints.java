@@ -7,11 +7,11 @@ import net.satisfy.wildernature.util.contract.ContractInProgress;
 
 public class BountyEntrypoints {
     public static void clientEntry() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, BountyBlockNetworking.ID_SCREEN_UPDATE, BountyBlockNetworking::c_onServerUpdate);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, BountyBlockNetworking.ID_SCREEN_UPDATE, BountyBlockNetworking::handleServerUpdate);
     }
 
     public static void serverEntry() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, BountyBlockNetworking.ID_SCREEN_ACTION, BountyBlockNetworking::s_handleClientAction);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, BountyBlockNetworking.ID_SCREEN_ACTION, BountyBlockNetworking::handleClientAction);
         EntityEvent.LIVING_DEATH.register(ContractInProgress::onEntityDeath);
         TickEvent.SERVER_POST.register(ContractInProgress::onServerTick);
     }

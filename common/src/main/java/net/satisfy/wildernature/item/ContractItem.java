@@ -31,14 +31,16 @@ public class ContractItem extends Item {
             list.add(Component.translatable("tooltip.wildernature.contract_error"));
             return;
         }
-        var nameSplit = Component.translatable(itemStack.getTag().getString(TAG_NAME));
-        var descriptionSplit = Component.translatable(itemStack.getTag().getString(TAG_DESCRIPTION));
-        var progressSplit = Component.translatable("text.gui.wildernature.bounty.progress",
+
+        var name = Component.translatable(itemStack.getTag().getString(TAG_NAME));
+        var description = Component.translatable(itemStack.getTag().getString(TAG_DESCRIPTION));
+        var progress = Component.translatable("text.gui.wildernature.bounty.progress",
                 itemStack.getTag().getInt(TAG_COUNT_TOTAL) - itemStack.getTag().getInt(TAG_COUNT_LEFT),
                 itemStack.getTag().getInt(TAG_COUNT_TOTAL));
-        list.add(nameSplit);
-        list.add(descriptionSplit);
-        list.add(progressSplit);
+
+        list.add(name);
+        list.add(description);
+        list.add(progress);
 
         if (itemStack.getTag().contains(TAG_EXPIRY_TICK) && level != null) {
             long expiryTick = itemStack.getTag().getLong(TAG_EXPIRY_TICK);
@@ -58,23 +60,25 @@ public class ContractItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int i, boolean bl) {
-        if (level.isClientSide())
-            return;
-        if (itemStack.getTag() == null) {
+        if (level.isClientSide() || itemStack.getTag() == null) {
             return;
         }
+
         if (entity instanceof Player player) {
-            if (!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER)))
+            if (!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER))) {
                 return;
+            }
+
             var progress = ContractInProgress.progressPerPlayer.get(player.getUUID());
             if (progress == null) {
                 itemStack.setCount(0);
                 return;
             }
-            itemStack.getTag().putString(TAG_CONTRACT_ID, progress.s_contract.toString());
-            itemStack.getTag().putString(TAG_NAME, progress.s_getContract().name());
-            itemStack.getTag().putString(TAG_DESCRIPTION, progress.s_getContract().description());
-            itemStack.getTag().putInt(TAG_COUNT_TOTAL, progress.s_getContract().count());
+
+            itemStack.getTag().putString(TAG_CONTRACT_ID, progress.contractResource.toString());
+            itemStack.getTag().putString(TAG_NAME, progress.getContract().name());
+            itemStack.getTag().putString(TAG_DESCRIPTION, progress.getContract().description());
+            itemStack.getTag().putInt(TAG_COUNT_TOTAL, progress.getContract().count());
             itemStack.getTag().putInt(TAG_COUNT_LEFT, progress.count);
         }
     }

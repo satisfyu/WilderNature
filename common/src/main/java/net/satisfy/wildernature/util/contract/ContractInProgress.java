@@ -32,157 +32,149 @@ public class ContractInProgress {
     public static final HashMap<UUID, ContractInProgress> progressPerPlayer = new HashMap<>();
     public static final long EXPIRY_TICKS = 60 * 60 * 20;
 
-    private static ResourceLocation contract(ContractInProgress o) {
-        return o.s_contract;
+    private static ResourceLocation getContractResource(ContractInProgress progress) {
+        return progress.contractResource;
     }
 
-    public final ResourceLocation s_contract;
+    public final ResourceLocation contractResource;
+    public final long boardId;
+    public int count;
+    public final long startTick;
 
-    private static long id(Object o) {
+    private static long getId(Object o) {
         return ((ContractInProgress) o).boardId;
     }
 
-    public final long boardId;
-
-    public boolean isFinished() {
-        return count <= 0;
-    }
-
-    public int count;
-
-    private static int count(Object o) {
+    private static int getCount(Object o) {
         return ((ContractInProgress) o).count;
     }
 
-    public final long startTick;
-
     public static final Codec<ContractInProgress> SERVER_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("contract").forGetter(ContractInProgress::contract),
-            Codec.INT.fieldOf("count").forGetter(ContractInProgress::count),
-            Codec.LONG.fieldOf("id").forGetter(ContractInProgress::id),
-            Codec.LONG.fieldOf("start_tick").forGetter(o -> o.startTick)
+            ResourceLocation.CODEC.fieldOf("contract").forGetter(ContractInProgress::getContractResource),
+            Codec.INT.fieldOf("count").forGetter(ContractInProgress::getCount),
+            Codec.LONG.fieldOf("id").forGetter(ContractInProgress::getId),
+            Codec.LONG.fieldOf("start_tick").forGetter(progress -> progress.startTick)
     ).apply(instance, ContractInProgress::new));
 
     public ContractInProgress(ResourceLocation contract, int count, long id, long startTick) {
-        this.s_contract = contract;
+        this.contractResource = contract;
         this.boardId = id;
         this.count = count;
         this.startTick = startTick;
     }
 
-
     public static ContractInProgress newInstance(ResourceLocation contract, int count, long boardId, long startTick) {
         return new ContractInProgress(contract, count, boardId, startTick);
     }
 
-    public static EventResult onEntityDeath(LivingEntity livingEntity, DamageSource damageSource) {
+    public boolean isFinished() {
+        return count <= 0;
+    }
+
+    public static EventResult onEntityDeath(LivingEntity entity, DamageSource damageSource) {
         var attacker = damageSource.getEntity();
-        if (attacker instanceof ServerPlayer serverPlayer) {
-            var contract = progressPerPlayer.get(serverPlayer.getUUID());
+        if (attacker instanceof ServerPlayer player) {
+            var contract = progressPerPlayer.get(player.getUUID());
             if (contract != null) {
-                contract.onEntityDeath(livingEntity, damageSource, serverPlayer);
+                contract.onEntityDeath(entity, damageSource, player);
             }
         }
         return EventResult.pass();
     }
 
-    public void onEntityDeath(LivingEntity livingEntity, DamageSource damageSource, Player sourcePlayer) {
-        Contract contract = this.s_getContract();
+    public void onEntityDeath(LivingEntity entity, DamageSource damageSource, Player player) {
+        Contract contract = getContract();
         try {
-            if (isFinished())
-                return;
-            var entityLootParams = new LootParams.Builder((ServerLevel) livingEntity.level())
-                    .withParameter(LootContextParams.ORIGIN, livingEntity.getPosition(0))
-                    .withOptionalParameter(LootContextParams.THIS_ENTITY, livingEntity)
-                    .create(LootContextParamSets.COMMAND);
-            var entityLootContext = new LootContext.Builder(entityLootParams).create(null);
-            var entityCondition = (LootItemCondition) Objects.requireNonNull(livingEntity.getServer()).getLootData().getElement(LootDataType.PREDICATE, contract.targetPredicate());
-            var entityResult = entityCondition != null && entityCondition.test(entityLootContext);
+            if (isFinished()) return;
 
-            var damageLootParams = new LootParams.Builder((ServerLevel) livingEntity.level())
-                    .withParameter(LootContextParams.THIS_ENTITY, livingEntity)
-                    .withParameter(LootContextParams.ORIGIN, livingEntity.getPosition(0))
+            var lootParams = new LootParams.Builder((ServerLevel) entity.level())
+                    .withParameter(LootContextParams.ORIGIN, entity.getPosition(0))
+                    .withOptionalParameter(LootContextParams.THIS_ENTITY, entity)
+                    .create(LootContextParamSets.COMMAND);
+            var context = new LootContext.Builder(lootParams).create(null);
+
+            var condition = (LootItemCondition) Objects.requireNonNull(entity.getServer())
+                    .getLootData()
+                    .getElement(LootDataType.PREDICATE, contract.targetPredicate());
+            var result = condition != null && condition.test(context);
+
+            var damageParams = new LootParams.Builder((ServerLevel) entity.level())
+                    .withParameter(LootContextParams.THIS_ENTITY, entity)
+                    .withParameter(LootContextParams.ORIGIN, entity.getPosition(0))
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
                     .withParameter(LootContextParams.KILLER_ENTITY, damageSource.getEntity())
                     .withParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity())
-                    .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, sourcePlayer)
+                    .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
                     .create(LootContextParamSets.ENTITY);
+            var damageContext = new LootContext.Builder(damageParams).create(null);
 
-            var damageLootContext = new LootContext.Builder(damageLootParams).create(null);
-            var damageCondition = (LootItemCondition) livingEntity.getServer().getLootData().getElement(LootDataType.PREDICATE, contract.damagePredicate());
-            var damageResult = damageCondition == null || damageCondition.test(damageLootContext);
+            var damageCondition = (LootItemCondition) entity.getServer().getLootData()
+                    .getElement(LootDataType.PREDICATE, contract.damagePredicate());
+            var damageResult = damageCondition == null || damageCondition.test(damageContext);
+
             if (damageCondition == null) {
-                sourcePlayer.sendSystemMessage(Component.literal("Data error: contract " + this.s_contract + " has wrong damage predicate id (" + contract.damagePredicate() + "). Please check if name is correct"));
+                player.sendSystemMessage(Component.literal("Data error: contract " + contractResource + " has wrong damage predicate id (" + contract.damagePredicate() + "). Please check if name is correct"));
                 return;
             }
 
-            var predicateOrId = (entityResult || BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType()).equals(contract.targetPredicate()));
+            var targetMatches = (result || BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).equals(contract.targetPredicate()));
             if (Platform.isDevelopmentEnvironment()) {
-                sourcePlayer.sendSystemMessage(Component.literal("_entity: " + predicateOrId + "; damage: " + damageResult));
+                player.sendSystemMessage(Component.literal("_entity: " + targetMatches + "; damage: " + damageResult));
             }
-            if (predicateOrId && damageResult) {
+
+            if (targetMatches && damageResult) {
                 count--;
             }
-            if (Platform.isDevelopmentEnvironment()) {
-                sourcePlayer.sendSystemMessage(Component.literal("_Entities left: " + count));
-            }
-            if (count <= 0) {
-                if (Platform.isDevelopmentEnvironment()) {
-                    sourcePlayer.sendSystemMessage(Component.literal("_Finished contract \"" + contract.name() + "\""));
-                }
 
+            if (Platform.isDevelopmentEnvironment()) {
+                player.sendSystemMessage(Component.literal("_Entities left: " + count));
             }
+
+            if (isFinished() && Platform.isDevelopmentEnvironment()) {
+                player.sendSystemMessage(Component.literal("_Finished contract \"" + contract.name() + "\""));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            Objects.requireNonNull(sourcePlayer.getServer()).halt(false);
+            Objects.requireNonNull(player.getServer()).halt(false);
         }
     }
 
     @Override
     public String toString() {
-        return "[" + this.boardId + ", " + this.s_contract.toString() + ", " + this.count + "]";
+        return "[" + boardId + ", " + contractResource.toString() + ", " + count + "]";
     }
 
-    public void onFinish(ServerPlayer sourcePlayer) {
-        MinecraftServer server = sourcePlayer.server;
+    public void onFinish(ServerPlayer player) {
+        MinecraftServer server = player.server;
 
         server.execute(() -> {
-            var bountyHandler = ((BountyBlockScreenHandler) sourcePlayer.containerMenu);
-            if (bountyHandler.s_targetEntity.boardId == boardId) {
-                bountyHandler.s_targetEntity.addXp(this.s_getContract().reward().blockExpReward());
-            } else {
-                if (Platform.isDevelopmentEnvironment()) {
-                    sourcePlayer.sendSystemMessage(Component.literal("_not given xp to block because contract taken in other board"));
-                }
-            }
-            if (s_getContract().reward().playerRewardLoot().isEmpty()) {
-                return;
+            var bountyHandler = ((BountyBlockScreenHandler) player.containerMenu);
+            if (bountyHandler.targetEntity.boardId == boardId) {
+                bountyHandler.targetEntity.addXp(getContract().reward().blockExpReward());
+            } else if (Platform.isDevelopmentEnvironment()) {
+                player.sendSystemMessage(Component.literal("_not given xp to block because contract taken in other board"));
             }
 
-            Objects.requireNonNull(sourcePlayer.level().getServer())
+            if (getContract().reward().playerRewardLoot().isEmpty()) return;
+
+            Objects.requireNonNull(player.level().getServer())
                     .getLootData()
-                    .getLootTable(
-                            s_getContract().reward().playerRewardLoot().get()
-                    )
+                    .getLootTable(getContract().reward().playerRewardLoot().get())
                     .getRandomItems(
-                            new LootParams.Builder((ServerLevel) sourcePlayer.level())
-                                    .withParameter(
-                                            LootContextParams.THIS_ENTITY,
-                                            sourcePlayer)
-                                    .withParameter(
-                                            LootContextParams.ORIGIN,
-                                            sourcePlayer.getPosition(0))
+                            new LootParams.Builder((ServerLevel) player.level())
+                                    .withParameter(LootContextParams.THIS_ENTITY, player)
+                                    .withParameter(LootContextParams.ORIGIN, player.getPosition(0))
                                     .create(LootContextParamSets.ADVANCEMENT_REWARD),
-                            sourcePlayer.getLootTableSeed(),
-                            sourcePlayer::spawnAtLocation
+                            player.getLootTableSeed(),
+                            player::spawnAtLocation
                     );
         });
     }
 
-    public Contract s_getContract() {
-        return Contract.fromId(this.s_contract);
+    public Contract getContract() {
+        return Contract.fromId(this.contractResource);
     }
-
 
     public static void onServerTick(MinecraftServer server) {
         long currentTick = server.overworld().getGameTime();
@@ -201,7 +193,6 @@ public class ContractInProgress {
             }
         }
     }
-
 
     public static void removeContractItem(ServerPlayer player, String messageKey) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {

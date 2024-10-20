@@ -15,81 +15,90 @@ import java.util.*;
 
 public class ContractReloader implements ResourceManagerReloadListener {
     private static final HashMap<ResourceLocation, Contract> contracts = new HashMap<>();
+    public static final HashMap<ResourceLocation, BountyBoardTier> tiers = new HashMap<>();
 
     public static Contract getContract(ResourceLocation location) {
         var path = location.getPath();
-
         int index = path.indexOf("/");
-
         var newLocation = path.substring(index + 1);
         var rl = new ResourceLocation(location.getNamespace(), newLocation);
 
         return contracts.get(rl);
     }
 
-    public static HashMap<ResourceLocation, BountyBoardTier> tiers = new HashMap<>();
-
     public static List<ResourceLocation> getContractsOfTier(ResourceLocation tierId) {
         return contracts.keySet().stream().filter(key -> {
-            var allTiers = new ArrayList<>();
-            BountyBoardTier tier;
+            var allTiers = new ArrayList<ResourceLocation>();
             ResourceLocation id = tierId;
+
             while (true) {
                 allTiers.add(id);
-                final var idcopy = id;
-                tier = BountyBoardTier.byId(id).orElseThrow(() -> new RuntimeException("Error: Not found tier with id %s".formatted(idcopy)));
-                if (tier.previousTier().isPresent())
+                final var idCopy = id;
+                var tier = BountyBoardTier.byId(id).orElseThrow(() ->
+                        new RuntimeException("Error: Not found tier with id %s".formatted(idCopy)));
+
+                if (tier.previousTier().isPresent()) {
                     id = tier.previousTier().get();
-                else break;
+                } else {
+                    break;
+                }
             }
             return allTiers.contains(contracts.get(key).tier());
         }).toList();
     }
 
     public static ResourceLocation getRandomContractOfTier(ResourceLocation tier) {
-        var tier1 = getContractsOfTier(tier);
-        return tier1.get(new Random().nextInt(tier1.size()));
+        var contractsOfTier = getContractsOfTier(tier);
+        if (contractsOfTier.isEmpty()) {
+            throw new RuntimeException("No contracts available for tier: " + tier);
+        }
+        return contractsOfTier.get(new Random().nextInt(contractsOfTier.size()));
     }
 
+    @Override
     public void onResourceManagerReload(ResourceManager manager) {
         contracts.clear();
-        var contracts = manager.listResources("wildernature_contracts", path -> path.getPath().endsWith(".json"));
-        contracts.forEach((resourceLocation, resource) -> {
-            try {
-                var open = resource.open();
+        var contractResources = manager.listResources("wildernature_contracts", path -> path.getPath().endsWith(".json"));
+
+        contractResources.forEach((resourceLocation, resource) -> {
+            try (var open = resource.open()) {
                 int index = resourceLocation.getPath().indexOf("/");
                 var pathEdits = resourceLocation.getPath().substring(index + 1);
 
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
-                var contract = Contract.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false, (err) -> {
-                    throw new RuntimeException(err);
-                });
+                var contract = Contract.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class))
+                        .getOrThrow(false, error -> {
+                            throw new RuntimeException("Failed to parse contract: " + error);
+                        });
 
                 var rl = new ResourceLocation(resourceLocation.getNamespace(), pathEdits);
-                WilderNature.info("registering contract {}", rl);
-                ContractReloader.contracts.put(rl, contract);
+                WilderNature.info("Registering contract {}", rl);
+                contracts.put(rl, contract);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Failed to load contract: " + resourceLocation, e);
             }
         });
-        contracts.clear();
-        var tiers = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
-        tiers.forEach((resourceLocation, resource) -> {
+
+        tiers.clear();
+        var tierResources = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
+
+        tierResources.forEach((resourceLocation, resource) -> {
             WilderNature.info("Found tier {}", resourceLocation);
-            try {
+            try (var open = resource.open()) {
                 var namespace = resourceLocation.getNamespace();
-                var pathEdits = resourceLocation.getPath();
-                pathEdits = pathEdits.substring("wildernature_tiers/".length());
-                pathEdits = pathEdits.substring(0, pathEdits.length() - ".json".length());
-                var open = resource.open();
+                var pathEdits = resourceLocation.getPath()
+                        .substring("wildernature_tiers/".length(), resourceLocation.getPath().length() - ".json".length());
+
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
-                var tier = BountyBoardTier.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false, (err) -> {
-                    throw new RuntimeException(err);
-                });
+                var tier = BountyBoardTier.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class))
+                        .getOrThrow(false, error -> {
+                            throw new RuntimeException("Failed to parse tier: " + error);
+                        });
+
                 var rl = new ResourceLocation(namespace, pathEdits);
-                ContractReloader.tiers.put(rl, tier);
+                tiers.put(rl, tier);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Failed to load tier: " + resourceLocation, e);
             }
         });
     }

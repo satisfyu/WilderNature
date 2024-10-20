@@ -241,9 +241,9 @@ public class BountyBoardBlock extends BaseEntityBlock {
             friendlyByteBuf.writeEnum(BountyBlockNetworking.BountyServerUpdateType.MULTI);
             friendlyByteBuf.writeShort(3);
             assert entity != null;
-            BountyBlockScreenHandler.s_writeUpdateContracts(friendlyByteBuf, entity);
-            BountyBlockScreenHandler.s_writeBlockDataChange(friendlyByteBuf, entity.rerollsLeft, entity.rerollCooldownLeft, entity.boardId, entity.tier, entity.xp);
-            BountyBlockScreenHandler.s_writeActiveContractInfo(friendlyByteBuf, (ServerPlayer) player);
+            BountyBlockScreenHandler.writeUpdateContracts(friendlyByteBuf, entity);
+            BountyBlockScreenHandler.writeBlockDataChange(friendlyByteBuf, entity.rerollsLeft, entity.rerollCooldownLeft, entity.boardId, entity.tier, entity.xp);
+            BountyBlockScreenHandler.writeActiveContractInfo(friendlyByteBuf, (ServerPlayer) player);
         });
         return InteractionResult.SUCCESS;
     }
