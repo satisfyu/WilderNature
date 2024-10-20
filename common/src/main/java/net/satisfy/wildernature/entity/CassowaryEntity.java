@@ -38,13 +38,13 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
     }
 
     private void setupAnimationStates() {
-        if(this.idleAnimationTimeout <= 0) {
+        if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
             this.idleAnimationState.start(this.tickCount);
         } else {
@@ -55,7 +55,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
         float f;
-        if(this.getPose() == Pose.STANDING) {
+        if (this.getPose() == Pose.STANDING) {
             f = Math.min(pPartialTick * 6F, 1f);
         } else {
             f = 0f;
@@ -89,7 +89,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
         return getTarget();
     }
 
-    public double getMeleeAttackRangeSqr_(LivingEntity entity){
+    public double getMeleeAttackRangeSqr_(LivingEntity entity) {
         return super.getMeleeAttackRangeSqr(entity);
     }
 
@@ -106,7 +106,7 @@ public class CassowaryEntity extends Animal implements EntityWithAttackAnimation
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.cassowary_attack *20+2    ),8));
+        this.goalSelector.addGoal(1, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.cassowary_attack * 20 + 2), 8));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.15D));
         this.goalSelector.addGoal(2, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 3f));

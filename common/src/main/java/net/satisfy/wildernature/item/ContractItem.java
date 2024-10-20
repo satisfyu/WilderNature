@@ -11,7 +11,6 @@ import net.satisfy.wildernature.util.contract.ContractInProgress;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ContractItem extends Item {
     public static final String TAG_PLAYER = "player_uuid";
@@ -28,7 +27,7 @@ public class ContractItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        if(itemStack.getTag() == null){
+        if (itemStack.getTag() == null) {
             list.add(Component.translatable("tooltip.wildernature.contract_error"));
             return;
         }
@@ -41,12 +40,11 @@ public class ContractItem extends Item {
         list.add(descriptionSplit);
         list.add(progressSplit);
 
-        if(itemStack.getTag().contains(TAG_EXPIRY_TICK)){
+        if (itemStack.getTag().contains(TAG_EXPIRY_TICK) && level != null) {
             long expiryTick = itemStack.getTag().getLong(TAG_EXPIRY_TICK);
-            assert level != null;
             long currentTick = level.getGameTime();
             long remainingTicks = expiryTick - currentTick;
-            if (remainingTicks > 0){
+            if (remainingTicks > 0) {
                 long remainingSeconds = remainingTicks / 20;
                 long minutes = remainingSeconds / 60;
                 long seconds = remainingSeconds % 60;
@@ -60,17 +58,16 @@ public class ContractItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int i, boolean bl) {
-        if(level.isClientSide())
+        if (level.isClientSide())
             return;
-        if(itemStack.getTag() == null)
-        {
+        if (itemStack.getTag() == null) {
             return;
         }
-        if(entity instanceof Player player){
-            if(!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER)))
+        if (entity instanceof Player player) {
+            if (!player.getUUID().equals(itemStack.getTag().getUUID(TAG_PLAYER)))
                 return;
             var progress = ContractInProgress.progressPerPlayer.get(player.getUUID());
-            if(progress == null){
+            if (progress == null) {
                 itemStack.setCount(0);
                 return;
             }

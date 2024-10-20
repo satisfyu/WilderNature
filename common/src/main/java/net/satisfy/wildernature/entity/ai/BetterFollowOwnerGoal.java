@@ -17,7 +17,6 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import java.util.EnumSet;
 
 
-// Owl by Lemonszz: https://github.com/Lemonszz/Biome-Makeover/blob/1.20/LICENCE
 public class BetterFollowOwnerGoal extends Goal {
     public static final RandomSource RANDOM = RandomSource.create();
     protected final TamableAnimal tameable;

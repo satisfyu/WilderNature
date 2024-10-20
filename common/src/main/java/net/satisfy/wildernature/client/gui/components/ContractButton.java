@@ -16,29 +16,32 @@ public class ContractButton extends Button {
     public Contract getContract() {
         return contract;
     }
-    public void setContract(Contract contract){
-        setContractSelected(contract,false);
+
+    public void setContract(Contract contract) {
+        setContractSelected(contract, false);
     }
-    public void setContractSelected(Contract contract, boolean selected){
-        setContract(contract, null,selected);
+
+    public void setContractSelected(Contract contract, boolean selected) {
+        setContract(contract, null, selected);
     }
-    public void setContractProgress(Contract contract,ContractInProgress progress) {
-        setContract(contract,progress,false);
+
+    public void setContractProgress(Contract contract, ContractInProgress progress) {
+        setContract(contract, progress, false);
     }
-    private void setContract(Contract contract, ContractInProgress progress, boolean selected){
+
+    private void setContract(Contract contract, ContractInProgress progress, boolean selected) {
         this.contract = contract;
         this.progress = progress;
-        if(contract==null)
-        {
+        if (contract == null) {
             setTooltip(null);
             return;
         }
         MutableComponent text = Component.empty();
 
-        if(selected){
+        if (selected) {
             text.append(Component.translatable("text.gui.wildernature.bounty.selectedcontract")).append("\n");
         }
-        if(progress!=null) {
+        if (progress != null) {
             if (progress.count == 0) {
                 text.append(Component.translatable("text.gui.wildernature.bounty.readytofinishcontract")).append("\n");
             } else {
@@ -50,25 +53,25 @@ public class ContractButton extends Button {
                 .append("\n")
                 .append(Component.translatable(contract.description()));
 
-        if(progress !=null){
+        if (progress != null) {
             text.append("\n");
-            text.append(Component.translatable("text.gui.wildernature.bounty.progress", contract.count()-progress.count, contract.count()));
+            text.append(Component.translatable("text.gui.wildernature.bounty.progress", contract.count() - progress.count, contract.count()));
         }
         setTooltip(Tooltip.create(text));
     }
 
     public ContractButton(int x, int y, Contract contract, OnPress onPress) {
-        super(x, y, 18,18, Component.empty(), onPress, Button.DEFAULT_NARRATION);
+        super(x, y, 18, 18, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         setContract(contract);
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
-        if(contract==null)
+        if (contract == null)
             return;
-        guiGraphics.renderItem(contract.contractStack(), getX()+1,getY()+1);
-        if(this.isHoveredOrFocused()){
-            guiGraphics.fill( getX()+1,getY()+1,getX()+17,getY()+17,0x7fFFFFFF);
+        guiGraphics.renderItem(contract.contractStack(), getX() + 1, getY() + 1);
+        if (this.isHoveredOrFocused()) {
+            guiGraphics.fill(getX() + 1, getY() + 1, getX() + 17, getY() + 17, 0x7fFFFFFF);
         }
     }
 

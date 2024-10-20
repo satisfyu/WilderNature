@@ -63,10 +63,10 @@ public class TurkeyModel<T extends Entity> extends HierarchicalModel<T> {
 
     @Override
     public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        var turkey = ((TurkeyEntity)entity);
+        var turkey = ((TurkeyEntity) entity);
         this.root().getAllParts().forEach(ModelPart::resetPose);
         animateWalk(TurkeyAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
-        animate(turkey.attackAnimationState,TurkeyAnimation.attack,ageInTicks);
+        animate(turkey.attackAnimationState, TurkeyAnimation.attack, ageInTicks);
     }
 
     @Override

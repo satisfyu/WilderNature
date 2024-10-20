@@ -72,6 +72,7 @@ public class HedgehogEntity extends Animal {
             public void onStop() {
                 setSniffing(false);
             }
+
             @Override
             public boolean isPossible() {
                 return true;
@@ -79,7 +80,7 @@ public class HedgehogEntity extends Animal {
 
             @Override
             public int duration() {
-                return (int) (ServerAnimationDurations.hedgehog_sniffing*20);
+                return (int) (ServerAnimationDurations.hedgehog_sniffing * 20);
             }
 
             @Override

@@ -76,7 +76,7 @@ public class CompletionistBannerRenderer implements BlockEntityRenderer<Completi
                 this.pole.visible = true;
             } else {
                 poseStack.translate(0.5, -0.1666666716337204, 0.5);
-                rotation = -blockState.getValue(CompletionistWallBannerBlock.FACING).toYRot() + 180.0f;  // Rotation um 180 Grad ergänzt
+                rotation = -blockState.getValue(CompletionistWallBannerBlock.FACING).toYRot() + 180.0f;
                 poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
                 poseStack.translate(0.0, -0.3125, -0.4375);
                 this.pole.visible = false;

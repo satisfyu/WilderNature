@@ -72,13 +72,13 @@ public class DeerModel extends HierarchicalModel<DeerEntity> {
         this.head.xRot = headPitch * 0.0047453292F;
 
         this.animate(entity.idleState, DeerAnimation.idle, ageInTicks, 1f);
-        if(entity.isDeerRunning()) {
-            this.animateWalk(DeerAnimation.run,limbSwing,limbSwingAmount,1.5f, 2.5f);
+        if (entity.isDeerRunning()) {
+            this.animateWalk(DeerAnimation.run, limbSwing, limbSwingAmount, 1.5f, 2.5f);
         } else {
-            this.animateWalk(DeerAnimation.walk,limbSwing,limbSwingAmount,1f, 2.5f);
+            this.animateWalk(DeerAnimation.walk, limbSwing, limbSwingAmount, 1f, 2.5f);
         }
         this.animate(entity.lookAroundState, DeerAnimation.look_around, ageInTicks, 1.0f);
-        this.animate(entity.eatingState, DeerAnimation.eat, ageInTicks,1.0f);
+        this.animate(entity.eatingState, DeerAnimation.eat, ageInTicks, 1.0f);
     }
 
     @Override

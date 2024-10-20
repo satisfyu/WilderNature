@@ -54,23 +54,23 @@ public class ContractInProgress {
         return ((ContractInProgress) o).count;
     }
 
-    public final long startTick; 
+    public final long startTick;
 
     public static final Codec<ContractInProgress> SERVER_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("contract").forGetter(ContractInProgress::contract),
             Codec.INT.fieldOf("count").forGetter(ContractInProgress::count),
             Codec.LONG.fieldOf("id").forGetter(ContractInProgress::id),
-            Codec.LONG.fieldOf("start_tick").forGetter(o -> o.startTick) 
+            Codec.LONG.fieldOf("start_tick").forGetter(o -> o.startTick)
     ).apply(instance, ContractInProgress::new));
 
     public ContractInProgress(ResourceLocation contract, int count, long id, long startTick) {
         this.s_contract = contract;
         this.boardId = id;
         this.count = count;
-        this.startTick = startTick; 
+        this.startTick = startTick;
     }
 
-    
+
     public static ContractInProgress newInstance(ResourceLocation contract, int count, long boardId, long startTick) {
         return new ContractInProgress(contract, count, boardId, startTick);
     }
@@ -130,6 +130,7 @@ public class ContractInProgress {
                 if (Platform.isDevelopmentEnvironment()) {
                     sourcePlayer.sendSystemMessage(Component.literal("_Finished contract \"" + contract.name() + "\""));
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +183,7 @@ public class ContractInProgress {
         return Contract.fromId(this.s_contract);
     }
 
-    
+
     public static void onServerTick(MinecraftServer server) {
         long currentTick = server.overworld().getGameTime();
         Iterator<HashMap.Entry<UUID, ContractInProgress>> iterator = progressPerPlayer.entrySet().iterator();
@@ -194,23 +195,25 @@ public class ContractInProgress {
             if (currentTick - progress.startTick >= EXPIRY_TICKS) {
                 ServerPlayer player = server.getPlayerList().getPlayer(playerId);
                 if (player != null) {
-                    removeContractItem(player, progress);
-                    player.sendSystemMessage(Component.translatable("text.gui.wildernature.bounty.contract_expired"));
+                    removeContractItem(player, "text.gui.wildernature.bounty.contract_expired");
                 }
                 iterator.remove();
             }
         }
     }
 
-    
-    private static void removeContractItem(ServerPlayer player, ContractInProgress progress) {
+
+    public static void removeContractItem(ServerPlayer player, String messageKey) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() instanceof ContractItem) {
-                if (stack.hasTag() && stack.getTag().getUUID(ContractItem.TAG_PLAYER).equals(player.getUUID())) {
-                    player.getInventory().removeItem(stack);
-                    player.sendSystemMessage(Component.translatable("text.gui.wildernature.bounty.contract_removed_due_to_timeout"));
-                    break; 
+                if (stack.hasTag()) {
+                    assert stack.getTag() != null;
+                    if (stack.getTag().getUUID(ContractItem.TAG_PLAYER).equals(player.getUUID())) {
+                        player.getInventory().removeItem(stack);
+                        player.sendSystemMessage(Component.translatable(messageKey));
+                        break;
+                    }
                 }
             }
         }

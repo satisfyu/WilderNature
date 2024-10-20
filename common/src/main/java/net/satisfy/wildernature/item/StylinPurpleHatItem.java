@@ -16,8 +16,7 @@ public class StylinPurpleHatItem extends ArmorItem {
     }
 
 
-    public ResourceLocation getHatTexture()
-    {
+    public ResourceLocation getHatTexture() {
         return hatTexture;
     }
 

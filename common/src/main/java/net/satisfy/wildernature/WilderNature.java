@@ -11,7 +11,7 @@ public class WilderNature {
     public static final String MOD_ID = "wildernature";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static void info(String info, Object... objects){
+    public static void info(String info, Object... objects) {
         LOGGER.info(info, objects);
     }
 

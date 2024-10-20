@@ -78,7 +78,7 @@ public class SquirrelModel extends AgeableListModel<SquirrelEntity> {
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
-    // Squirrel Animation by SameDifferent: https://github.com/samedifferent/Ecologics/blob/1.19-crossplatform/LICENSE
+
     @Override
     public void setupAnim(SquirrelEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.body.getAllParts().forEach(ModelPart::resetPose);

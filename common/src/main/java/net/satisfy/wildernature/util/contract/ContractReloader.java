@@ -14,20 +14,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ContractReloader implements ResourceManagerReloadListener {
-    private static HashMap<ResourceLocation,Contract> contracts = new HashMap<>();
+    private static final HashMap<ResourceLocation, Contract> contracts = new HashMap<>();
+
     public static Contract getContract(ResourceLocation location) {
         var path = location.getPath();
 
-        int index = path.indexOf("/", 0);
+        int index = path.indexOf("/");
 
-        var newLocation = path.substring(index+1);
-        var rl = new ResourceLocation(location.getNamespace(),newLocation);
-        var contract = contracts.get(rl);
+        var newLocation = path.substring(index + 1);
+        var rl = new ResourceLocation(location.getNamespace(), newLocation);
 
-        return contract;
+        return contracts.get(rl);
     }
+
     public static HashMap<ResourceLocation, BountyBoardTier> tiers = new HashMap<>();
-    public static List<ResourceLocation> getContractsOfTier(ResourceLocation tierId){
+
+    public static List<ResourceLocation> getContractsOfTier(ResourceLocation tierId) {
         return contracts.keySet().stream().filter(key -> {
             var allTiers = new ArrayList<>();
             BountyBoardTier tier;
@@ -35,9 +37,7 @@ public class ContractReloader implements ResourceManagerReloadListener {
             while (true) {
                 allTiers.add(id);
                 final var idcopy = id;
-                tier = BountyBoardTier.byId(id).orElseThrow(()->{
-                    throw new RuntimeException("Error: Not found tier with id %s".formatted(idcopy));
-                });
+                tier = BountyBoardTier.byId(id).orElseThrow(() -> new RuntimeException("Error: Not found tier with id %s".formatted(idcopy)));
                 if (tier.previousTier().isPresent())
                     id = tier.previousTier().get();
                 else break;
@@ -51,17 +51,13 @@ public class ContractReloader implements ResourceManagerReloadListener {
         return tier1.get(new Random().nextInt(tier1.size()));
     }
 
-    public static Map<ResourceLocation,Contract> getAllContracts() {
-        return new HashMap<>(contracts);
-    }
-
     public void onResourceManagerReload(ResourceManager manager) {
         contracts.clear();
         var contracts = manager.listResources("wildernature_contracts", path -> path.getPath().endsWith(".json"));
         contracts.forEach((resourceLocation, resource) -> {
             try {
                 var open = resource.open();
-                int index = resourceLocation.getPath().indexOf("/", 0);
+                int index = resourceLocation.getPath().indexOf("/");
                 var pathEdits = resourceLocation.getPath().substring(index + 1);
 
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
@@ -71,7 +67,7 @@ public class ContractReloader implements ResourceManagerReloadListener {
 
                 var rl = new ResourceLocation(resourceLocation.getNamespace(), pathEdits);
                 WilderNature.info("registering contract {}", rl);
-                this.contracts.put(rl, contract);
+                ContractReloader.contracts.put(rl, contract);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -79,17 +75,19 @@ public class ContractReloader implements ResourceManagerReloadListener {
         contracts.clear();
         var tiers = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
         tiers.forEach((resourceLocation, resource) -> {
-            WilderNature.info("Found tier {}",resourceLocation);
+            WilderNature.info("Found tier {}", resourceLocation);
             try {
                 var namespace = resourceLocation.getNamespace();
                 var pathEdits = resourceLocation.getPath();
                 pathEdits = pathEdits.substring("wildernature_tiers/".length());
-                pathEdits = pathEdits.substring(0,pathEdits.length()-".json".length());
+                pathEdits = pathEdits.substring(0, pathEdits.length() - ".json".length());
                 var open = resource.open();
                 var jsonString = new String(open.readAllBytes(), StandardCharsets.UTF_8);
-                var tier = BountyBoardTier.CODEC.parse(JsonOps.INSTANCE,new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false,(err)->{throw new RuntimeException(err);});
-                var rl = new ResourceLocation(namespace,pathEdits);
-                this.tiers.put(rl,tier);
+                var tier = BountyBoardTier.CODEC.parse(JsonOps.INSTANCE, new Gson().fromJson(jsonString, JsonElement.class)).getOrThrow(false, (err) -> {
+                    throw new RuntimeException(err);
+                });
+                var rl = new ResourceLocation(namespace, pathEdits);
+                ContractReloader.tiers.put(rl, tier);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

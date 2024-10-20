@@ -8,13 +8,9 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.satisfy.wildernature.entity.HedgehogEntity;
-import net.satisfy.wildernature.entity.animation.FlamingoAnimation;
 import net.satisfy.wildernature.entity.animation.HedgehogAnimation;
-import net.satisfy.wildernature.entity.animation.RaccoonAnimation;
 import net.satisfy.wildernature.util.WilderNatureIdentifier;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
 
 public class HedgehogModel<T extends HedgehogEntity> extends HierarchicalModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new WilderNatureIdentifier("hedgehog"), "main");
@@ -81,10 +77,9 @@ public class HedgehogModel<T extends HedgehogEntity> extends HierarchicalModel<T
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.animateWalk(HedgehogAnimation.walk, limbSwing, limbSwingAmount, 1f, 2.5f);
-        if(entity.getDeltaMovement().multiply(1,0,1).length() != 0){
+        if (entity.getDeltaMovement().multiply(1, 0, 1).length() != 0) {
             this.animate(entity.idleAnimationState, HedgehogAnimation.walk, ageInTicks, 1f);
-        }
-        else {
+        } else {
             this.animate(entity.idleAnimationState, HedgehogAnimation.idle, ageInTicks, 1f);
         }
         this.animate(entity.sniffAnimationState, HedgehogAnimation.sniff, ageInTicks, 1f);

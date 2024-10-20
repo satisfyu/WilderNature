@@ -25,9 +25,6 @@ public class PenguinRenderer extends MobRenderer<PenguinEntity, PenguinModel<Pen
     }
 
 
-
-
-
     @Override
     public void render(PenguinEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {

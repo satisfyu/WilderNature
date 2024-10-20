@@ -24,7 +24,7 @@ public class PelicanModel<T extends Entity> extends HierarchicalModel<T> {
     @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
-        
+
         PartDefinition partdefinition = meshdefinition.getRoot();
 
         PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));

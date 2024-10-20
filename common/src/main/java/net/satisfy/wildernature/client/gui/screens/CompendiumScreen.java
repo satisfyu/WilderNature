@@ -151,11 +151,11 @@ public abstract class CompendiumScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (currentPage < TEXTURES.length - 1 && isMouseOverArea((int)mouseX, (int)mouseY, 356, 43, 371, 227)) {
+        if (currentPage < TEXTURES.length - 1 && isMouseOverArea((int) mouseX, (int) mouseY, 356, 43, 371, 227)) {
             nextPage();
             return true;
         }
-        if (currentPage > 0 && isMouseOverArea((int)mouseX, (int)mouseY, 61, 43, 76, 227)) {
+        if (currentPage > 0 && isMouseOverArea((int) mouseX, (int) mouseY, 61, 43, 76, 227)) {
             previousPage();
             return true;
         }
@@ -183,9 +183,12 @@ public abstract class CompendiumScreen extends Screen {
         }
     }
 
-    private record PageData(TooltipData[] tooltips, FixedTextData[] fixedTexts) {}
+    private record PageData(TooltipData[] tooltips, FixedTextData[] fixedTexts) {
+    }
 
-    private record TooltipData(String text, int x1, int y1, int x2, int y2) {}
+    private record TooltipData(String text, int x1, int y1, int x2, int y2) {
+    }
 
-    private record FixedTextData(String text, int x, int y) {}
+    private record FixedTextData(String text, int x, int y) {
+    }
 }

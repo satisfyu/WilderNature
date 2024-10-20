@@ -19,28 +19,30 @@ public abstract class ServerPlayerMixin extends Player {
         super(level, blockPos, f, gameProfile);
     }
 
-    @Inject(method = "addAdditionalSaveData",at = @At("RETURN"))
-    void add(CompoundTag compoundTag, CallbackInfo ci){
+    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+    void add(CompoundTag compoundTag, CallbackInfo ci) {
         var wilderNature$contract = ContractInProgress.progressPerPlayer.get(this.uuid);
-        if(wilderNature$contract !=null)
+        if (wilderNature$contract != null)
             compoundTag.put(
                     "wn_contract",
                     ContractInProgress.SERVER_CODEC
-                    .encode(
-                            wilderNature$contract,
-                            NbtOps.INSTANCE,
-                            new CompoundTag()
-                    )
-                    .getOrThrow(
-                            false,
-                            (err)->{throw new RuntimeException(err);
-                            }
-                    )
+                            .encode(
+                                    wilderNature$contract,
+                                    NbtOps.INSTANCE,
+                                    new CompoundTag()
+                            )
+                            .getOrThrow(
+                                    false,
+                                    (err) -> {
+                                        throw new RuntimeException(err);
+                                    }
+                            )
             );
     }
-    @Inject(method = "readAdditionalSaveData",at = @At("RETURN"))
+
+    @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     @SuppressWarnings("all")
-    void read(CompoundTag compoundTag, CallbackInfo ci){
+    void read(CompoundTag compoundTag, CallbackInfo ci) {
         try {
             if (compoundTag.contains("wn_contract")) {
                 var tag = compoundTag.get(
@@ -58,8 +60,7 @@ public abstract class ServerPlayerMixin extends Player {
                 ContractInProgress.progressPerPlayer.put(this.uuid, contract);
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

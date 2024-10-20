@@ -101,7 +101,7 @@ public class TrufflingRecipe extends CustomRecipe {
             JsonArray jsonArray = GsonHelper.getAsJsonArray(json, "ingredients");
             NonNullList<Ingredient> ingredients = NonNullList.create();
 
-            for(int i = 0; i < jsonArray.size(); ++i) {
+            for (int i = 0; i < jsonArray.size(); ++i) {
                 Ingredient ingredient = Ingredient.fromJson(jsonArray.get(i));
                 if (!ingredient.isEmpty())
                     ingredients.add(ingredient);
@@ -128,7 +128,7 @@ public class TrufflingRecipe extends CustomRecipe {
             buffer.writeUtf(recipe.group);
             buffer.writeVarInt(recipe.ingredients.size());
 
-            for(Ingredient ingredient : recipe.ingredients) {
+            for (Ingredient ingredient : recipe.ingredients) {
                 ingredient.toNetwork(buffer);
             }
         }

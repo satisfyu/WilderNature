@@ -18,8 +18,8 @@ public abstract class CatMixin extends Mob {
     }
 
     @Inject(method = "registerGoals", at = @At("HEAD"))
-    void registerRunAway(CallbackInfo ci){
-        this.goalSelector.addGoal(0, new AvoidEntityGoal<>((Cat)(Object)this,DogEntity.class,16,1.2,1.2));
+    void registerRunAway(CallbackInfo ci) {
+        this.goalSelector.addGoal(0, new AvoidEntityGoal<>((Cat) (Object) this, DogEntity.class, 16, 1.2, 1.2));
     }
 
 }

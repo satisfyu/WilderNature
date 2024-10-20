@@ -37,12 +37,13 @@ public class WilderNatureClient {
         BlockEntityRendererRegistry.register(COMPLETIONIST_BANNER_ENTITY.get(), CompletionistBannerRenderer::new);
         BlockEntityRendererRegistry.register(BOUNTY_BOARD_ENTITY.get(), BountyBoardRenderer::new);
 
-        MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(),BountyBlockScreen::new);
+        MenuRegistry.registerScreenFactory(BountyBlockScreenHandler.BOUNTY_BLOCK.get(), BountyBlockScreen::new);
 
         makeHorn(ObjectRegistry.BISON_HORN.get());
 
     }
-        public static void preInitClient() {
+
+    public static void preInitClient() {
         registerEntityRenderers();
         registerEntityModelLayer();
         WilderNatureUtil.init();

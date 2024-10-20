@@ -289,13 +289,13 @@ public class RaccoonEntity extends Animal {
     public static class RaccoonDoorInteractGoal extends DoorInteractGoal {
 
         private final RaccoonEntity raccoon;
-        public static final AttributeModifier modifier = new AttributeModifier("racoon_door_do_not_move",-1000, AttributeModifier.Operation.ADDITION);
+        public static final AttributeModifier modifier = new AttributeModifier("racoon_door_do_not_move", -1000, AttributeModifier.Operation.ADDITION);
         int counter = 0;
 
         public RaccoonDoorInteractGoal(RaccoonEntity raccoon) {
             super(raccoon);
             this.raccoon = raccoon;
-            setFlags(EnumSet.of(Flag.LOOK,Flag.MOVE,Flag.JUMP));
+            setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
         }
 
         @Override
@@ -318,7 +318,7 @@ public class RaccoonEntity extends Animal {
 
         @Override
         public void tick() {
-            raccoon.level().getBlockState(doorPos).getShape(raccoon.level().getChunk(doorPos),doorPos).bounds().getCenter();
+            raccoon.level().getBlockState(doorPos).getShape(raccoon.level().getChunk(doorPos), doorPos).bounds().getCenter();
             if (canContinueToUse()) {
                 raccoon.startOpenDoorAnim();
             } else {

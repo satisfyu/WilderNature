@@ -79,13 +79,13 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     protected void registerGoals() {
         super.registerGoals();
         int i = 0;
-        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Player.class, 32,2,2) {
+        this.goalSelector.addGoal(++i, new AvoidEntityGoal<>(this, Player.class, 32, 2, 2) {
             @Override
             public boolean canUse() {
                 return super.canUse() && isInPanicRightNow();
             }
         });
-        this.goalSelector.addGoal(++i, new PanicGoal(this, 1.75D){
+        this.goalSelector.addGoal(++i, new PanicGoal(this, 1.75D) {
             protected boolean findRandomPosition() {
                 Vec3 vec3 = DefaultRandomPos.getPos(this.mob, 20, 20);
                 if (vec3 == null) {
@@ -100,7 +100,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         });
         this.goalSelector.addGoal(++i, new SleepGoal(this));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(++i, new FloatGoal(this){
+        this.goalSelector.addGoal(++i, new FloatGoal(this) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !isSleeping();
@@ -112,7 +112,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
             }
         });
         this.goalSelector.addGoal(++i, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) ServerAnimationDurations.owl_attack *20,15){
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) ServerAnimationDurations.owl_attack * 20, 15) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !isSleeping();
@@ -123,7 +123,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
                 return super.canContinueToUse() && !isSleeping();
             }
         });
-        this.goalSelector.addGoal(++i, new FlyingFollowOwnerGoal(this, 1.2D, 10.0F, 2.0F, true){
+        this.goalSelector.addGoal(++i, new FlyingFollowOwnerGoal(this, 1.2D, 10.0F, 2.0F, true) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !isSleeping();
@@ -134,7 +134,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
                 return super.canContinueToUse() && !isSleeping();
             }
         });
-        this.goalSelector.addGoal(++i, new PredicateTemptGoal(this, 1.2D, this::isFood, false){
+        this.goalSelector.addGoal(++i, new PredicateTemptGoal(this, 1.2D, this::isFood, false) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !isSleeping();
@@ -234,7 +234,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
             case STANDING -> this.leaningPitch = Math.max(0.0F, this.leaningPitch - 2F);
             case FLYING -> this.leaningPitch = Math.min(7F, this.leaningPitch + 1.5F);
         }
-        if(level().isClientSide()){
+        if (level().isClientSide()) {
             setupAnimationStates();
         }
     }
@@ -258,8 +258,9 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     private boolean isHooting() {
         return this.entityData.get(HOOTING);
     }
+
     private void setHooting(boolean hooting) {
-        this.entityData.set(HOOTING,hooting);
+        this.entityData.set(HOOTING, hooting);
     }
 
     @Override
@@ -426,6 +427,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     public void setAttacking_(boolean b) {
         this.entityData.set(ATTACKING, b);
     }
+
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }
@@ -451,7 +453,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
 
 
     private static class ExtendedFlyOntoTree extends WaterAvoidingRandomStrollGoal {
-        public  ExtendedFlyOntoTree(PathfinderMob pathAwareEntity, double speed, float probability) {
+        public ExtendedFlyOntoTree(PathfinderMob pathAwareEntity, double speed, float probability) {
             super(pathAwareEntity, speed, probability);
         }
 
@@ -498,10 +500,10 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     }
 
     private void setSleeping(boolean b) {
-        this.entityData.set(SLEEPING,b);
+        this.entityData.set(SLEEPING, b);
     }
 
-    public boolean isInPanicRightNow(){
+    public boolean isInPanicRightNow() {
         return getLastHurtByMob() != null || isOnFire();
     }
 
@@ -522,10 +524,10 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         public boolean canUse() {
             return owl.level().isDay() && !owl.isInPanicRightNow();
         }
+
         public boolean canContinueToUse() {
             return canUse();
         }
-
 
 
         @Override
@@ -543,6 +545,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
         public void tick() {
             super.tick();
         }
+
         public void stop() {
             super.stop();
             owl.setSleeping(false);

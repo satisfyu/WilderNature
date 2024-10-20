@@ -48,25 +48,26 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     public long boardId = new Random().nextInt();
     private ResourceLocation[] contracts = new ResourceLocation[3];
     public ResourceLocation tier = new WilderNatureIdentifier("tier1");
-    public int xp=0;
+    public int xp = 0;
 
-    public ResourceLocation[] getContracts(){
-        if(contracts==null){
+    public ResourceLocation[] getContracts() {
+        if (contracts == null) {
             contracts = new ResourceLocation[3];
             fillWithRandomContracts();
         }
-        if(contracts.length!=3){
-            contracts=null;
+        if (contracts.length != 3) {
+            contracts = null;
             contracts = getContracts();
             return contracts;
         }
-        for(int i=0;i<3;i++){
-            if(contracts[i] == null)
+        for (int i = 0; i < 3; i++) {
+            if (contracts[i] == null)
                 contracts[i] = getRandomContract();
         }
         return contracts.clone();
     }
-    public void setContracts(ResourceLocation[] contracts){
+
+    public void setContracts(ResourceLocation[] contracts) {
         this.contracts = contracts.clone();
     }
 
@@ -80,53 +81,56 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
         this.rerollCooldownLeft = compoundTag.contains(KEY_REROLL_COOLDOWN_LEFT) ? compoundTag.getInt(KEY_REROLL_COOLDOWN_LEFT) : 0;
         this.rerollsLeft = compoundTag.contains(KEY_REROLLS_LEFT) ? compoundTag.getInt(KEY_REROLLS_LEFT) : 3;
         this.boardId = compoundTag.contains(KEY_LONGID) ? compoundTag.getLong(KEY_LONGID) : new Random().nextInt();
-        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)): new WilderNatureIdentifier("");
+        this.tier = compoundTag.contains(KEY_TIER) ? new ResourceLocation(compoundTag.getString(KEY_TIER)) : new WilderNatureIdentifier("");
         this.xp = compoundTag.contains(KEY_EXP) ? compoundTag.getInt(KEY_EXP) : 0;
-        if(compoundTag.contains(KEY_CONTRACTS)){
-            setContracts(ResourceLocation.CODEC.listOf().parse(NbtOps.INSTANCE,(compoundTag.get(KEY_CONTRACTS))).getOrThrow(false,(error)->new RuntimeException(error)).toArray(new ResourceLocation[3]));
-        }
-        else {
+        if (compoundTag.contains(KEY_CONTRACTS)) {
+            setContracts(ResourceLocation.CODEC.listOf().parse(NbtOps.INSTANCE, (compoundTag.get(KEY_CONTRACTS))).getOrThrow(false, (error) -> new RuntimeException(error)).toArray(new ResourceLocation[3]));
+        } else {
             fillWithRandomContracts();
         }
     }
 
-    public void tryReroll(){
-        if(rerollsLeft<=0){
+    public void tryReroll() {
+        if (rerollsLeft <= 0) {
             return;
         }
-        if(rerollsLeft == rerolls){
+        if (rerollsLeft == rerolls) {
             rerollCooldownLeft = rerollCooldown;
         }
         rerollsLeft--;
         fillWithRandomContracts();
         onBlockDataChange.invoke();
     }
+
     private void fillWithRandomContracts() {
-        for(int i=0;i<3;i++){
+        for (int i = 0; i < 3; i++) {
             setRandomContactInSlot(i);
         }
     }
 
-    public void setRandomContactInSlot(int i){
+    public void setRandomContactInSlot(int i) {
         var contracts = getContracts();
         contracts[i] = getRandomContract();
         setContracts(contracts);
     }
-    private ResourceLocation getRandomContract(){
+
+    private ResourceLocation getRandomContract() {
         return ContractReloader.getRandomContractOfTier(this.tier);
     }
 
     @Override
     public void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        compoundTag.putInt(KEY_REROLL_COOLDOWN_LEFT,rerollCooldownLeft);
-        compoundTag.putInt(KEY_REROLLS_LEFT,rerollsLeft);
+        compoundTag.putInt(KEY_REROLL_COOLDOWN_LEFT, rerollCooldownLeft);
+        compoundTag.putInt(KEY_REROLLS_LEFT, rerollsLeft);
         compoundTag.putLong(KEY_LONGID, boardId);
         compoundTag.putString(KEY_TIER, tier.toString());
         compoundTag.putInt(KEY_EXP, xp);
         compoundTag.put(
                 KEY_CONTRACTS,
-                ResourceLocation.CODEC.listOf().encode(Arrays.stream(getContracts()).toList(),NbtOps.INSTANCE,new ListTag()).getOrThrow(false,(err)->{throw new RuntimeException(err);})
+                ResourceLocation.CODEC.listOf().encode(Arrays.stream(getContracts()).toList(), NbtOps.INSTANCE, new ListTag()).getOrThrow(false, (err) -> {
+                    throw new RuntimeException(err);
+                })
         );
     }
 
@@ -141,7 +145,7 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
 
 
         var tag = new CompoundTag();
-        tag.put("list",orThrow);
+        tag.put("list", orThrow);
         return tag;
     }
 
@@ -154,32 +158,34 @@ public class BountyBoardBlockEntity extends BlockEntity implements MenuProvider 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return BountyBlockScreenHandler.s_createServer(i,inventory,this);
+        return BountyBlockScreenHandler.s_createServer(i, inventory, this);
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, BountyBoardBlockEntity abstractFurnaceBlockEntity) {
-        abstractFurnaceBlockEntity.serverTick(level,blockPos,blockState);
+        abstractFurnaceBlockEntity.serverTick(level, blockPos, blockState);
     }
 
     private void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         rerollCooldownLeft--;
-        if(rerollCooldownLeft<0)
+        if (rerollCooldownLeft < 0)
             rerollsLeft = rerolls;
         onTick.invoke();
     }
-    public BountyBoardTier getTier(){
+
+    public BountyBoardTier getTier() {
         return BountyBoardTier.byId(this.tier).get();
     }
+
     public void addXp(int addXp) {
         var nextTierXp = getTier().experience();
-        this.xp+=addXp;
-        if(this.xp>=nextTierXp){
-            addXp=xp-nextTierXp;
+        this.xp += addXp;
+        if (this.xp >= nextTierXp) {
+            addXp = xp - nextTierXp;
             this.xp = 0;
 
-            if(getTier().nextTier().isEmpty()) {
-                if(Platform.isDevelopmentEnvironment()) {
-                    Objects.requireNonNull(Objects.requireNonNull(this.getLevel()).getServer()).getPlayerList().broadcastSystemMessage(Component.literal("_info: next tier is empty, impossible to upgrade"),true);
+            if (getTier().nextTier().isEmpty()) {
+                if (Platform.isDevelopmentEnvironment()) {
+                    Objects.requireNonNull(Objects.requireNonNull(this.getLevel()).getServer()).getPlayerList().broadcastSystemMessage(Component.literal("_info: next tier is empty, impossible to upgrade"), true);
                 }
                 return;
             }

@@ -70,6 +70,7 @@ public class FlamingoEntity extends Animal {
             public void onStop() {
                 setStanding(false);
             }
+
             @Override
             public boolean isPossible() {
                 return true;
@@ -77,7 +78,7 @@ public class FlamingoEntity extends Animal {
 
             @Override
             public int duration() {
-                return (int) (ServerAnimationDurations.pelican_stand*20);
+                return (int) (ServerAnimationDurations.pelican_stand * 20);
             }
 
             @Override
@@ -95,7 +96,7 @@ public class FlamingoEntity extends Animal {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
     }

@@ -33,23 +33,23 @@ public class BountyBoardRenderer implements BlockEntityRenderer<BountyBoardBlock
         switch (direction) {
             case NORTH -> {
                 poseStack.translate(0.5, 1.5, 0.5);
-                poseStack.mulPose(new Quaternionf().rotateY((float)Math.toRadians(0.0F)));
+                poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(0.0F)));
             }
             case SOUTH -> {
                 poseStack.translate(0.5, 1.5, 0.5);
-                poseStack.mulPose(new Quaternionf().rotateY((float)Math.toRadians(180.0F)));
+                poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(180.0F)));
             }
             case WEST -> {
                 poseStack.translate(0.5, 1.5, 0.5);
-                poseStack.mulPose(new Quaternionf().rotateY((float)Math.toRadians(90.0F)));
+                poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(90.0F)));
             }
             case EAST -> {
                 poseStack.translate(0.5, 1.5, 0.5);
-                poseStack.mulPose(new Quaternionf().rotateY((float)Math.toRadians(-90.0F)));
+                poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(-90.0F)));
             }
         }
 
-        poseStack.mulPose(new Quaternionf().rotateZ((float)Math.toRadians(180.0F)));
+        poseStack.mulPose(new Quaternionf().rotateZ((float) Math.toRadians(180.0F)));
         VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.entityCutout(TEXTURE));
         model.renderToBuffer(poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();

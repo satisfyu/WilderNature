@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
-// BetterWallClimberNavigation by SameDifferent: https://github.com/samedifferent/Ecologics/blob/1.19-crossplatform/LICENSE
+
 public class BetterWallClimberNavigation extends GroundPathNavigation {
     @Nullable
     private BlockPos pathToPosition;

@@ -30,7 +30,7 @@ import net.satisfy.wildernature.registry.SoundRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
+public class PelicanEntity extends Animal implements EntityWithAttackAnimation {
     private static final Ingredient FOOD_ITEMS;
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(PelicanEntity.class, EntityDataSerializers.BOOLEAN);
     public final AnimationState attackAnimationState = new AnimationState();
@@ -40,25 +40,25 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             setupAnimationStates();
         }
     }
 
     private void setupAnimationStates() {
-        if(this.idleAnimationTimeout <= 0) {
+        if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
             this.idleAnimationState.start(this.tickCount);
         } else {
             --this.idleAnimationTimeout;
         }
-        attackAnimationState.animateWhen(isAttacking(),this.tickCount);
+        attackAnimationState.animateWhen(isAttacking(), this.tickCount);
     }
 
     @Override
     protected void updateWalkAnimation(float pPartialTick) {
         float f;
-        if(this.getPose() == Pose.STANDING) {
+        if (this.getPose() == Pose.STANDING) {
             f = Math.min(pPartialTick * 6F, 1f);
         } else {
             f = 0f;
@@ -96,7 +96,7 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
         return getTarget();
     }
 
-    public double getMeleeAttackRangeSqr_(LivingEntity entity){
+    public double getMeleeAttackRangeSqr_(LivingEntity entity) {
         return super.getMeleeAttackRangeSqr(entity);
     }
 
@@ -115,8 +115,8 @@ public class PelicanEntity extends Animal implements EntityWithAttackAnimation{
 
     @Override
     protected void registerGoals() {
-        int i=0;
-        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack +2),8));
+        int i = 0;
+        this.goalSelector.addGoal(++i, new AnimationAttackGoal(this, 1.0D, true, (int) (ServerAnimationDurations.turkey_attack + 2), 8));
         this.goalSelector.addGoal(++i, new FloatGoal(this));
         this.goalSelector.addGoal(++i, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(++i, new TemptGoal(this, 1.0, FOOD_ITEMS, false));

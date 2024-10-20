@@ -13,19 +13,28 @@ public class BountyBlockNetworking {
     public static final ResourceLocation ID_SCREEN_ACTION = new WilderNatureIdentifier("screen_action");
     public static final int MAX_SIZE = 32768;
 
-    static void c_onServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
-        Player player = context.getPlayer();
-        if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
-            screenHandler.c_onServerUpdate(buf);
-        }
-    }
-    public enum BountyServerUpdateType{
+    public enum BountyServerUpdateType {
         SEND_BOARD_DATA,
         UPDATE_CONTRACTS,
         SET_ACTIVE_CONTRACT,
         CLEAR_ACTIVE_CONTRACT,
         MULTI
     }
+
+    public enum BountyClientActionType {
+        REROLL,
+        CONFIRM_CONTRACT,
+        FINISH_CONTRACT,
+        DELETE_CONTRACT
+    }
+
+    static void c_onServerUpdate(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+        Player player = context.getPlayer();
+        if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
+            screenHandler.c_onServerUpdate(buf);
+        }
+    }
+
     static void s_handleClientAction(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         Player player = context.getPlayer();
         if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
@@ -33,9 +42,19 @@ public class BountyBlockNetworking {
         }
     }
 
-    public enum BountyClientActionType {
-        REROLL,
-        CONFIRM_CONTRACT,
-        FINISH_CONTRACT
+    public static void register() {
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ID_SCREEN_UPDATE, (buf, context) -> {
+            Player player = context.getPlayer();
+            if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
+                screenHandler.c_onServerUpdate(buf);
+            }
+        });
+
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ID_SCREEN_ACTION, (buf, context) -> {
+            ServerPlayer player = (ServerPlayer) context.getPlayer();
+            if (player.containerMenu instanceof BountyBlockScreenHandler screenHandler) {
+                screenHandler.s_handleClientAction(player, buf);
+            }
+        });
     }
 }

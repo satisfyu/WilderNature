@@ -69,13 +69,12 @@ public class RedWolfModel<T extends RedWolfEntity> extends HierarchicalModel<T> 
 
     public void setupAnim(T wolf, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        if(wolf.isSneaking()){
+        if (wolf.isSneaking()) {
             animateWalk(RedWolfAnimation.sneak, limbSwing, limbSwingAmount, 2f, 2.5f);
-        }
-        else {
+        } else {
             animateWalk(RedWolfAnimation.walk, limbSwing, limbSwingAmount, 2f, 2.5f);
         }
-        animate(wolf.attackState,RedWolfAnimation.attack,ageInTicks);
+        animate(wolf.attackState, RedWolfAnimation.attack, ageInTicks);
         this.animate(wolf.sitAnimationState, RedWolfAnimation.sit, ageInTicks, 1f);
     }
 }
