@@ -8,7 +8,7 @@ version = "${version}"
 displayName = "[Let's Do] Wilder Nature"
 authors = "satisfy, jason13"
 description = '''
----
+Discover enchanting new animals like playful squirrels and majestic deers! Visit the bounty board for fun challenges and fabulous rewards.
 '''
 logoFile = "pack.png"
 
