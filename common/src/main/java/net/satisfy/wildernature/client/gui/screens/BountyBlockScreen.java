@@ -135,11 +135,15 @@ public class BountyBlockScreen extends AbstractContainerScreen<BountyBlockScreen
                 buf.writeEnum(BountyBlockNetworking.BountyClientActionType.CONFIRM_CONTRACT);
                 buf.writeByte(i);
                 NetworkManager.sendToServer(BountyBlockNetworking.ID_SCREEN_ACTION, buf);
+
+                contractButtons[i].setContract(null);
+                contractButtons[i].active = false;
                 return;
             }
         }
         throw new RuntimeException("No Contract Found");
     }
+
 
     private void setSelectedContract(Contract contract) {
         targetContractButton.setContractSelected(contract, true);
