@@ -49,7 +49,6 @@ public class EntityRegistry {
     }
 
     public static void init() {
-        WilderNature.LOGGER.debug("Registering Entities for " + WilderNature.MOD_ID);
         ENTITY_TYPES.register();
         BLOCK_ENTITIES.register();
         EntityAttributeRegistry.register(BISON, BisonEntity::createMobAttributes);

@@ -36,8 +36,19 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
+
+    modImplementation("top.theillusivec4.curios:curios-forge:${rootProject.curios_version}")
+
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.minecraftforge.net' }
+    maven { url 'https://maven.blamejared.com' }
+    maven { url 'https://curios-api.github.io/curios-api/' }
+}
+
 
 processResources {
     inputs.property "version", project.version

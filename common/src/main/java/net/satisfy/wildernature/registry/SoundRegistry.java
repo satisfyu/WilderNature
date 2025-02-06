@@ -66,6 +66,5 @@ public class SoundRegistry {
     }
 
     public static void init() {
-        WilderNature.LOGGER.debug("Registering Sounds for " + WilderNature.MOD_ID);
     }
 }

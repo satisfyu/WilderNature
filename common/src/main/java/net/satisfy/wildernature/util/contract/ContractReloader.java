@@ -6,7 +6,6 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.satisfy.wildernature.WilderNature;
 import net.satisfy.wildernature.util.BountyBoardTier;
 
 import java.io.IOException;
@@ -72,7 +71,6 @@ public class ContractReloader implements ResourceManagerReloadListener {
                         });
 
                 var rl = new ResourceLocation(resourceLocation.getNamespace(), pathEdits);
-                WilderNature.info("Registering contract {}", rl);
                 contracts.put(rl, contract);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to load contract: " + resourceLocation, e);
@@ -83,7 +81,6 @@ public class ContractReloader implements ResourceManagerReloadListener {
         var tierResources = manager.listResources("wildernature_tiers", path -> path.getPath().endsWith(".json"));
 
         tierResources.forEach((resourceLocation, resource) -> {
-            WilderNature.info("Found tier {}", resourceLocation);
             try (var open = resource.open()) {
                 var namespace = resourceLocation.getNamespace();
                 var pathEdits = resourceLocation.getPath()

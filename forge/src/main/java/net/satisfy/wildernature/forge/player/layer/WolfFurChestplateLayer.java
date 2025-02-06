@@ -24,7 +24,7 @@ public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidMo
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i, @NotNull T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         boolean shouldRender = false;
 
         for (ItemStack stack : ((Player) entity).getInventory().armor) {
@@ -44,7 +44,7 @@ public class WolfFurChestplateLayer<T extends LivingEntity, M extends HumanoidMo
     }
 
     @Override
-    protected @NotNull ResourceLocation getTextureLocation(T entity) {
+    protected @NotNull ResourceLocation getTextureLocation(@NotNull T entity) {
         return WolfFurChestplateModel.WOLF_FUR_CHESTPLATE_TEXTURE;
     }
 }

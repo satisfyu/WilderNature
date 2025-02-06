@@ -127,7 +127,6 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
         var action = buf.readEnum(BountyBlockNetworking.BountyClientActionType.class);
         switch (action) {
             case REROLL:
-                WilderNature.info("Player {} Rerolled", player.getScoreboardName());
                 targetEntity.tryReroll();
                 break;
             case CONFIRM_CONTRACT:
@@ -233,9 +232,7 @@ public class BountyBlockScreenHandler extends AbstractContainerMenu {
                 progress = buf.readFloat();
             }
             if (updateType == BountyBlockNetworking.BountyServerUpdateType.SET_ACTIVE_CONTRACT) {
-                if (Platform.isDevelopmentEnvironment()) {
-                    WilderNature.info("Handling SET_ACTIVE_CONTRACT");
-                }
+                Platform.isDevelopmentEnvironment();
                 var nbt = buf.readNbt();
                 activeContractProgress = ContractInProgress.SERVER_CODEC.decode(NbtOps.INSTANCE, nbt)
                         .getOrThrow(false, error -> { throw new RuntimeException(error); })
