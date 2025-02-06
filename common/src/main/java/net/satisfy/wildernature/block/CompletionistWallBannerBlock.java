@@ -35,7 +35,7 @@ public class CompletionistWallBannerBlock extends CompletionistBannerBlock {
         return this.asItem().getDescriptionId();
     }
 
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+    public boolean canSurvive(@NotNull BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return levelReader.getBlockState(blockPos.relative(blockState.getValue(FACING))).isSolid();
     }
 
