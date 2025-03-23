@@ -340,7 +340,7 @@ public class OwlEntity extends ShoulderRidingEntity implements EntityWithAttackA
     @Override
     public boolean isFood(ItemStack stack) {
         Item item = stack.getItem();
-        return item.isEdible() && Objects.requireNonNull(item.getFoodProperties()).isMeat();
+        return item.isEdible() && item.getFoodProperties() != null && item.getFoodProperties().isMeat();
     }
 
     @Override
